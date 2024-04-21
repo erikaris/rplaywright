@@ -1,5 +1,6 @@
 # rplaywright
 
+### About
 rplaywright is an R package developed as part of my participation in the [rOpenSci Champions Program](https://ropensci.org/champions/). It is designed to seamlessly bridge with the NodeJS library, [Playwright](https://playwright.dev/), enabling simplified web testing and automation for R users. This package aims to provide R users with a comprehensive toolkit for interacting with web browsers programmatically, allowing for tasks such as browser automation, web scraping, and end-to-end testing directly from within the R environment. rplaywright offers a user-friendly interface and robust functionality for handling complex web interactions, making it an invaluable tool for both beginners and experienced developers alike.
 
 ### Usage
