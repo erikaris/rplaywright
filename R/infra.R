@@ -35,6 +35,8 @@ rplaywright_npm_install <- function(
 }
 
 #### start server ####
+#' @param force
+#'
 #' @export
 rplaywright_start_server <- function(
     force = FALSE
@@ -46,6 +48,8 @@ rplaywright_start_server <- function(
   )
 }
 
+#' @param force
+#'
 #' @export
 rplaywright_stop_server <- function(
     force = FALSE
