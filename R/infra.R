@@ -1,4 +1,5 @@
 #### install npm ####
+#' a wrapper for nodejs playwright functionalities
 #' @export
 rplaywright_npm_install <- function(
     force = FALSE
@@ -35,6 +36,7 @@ rplaywright_npm_install <- function(
 }
 
 #### start server ####
+#' function for starting the headless browser server.
 #' @param force
 #'
 #' @export
