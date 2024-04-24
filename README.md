@@ -43,7 +43,7 @@ context <- rplaywright::rplaywright_context_new(browser, options = list(
         cookies = list(
             list(
                 name = "auth_token",
-                value = "ee488aa11b029d4e8e37550420c9aba3b5839088", # Use auth_token from cookies
+                value = "use_your_x_auth_token", # Use auth_token from cookies
                 domain = "twitter.com",
                 path = "/",
                 expires = -1,
