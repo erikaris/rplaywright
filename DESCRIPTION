@@ -16,3 +16,7 @@ Imports:
     processx,
     R.utils,
     yesno
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
