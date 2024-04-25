@@ -15,7 +15,8 @@ Imports:
     httr,
     processx,
     R.utils,
-    yesno
+    yesno,
+    future
 Suggests: 
     knitr,
     rmarkdown,

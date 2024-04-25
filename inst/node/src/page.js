@@ -249,7 +249,6 @@ exports.pagePlugin = (instance, opts, next) => {
           page
             .waitForResponse(
               async (resp) => {
-                console.log(resp.status(), resp.url());
                 return await filter(resp, request.body?.filter);
               },
               { timeout: request.body.timeout }

@@ -1,3 +1,5 @@
+future::plan(future::multisession)
+
 #' Install nodejs dependencies
 #'
 #' @param force Install dependencies without prompt
@@ -398,23 +400,54 @@ rplaywright_page_scrolltoright <- function(
   httr::content(resp)
 }
 
+#' Waits for the given timeout in milliseconds.
+#'
+#' @param page Page instance
+#' @param args List of as defined in \url{https://playwright.dev/docs/api/class-page#page-wait-for-timeout}
+#'
+#' @examples
+#' rplaywright::rplaywright_page_waitfortimeout(page, args = list(timeout = 1000))
+#'
 #' @export
 rplaywright_page_waitfortimeout <- function(
-    page, options = list()
-){
-  options$page_id = page$page_id
-  resp <- httr::POST(paste0('http://localhost:3000/page/waitForTimeout'), body = options, encode = "json", httr::accept_json())
-  httr::content(resp)
-}
-
-#' @export
-rplaywright_page_waitforresponse <- function(
-    page, options = list()
+    page, args = list()
 ){
   if (is.null(page)) stop('page instance must be provided')
   if (('page_id' %in% names(page)) == F) stop('\'page\' is not a page instance')
 
-  options$page_id = page$page_id
-  resp <- httr::POST(paste0('http://localhost:3000/page/waitForResponse'), body = options, encode = "json", httr::accept_json())
+  args$page_id = page$page_id
+
+  resp <- httr::POST(paste0('http://localhost:3000/page/waitForTimeout'), body = args, encode = "json", httr::accept_json())
   httr::content(resp)
+}
+
+#' Returns the matched response
+#'
+#' if async = T, the value must be resolved with future::value()
+#'
+#' @param page Page instance
+#' @param async If {TRUE}, this function will not wait until new page loaded
+#' @param args List of as defined in \url{https://playwright.dev/docs/api/class-page#page-wait-for-timeout}
+#' @returns future if async or httr if not async
+#'
+#' @examples
+#' rplaywright::rplaywright_page_waitfortimeout(page, args = list(timeout = 1000))
+#'
+#' @export
+rplaywright_page_waitforresponse <- function(
+    page, async = F, args = list()
+){
+  if (is.null(page)) stop('page instance must be provided')
+  if (('page_id' %in% names(page)) == F) stop('\'page\' is not a page instance')
+
+  args$page_id = page$page_id
+  doPost <- function() {
+    resp <- httr::POST(paste0('http://localhost:3000/page/waitForResponse'), body = args, encode = "json", httr::accept_json())
+    httr::content(resp)
+  }
+
+  if (!async) return(doPost())
+  return(future::future({
+    doPost()
+  }))
 }
