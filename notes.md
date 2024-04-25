@@ -79,4 +79,4 @@ rplaywright_page_screenshot <- function(
 
 ### why rplaywright (background story). 
 #### background story
-I currently work on a project about understanding Micro, Small, and Medium Enterprises (MSMEs) activities in Indonesia through social media data. While working on this project, I worked extensively with a NodeJS library named Playwright. Thus, I want to propose the development of an R package, which I tentatively named "playwright".
+I currently work on a project about understanding Micro, Small, and Medium Enterprises (MSMEs) activities in Indonesia through social media data. While working on this project, I worked extensively with a NodeJS library named Playwright. Thus, I want to propose the development of an R package, which I named "rplaywright".
