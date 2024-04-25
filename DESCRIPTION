@@ -2,7 +2,7 @@ Package: rplaywright
 Title: RPlaywright: Bridging R and Playwright for Web Testing and Automation
 Version: 0.0.0.9000
 Authors@R: 
-    person("Erika", "Siregar", , "erika.mukhlisina@example.com", role = c("aut", "cre"),
+    person("Erika", "Siregar", , "erika.mukhlisina@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: Provides a seamless integration between R and the Playwright library, facilitating web testing and automation tasks. This package empowers users to efficiently interact with Playwright functionalities within the R environment, enabling comprehensive web testing and automation workflows.
 License: MIT + file LICENSE

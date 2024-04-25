@@ -2,10 +2,17 @@
 % Please edit documentation in R/infra.R
 \name{rplaywright_npm_install}
 \alias{rplaywright_npm_install}
-\title{a wrapper for nodejs playwright functionalities}
+\title{Install nodejs dependencies}
 \usage{
 rplaywright_npm_install(force = FALSE)
 }
+\arguments{
+\item{force}{Install dependencies without prompt}
+}
 \description{
-here we will put more details
+Install nodejs dependencies
+}
+\examples{
+rplaywright::rplaywright_npm_install(force=T)
+
 }

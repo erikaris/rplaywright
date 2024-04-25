@@ -2,13 +2,14 @@
 % Please edit documentation in R/infra.R
 \name{rplaywright_start_server}
 \alias{rplaywright_start_server}
-\title{function for starting the headless browser server.}
+\title{Start rplaywright server}
 \usage{
-rplaywright_start_server(force = FALSE)
-}
-\arguments{
-\item{force}{}
+rplaywright_start_server()
 }
 \description{
-function for starting the headless browser server.
+Start rplaywright server
+}
+\examples{
+rplaywright::rplaywright_start_server()
+
 }

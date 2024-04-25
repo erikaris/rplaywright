@@ -136,14 +136,12 @@ exports.pagePlugin = (instance, opts, next) => {
         const locator = page.getByLabel(request.body.text, {
           ...(request.body?.options || {}),
         });
-        for (const oaction of request.body?.actions || []) {
-          for (const action of Object.keys(oaction)) {
-            const fn = locator[action];
-            if (fn) await fn.apply(locator, oaction[action] || []);
-          }
-        }
 
-        // locator.fill()
+        const actions = request.body?.actions || {};
+        for (const action of Object.keys(actions)) {
+          const fn = locator[action];
+          if (fn) await fn.apply(locator, actions[action] || []);
+        }
 
         reply.send({
           browser_id,
@@ -167,14 +165,12 @@ exports.pagePlugin = (instance, opts, next) => {
         const locator = page.getByRole(request.body.role, {
           ...(request.body?.options || {}),
         });
-        for (const oaction of request.body?.actions || []) {
-          for (const action of Object.keys(oaction)) {
-            const fn = locator[action];
-            if (fn) await fn.apply(locator, oaction[action] || []);
-          }
-        }
 
-        // locator.fill()
+        const actions = request.body?.actions || {};
+        for (const action of Object.keys(actions)) {
+          const fn = locator[action];
+          if (fn) await fn.apply(locator, actions[action] || []);
+        }
 
         reply.send({
           browser_id,
@@ -294,13 +290,14 @@ exports.pagePlugin = (instance, opts, next) => {
       const { browser_id } = contexts[context_id];
       if (page) {
         await page.evaluate(
-          (to) =>
-            // scroll to the bottom of the page
+          (args) => {
+            // console.log(JSON.stringify(args))
             window.scrollTo({
               behavior: "smooth",
-              top: to,
-            }),
-          [request.body.to]
+              ...(args || {}),
+            });
+          },
+          request.body
         );
 
         reply.send({
@@ -326,6 +323,32 @@ exports.pagePlugin = (instance, opts, next) => {
           window.scrollTo({
             behavior: "smooth",
             top: document.body.scrollHeight,
+          })
+        );
+
+        reply.send({
+          browser_id,
+          context_id,
+          page_id: request.body.page_id,
+        });
+      }
+    }
+  );
+
+  instance.post(
+    "/scrollToRight",
+    /**
+     * @param {FastifyRequest<{ Body: PageScrollToBottomRequestBody }>} request
+     * @param {FastifyReply<{ReplyType : PageScrollToBottomResponse}>} reply
+     * */
+    async function (request, reply) {
+      const { context_id, page } = pages[request.body.page_id];
+      const { browser_id } = contexts[context_id];
+      if (page) {
+        await page.evaluate(() =>
+          window.scrollTo({
+            behavior: "smooth",
+            top: document.body.scrollWidth,
           })
         );
 

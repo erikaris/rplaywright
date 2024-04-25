@@ -58,25 +58,21 @@ context <- rplaywright::rplaywright_context_new(browser, options = list(
 
 page1 <- rplaywright::rplaywright_page_new(context, url = 'https://twitter.com/search-advanced')
 
-rplaywright::rplaywright_page_getbylabel(page1, options = list(
+rplaywright::rplaywright_page_getbylabel(page1, args = list(
     text = "All of these words",
-    actions = list(
-        list(fill = list(""))
-    )
+    actions = list(fill = list("ropensci"))
 ))
 
-rplaywright::rplaywright_page_getbyrole(page1, options = list(
+rplaywright::rplaywright_page_getbyrole(page1, args = list(
     role = "button",
     options = list(name = "Search"),
-    actions = list(
-        list(click = list())
-    )
+    actions = list(click = list())
 ))
 
 result <- list()
 count <- 1
 while (T) {
-    resp <- rplaywright::rplaywright_page_waitforresponse(page1, options = list(
+    resp <- rplaywright::rplaywright_page_waitforresponse(page1, args = list(
         timeout = 5000,
         filter = list(or = list(
             list(url = "SearchTimeline"), 
@@ -91,7 +87,7 @@ while (T) {
         count <- count + 1
     }
 
-    rplaywright::rplaywright_page_scrollto(page1, options = list(to = 0))
+    rplaywright::rplaywright_page_scrollto(page1, options = list(top = 0))
 
     rplaywright::rplaywright_page_waitfortimeout(page1, options = list(timeout = 2000))
 
