@@ -20,6 +20,12 @@ future if async or httr if not async
 if async = T, the value must be resolved with future::value()
 }
 \examples{
-rplaywright::rplaywright_page_waitfortimeout(page, args = list(timeout = 1000))
+rplaywright::rplaywright_page_waitforresponse(page1, args = list(
+  timeout = 5000,
+  filter = list(or = list(
+    list(url = "SearchTimeline"),
+    list(url = "TweetDetail")
+  ))
+))
 
 }
