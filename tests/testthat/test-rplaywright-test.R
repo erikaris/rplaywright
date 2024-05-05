@@ -1,3 +1,3 @@
-test_that("rplaywright works", {
-  expect_type(what_time(), "character") # we expect the result is in type of character
+test_that("rplaywright_npm_install works", {
+  expect_no_condition(rplaywright_npm_install)
 })

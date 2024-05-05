@@ -1,4 +1,66 @@
-url: ~
+url: https://github.com/erikaris/rplaywright
+
+development:
+  mode: auto
+
 template:
   bootstrap: 5
+  includes:
+    in_header: |
+      <script defer data-domain="usethis.r-lib.org,all.tidyverse.org" src="https://plausible.io/js/plausible.js"></script>
 
+navbar:
+  structure:
+    left: [setup, reference, articles, news]
+    right: [search, github]
+  components:
+    setup:
+      text: Setup
+      href: articles/rplaywright-setup.html
+
+news:
+  releases:
+  - text: "rplaywright 0.9.0"
+    href: https://github.com/erikaris/rplaywright
+
+reference:
+  - title: Browser
+    desc: >
+      Start and stop the browser
+    contents:
+    - rplaywright_browser_new
+    - rplaywright_browser_close
+    - use_course
+  - title: Defunct and deprecated functions
+    desc: >
+      <a href="https://lifecycle.r-lib.org/articles/lifecycle.html">
+      <img src='figures/lifecycle-defunct.svg' alt='Defunct lifecycle'/>
+      </a>
+      <a href="https://lifecycle.r-lib.org/articles/lifecycle.html">
+      <img src='figures/lifecycle-deprecated.svg' alt='Deprecated lifecycle'/>
+      </a>
+    contents:
+    - browse_github_token
+    - git_credentials
+    - pr_pull_upstream
+    - use_github_actions
+    - use_tidy_labels
+    - use_travis
+
+articles:
+- title: Basics
+  navbar: ~
+  contents:
+  - articles/usethis-setup
+
+- title: Git and GitHub
+  navbar: Git and GitHub
+  contents:
+  - articles/git-credentials
+  - articles/pr-functions
+
+- title: Developer
+  desc: Articles about package internals and development experiments
+  contents:
+  - articles/ui-cli-conversion
+  - articles/badge-accessibility
