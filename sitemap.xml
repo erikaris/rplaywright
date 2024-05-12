@@ -1,90 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/404.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/LICENSE.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/rplaywright.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/articles/rplaywright.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/index.html</loc>
   </url>
   <url>
-    <loc>/notes.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/notes.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_browser_close.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_browser_close.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_browser_new.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_browser_new.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_context_close.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_context_close.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_context_new.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_context_new.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_npm_install.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_npm_install.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_page_close.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_page_close.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_page_getbylabel.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_page_getbylabel.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_page_getbyrole.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_page_getbyrole.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_page_goto.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_page_goto.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_page_new.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_page_new.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_page_screenshot.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_page_screenshot.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_page_scrollto.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_page_scrollto.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_page_scrolltobottom.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_page_scrolltobottom.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_page_scrolltoright.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_page_scrolltoright.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_page_set_content.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_page_set_content.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_page_waitforresponse.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_page_waitforresponse.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_page_waitfortimeout.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_page_waitfortimeout.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_start_server.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_start_server.html</loc>
   </url>
   <url>
-    <loc>/reference/rplaywright_stop_server.html</loc>
+    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_stop_server.html</loc>
   </url>
 </urlset>
