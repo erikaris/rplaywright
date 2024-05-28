@@ -8,7 +8,7 @@ const {
 } = require("fastify");
 const { IncomingMessage, ServerResponse } = require("http");
 const uuid = require("uuid");
-const { browsers, contexts } = require("./vars");
+const { browsers, contexts, camelCaseRecursive } = require("./vars");
 
 // TODO: Implement most crucial APIs from https://playwright.dev/docs/api/class-browsercontext
 
@@ -26,13 +26,20 @@ exports.contextPlugin = (instance, opts, next) => {
      * @param {FastifyReply<{ReplyType : NewContextResponse}>} reply
      * */
     async function (request, reply) {
-      const context_id = uuid.v4();
-      const { browser } = browsers[request.body.browser_id];
-      if (browser) {
-        const context = await browser.newContext({...request.body});
-        contexts[context_id] = { browser_id: request.body.browser_id, context };
+      try {
+        let { browser_id, ...args } = request.body || {};
+        args = camelCaseRecursive(args);
 
-        reply.send({ browser_id: request.body.browser_id, context_id });
+        const context_id = uuid.v4();
+        const { browser } = browsers[browser_id];
+        if (browser) {
+          const context = await browser.newContext({ ...args });
+          contexts[context_id] = { browser_id: browser_id, context };
+
+          reply.send({ browser_id: browser_id, context_id });
+        }
+      } catch (err) {
+        reply.status(500).send(err.message);
       }
     }
   );

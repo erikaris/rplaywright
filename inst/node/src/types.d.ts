@@ -12,6 +12,16 @@ type VarPages = {
   page: import('playwright').Page
 }
 
+type VarLocators = {
+  page_id: string
+  locator: import('playwright').Locator
+}
+
+type VarResponses = {
+  locator_id: string
+  response: import('playwright').Response
+}
+
 
 
 type LaunchBrowserRequestBody = {

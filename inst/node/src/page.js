@@ -9,7 +9,8 @@ const {
 const { Response } = require("playwright");
 const { IncomingMessage, ServerResponse } = require("http");
 const uuid = require("uuid");
-const { contexts, pages } = require("./vars");
+const { contexts, pages, locators, camelCaseRecursive } = require("./vars");
+const { camelCase } = require("lodash");
 
 // TODO: Implement most crucial APIs from https://playwright.dev/docs/api/class-page
 
@@ -236,7 +237,7 @@ exports.pagePlugin = (instance, opts, next) => {
   };
 
   instance.post(
-    "/waitForResponse",
+    "/waitForResponseV1",
     /**
      * @param {FastifyRequest<{ Body: PageWaitForResponseRequestBody }>} request
      * @param {FastifyReply<{ReplyType : PageWaitForResponseResponse}>} reply
@@ -288,16 +289,13 @@ exports.pagePlugin = (instance, opts, next) => {
       const { context_id, page } = pages[request.body.page_id];
       const { browser_id } = contexts[context_id];
       if (page) {
-        await page.evaluate(
-          (args) => {
-            // console.log(JSON.stringify(args))
-            window.scrollTo({
-              behavior: "smooth",
-              ...(args || {}),
-            });
-          },
-          request.body
-        );
+        await page.evaluate((args) => {
+          // console.log(JSON.stringify(args))
+          window.scrollTo({
+            behavior: "smooth",
+            ...(args || {}),
+          });
+        }, request.body);
 
         reply.send({
           browser_id,
@@ -379,6 +377,54 @@ exports.pagePlugin = (instance, opts, next) => {
       }
     }
   );
+
+  instance.post("/:command", async function (request, reply) {
+    try {
+      let command = camelCase(request.params?.command || "");
+      let { page_id, async = false, args = [] } = request.body || {};
+      args = camelCaseRecursive(args).map((marg) => {
+        let [vmarg] = Object.values(marg);
+        return vmarg;
+      });
+      
+      try {
+        args = args.map(arg => eval(arg));
+      } catch (err) {}
+
+      let { context_id, page } = pages[page_id];
+      let { browser_id } = contexts[context_id];
+      let locator_id = uuid.v4();
+      let value = undefined;
+
+      if (page) {
+        if (async) {
+          // const locator = page.waitForResponse(resp => resp.url().includes('SearchTimeline') && resp.status() === 200, {timeout: 15000})
+          const locator = page[command].call(page, ...args);
+          locators[locator_id] = { page_id: page_id, locator };
+        } else {
+          const locator = await page[command].call(page, ...args);
+          const type =  locator?.constructor?.name
+
+          if (type == 'Locator') {
+            locators[locator_id] = { page_id: page_id, locator };
+          } else {
+            locator_id = undefined;
+            value = locator;
+          }
+        }
+      }
+
+      reply.send({
+        browser_id,
+        context_id,
+        page_id,
+        locator_id,
+        value
+      });
+    } catch (err) {
+      reply.status(500).send(err.message);
+    }
+  });
 
   next();
 };
