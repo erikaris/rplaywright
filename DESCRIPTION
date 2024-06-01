@@ -16,7 +16,9 @@ Imports:
     processx,
     R.utils,
     yesno,
-    future
+    future,
+    logger,
+    R6
 Suggests: 
     knitr,
     rmarkdown,
