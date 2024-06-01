@@ -28,6 +28,18 @@
     <loc>https://erikaris.github.io/rplaywright/reference/index.html</loc>
   </url>
   <url>
+    <loc>https://erikaris.github.io/rplaywright/reference/install_rplaywright.html</loc>
+  </url>
+  <url>
+    <loc>https://erikaris.github.io/rplaywright/reference/new_chromium.html</loc>
+  </url>
+  <url>
+    <loc>https://erikaris.github.io/rplaywright/reference/new_firefox.html</loc>
+  </url>
+  <url>
+    <loc>https://erikaris.github.io/rplaywright/reference/new_webkit.html</loc>
+  </url>
+  <url>
     <loc>https://erikaris.github.io/rplaywright/reference/rplaywright.html</loc>
   </url>
   <url>
@@ -86,5 +98,11 @@
   </url>
   <url>
     <loc>https://erikaris.github.io/rplaywright/reference/rplaywright_stop_server.html</loc>
+  </url>
+  <url>
+    <loc>https://erikaris.github.io/rplaywright/reference/start_server.html</loc>
+  </url>
+  <url>
+    <loc>https://erikaris.github.io/rplaywright/reference/stop_server.html</loc>
   </url>
 </urlset>
