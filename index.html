@@ -76,102 +76,127 @@
 </h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">load_all</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">roxygen2</span><span class="fu">::</span><span class="fu">roxygenise</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_npm_install.html">rplaywright_npm_install</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/install_rplaywright.html">install_rplaywright</a></span><span class="op">(</span>force <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">browser</span> <span class="op">&lt;-</span> <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_browser_new.html">rplaywright_browser_new</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">'chromium'</span><span class="op">)</span> <span class="co"># or firefox or webkit</span></span>
-<span><span class="va">context</span> <span class="op">&lt;-</span> <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_context_new.html">rplaywright_context_new</a></span><span class="op">(</span><span class="va">browser</span><span class="op">)</span></span>
+<span><span class="va">chrome</span> <span class="op">&lt;-</span> <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/new_chromium.html">new_chromium</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">firefox</span> <span class="op">&lt;-</span> <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/new_firefox.html">new_firefox</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">webkit</span> <span class="op">&lt;-</span> <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/new_webkit.html">new_webkit</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">page1</span> <span class="op">&lt;-</span> <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_page_new.html">rplaywright_page_new</a></span><span class="op">(</span><span class="va">context</span>, url <span class="op">=</span> <span class="st">'https://google.com'</span><span class="op">)</span></span>
-<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_page_goto.html">rplaywright_page_goto</a></span><span class="op">(</span><span class="va">page1</span>, url <span class="op">=</span> <span class="st">'https://amazon.com'</span>, async<span class="op">=</span><span class="cn">T</span><span class="op">)</span></span>
+<span><span class="va">context</span> <span class="op">&lt;-</span> <span class="va">chrome</span><span class="op">$</span><span class="fu">new_context</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">page2</span> <span class="op">&lt;-</span> <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_page_new.html">rplaywright_page_new</a></span><span class="op">(</span><span class="va">context</span><span class="op">)</span></span>
-<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_page_set_content.html">rplaywright_page_set_content</a></span><span class="op">(</span><span class="va">page2</span>, content <span class="op">=</span> <span class="st">'https://tokopedia.com'</span>, async<span class="op">=</span><span class="cn">F</span><span class="op">)</span></span>
+<span><span class="va">page1</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span>async <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="va">page1</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://google.com"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_page_screenshot.html">rplaywright_page_screenshot</a></span><span class="op">(</span><span class="va">page1</span>, path <span class="op">=</span> <span class="st">'./ss1.png'</span><span class="op">)</span></span>
-<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_page_screenshot.html">rplaywright_page_screenshot</a></span><span class="op">(</span><span class="va">page2</span>, path <span class="op">=</span> <span class="st">'./ss2.png'</span><span class="op">)</span></span>
+<span><span class="va">page2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span>async <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="va">page2</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://amazon.com"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">page3</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span>async <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
+<span><span class="va">page3</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://tokopedia.com"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ss1</span> <span class="op">&lt;-</span> <span class="va">page1</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">ss2</span> <span class="op">&lt;-</span> <span class="va">page2</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">ss3</span> <span class="op">&lt;-</span> <span class="va">page3</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html" class="external-link">Sys.sleep</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_page_close.html">rplaywright_page_close</a></span><span class="op">(</span><span class="va">page1</span><span class="op">)</span></span>
-<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_page_close.html">rplaywright_page_close</a></span><span class="op">(</span><span class="va">page2</span><span class="op">)</span></span>
+<span><span class="va">chrome</span><span class="op">$</span><span class="fu">close</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">firefox</span><span class="op">$</span><span class="fu">close</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">webkit</span><span class="op">$</span><span class="fu">close</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_browser_close.html">rplaywright_browser_close</a></span><span class="op">(</span><span class="va">browser</span><span class="op">)</span></span>
-<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_stop_server.html">rplaywright_stop_server</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/stop_server.html">stop_server</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="use-case-example-for-twitter-crawling">Use Case Example for Twitter Crawling<a class="anchor" aria-label="anchor" href="#use-case-example-for-twitter-crawling"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">roxygen2</span><span class="fu">::</span><span class="fu">roxygenise</span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">load_all</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">roxygen2</span><span class="fu">::</span><span class="fu">roxygenise</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">browser</span> <span class="op">&lt;-</span> <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_browser_new.html">rplaywright_browser_new</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">'chromium'</span><span class="op">)</span> <span class="co"># or firefox or webkit</span></span>
-<span><span class="va">context</span> <span class="op">&lt;-</span> <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_context_new.html">rplaywright_context_new</a></span><span class="op">(</span><span class="va">browser</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    screen <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1240</span>, height <span class="op">=</span> <span class="fl">1080</span><span class="op">)</span>,</span>
-<span>    storageState <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        cookies <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>            <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>                name <span class="op">=</span> <span class="st">"auth_token"</span>,</span>
-<span>                value <span class="op">=</span> <span class="st">"[your auth_token copied from cookies]"</span>, <span class="co"># Use auth_token from cookies</span></span>
-<span>                domain <span class="op">=</span> <span class="st">"twitter.com"</span>,</span>
-<span>                path <span class="op">=</span> <span class="st">"/"</span>,</span>
-<span>                expires <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
-<span>                httpOnly <span class="op">=</span> <span class="cn">T</span>,</span>
-<span>                secure <span class="op">=</span> <span class="cn">T</span>,</span>
-<span>                sameSite <span class="op">=</span> <span class="st">"Strict"</span></span>
-<span>            <span class="op">)</span></span>
-<span>        <span class="op">)</span>,</span>
-<span>        origins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
+<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/install_rplaywright.html">install_rplaywright</a></span><span class="op">(</span>force <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">chrome</span> <span class="op">&lt;-</span> <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/new_chromium.html">new_chromium</a></span><span class="op">(</span>start_server <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="va">context</span> <span class="op">&lt;-</span> <span class="va">chrome</span><span class="op">$</span><span class="fu">new_context</span><span class="op">(</span>options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  screen <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1240</span>, height <span class="op">=</span> <span class="fl">1080</span><span class="op">)</span>,</span>
+<span>  storage_state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    cookies <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        name <span class="op">=</span> <span class="st">"auth_token"</span>,</span>
+<span>        value <span class="op">=</span> <span class="st">"[your auth_token copied from cookies]"</span>, <span class="co"># Use auth_token from cookies</span></span>
+<span>        domain <span class="op">=</span> <span class="st">".x.com"</span>,</span>
+<span>        path <span class="op">=</span> <span class="st">"/"</span>,</span>
+<span>        expires <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,</span>
+<span>        http_only <span class="op">=</span> <span class="cn">T</span>,</span>
+<span>        secure <span class="op">=</span> <span class="cn">T</span>,</span>
+<span>        same_site <span class="op">=</span> <span class="st">"Strict"</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    origins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">page1</span> <span class="op">&lt;-</span> <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_page_new.html">rplaywright_page_new</a></span><span class="op">(</span><span class="va">context</span>, url <span class="op">=</span> <span class="st">'https://twitter.com/search-advanced'</span><span class="op">)</span></span>
+<span><span class="va">page</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://x.com/search-advanced"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_page_getbylabel.html">rplaywright_page_getbylabel</a></span><span class="op">(</span><span class="va">page1</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    text <span class="op">=</span> <span class="st">"All of these words"</span>,</span>
-<span>    actions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">""</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">event</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_response</span><span class="op">(</span></span>
+<span>  <span class="st">"resp =&gt; (resp.url().includes('SearchTimeline') || resp.url().includes('TweetDetail')) &amp;&amp; resp.status() === 200"</span>, </span>
+<span>  options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">15000</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_page_getbyrole.html">rplaywright_page_getbyrole</a></span><span class="op">(</span><span class="va">page1</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    role <span class="op">=</span> <span class="st">"button"</span>,</span>
-<span>    options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Search"</span><span class="op">)</span>,</span>
-<span>    actions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>click <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">field</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_label</span><span class="op">(</span><span class="st">"All of these words"</span><span class="op">)</span><span class="op">$</span><span class="fu">fill</span><span class="op">(</span><span class="st">"playwright"</span><span class="op">)</span></span>
+<span><span class="va">button</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"button"</span>, options<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name<span class="op">=</span><span class="st">"Search"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">count</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span></span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">event</span><span class="op">$</span><span class="fu">await</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">text</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"text"</span><span class="op">)</span></span>
+<span><span class="co"># json &lt;- resp$get("json")</span></span>
+<span></span>
+<span><span class="va">result</span><span class="op">[[</span><span class="va">count</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">text</span></span>
+<span><span class="va">count</span> <span class="op">&lt;-</span> <span class="va">count</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span></span>
 <span><span class="kw">while</span> <span class="op">(</span><span class="cn">T</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">resp</span> <span class="op">&lt;-</span> <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_page_waitforresponse.html">rplaywright_page_waitforresponse</a></span><span class="op">(</span><span class="va">page1</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        timeout <span class="op">=</span> <span class="fl">5000</span>,</span>
-<span>        filter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>or <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>            <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>url <span class="op">=</span> <span class="st">"SearchTimeline"</span><span class="op">)</span>, </span>
-<span>            <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>url <span class="op">=</span> <span class="st">"TweetDetail"</span><span class="op">)</span></span>
-<span>        <span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">resp</span><span class="op">$</span><span class="va">statusCode</span><span class="op">)</span><span class="op">)</span> <span class="va">resp</span><span class="op">$</span><span class="va">statusCode</span> <span class="op">=</span> <span class="fl">200L</span></span>
-<span></span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu">httr</span><span class="fu">::</span><span class="fu"><a href="https://httr.r-lib.org/reference/http_error.html" class="external-link">http_error</a></span><span class="op">(</span><span class="va">resp</span><span class="op">$</span><span class="va">statusCode</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="va">resp</span><span class="op">$</span><span class="va">success</span> <span class="op">==</span> <span class="cn">T</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="va">result</span><span class="op">[[</span><span class="va">count</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">resp</span></span>
-<span>        <span class="va">count</span> <span class="op">&lt;-</span> <span class="va">count</span> <span class="op">+</span> <span class="fl">1</span></span>
-<span>    <span class="op">}</span></span>
-<span></span>
-<span>    <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_page_scrollto.html">rplaywright_page_scrollto</a></span><span class="op">(</span><span class="va">page1</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>to <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span>    <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_page_waitfortimeout.html">rplaywright_page_waitfortimeout</a></span><span class="op">(</span><span class="va">page1</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout <span class="op">=</span> <span class="fl">2000</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span>    <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_page_scrolltobottom.html">rplaywright_page_scrolltobottom</a></span><span class="op">(</span><span class="va">page1</span>, options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="va">count</span> <span class="op">&gt;</span> <span class="fl">10</span><span class="op">)</span> <span class="kw">break</span>;</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Iteration "</span>, <span class="va">count</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">event</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_response</span><span class="op">(</span></span>
+<span>    <span class="st">"resp =&gt; (resp.url().includes('SearchTimeline') || resp.url().includes('TweetDetail')) &amp;&amp; resp.status() === 200"</span>, </span>
+<span>    options <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">15000</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">page</span><span class="op">$</span><span class="fu">evaluate</span><span class="op">(</span><span class="st">"</span></span>
+<span><span class="st">    () =&gt; window.scrollTo({</span></span>
+<span><span class="st">      behavior: 'smooth',</span></span>
+<span><span class="st">      top: 0,</span></span>
+<span><span class="st">    })</span></span>
+<span><span class="st">  "</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">page</span><span class="op">$</span><span class="fu">evaluate</span><span class="op">(</span><span class="st">"</span></span>
+<span><span class="st">     async () =&gt; await new Promise((r, j) =&gt; setTimeout(() =&gt; r(), 2000))</span></span>
+<span><span class="st">  "</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">page</span><span class="op">$</span><span class="fu">evaluate</span><span class="op">(</span><span class="st">"</span></span>
+<span><span class="st">    () =&gt; window.scrollTo({</span></span>
+<span><span class="st">      behavior: 'smooth',</span></span>
+<span><span class="st">      top: document.body.scrollHeight,</span></span>
+<span><span class="st">    })</span></span>
+<span><span class="st">  "</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">event</span><span class="op">$</span><span class="fu">await</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">resp</span><span class="op">)</span><span class="op">)</span> <span class="kw">next</span>;</span>
+<span>  </span>
+<span>  <span class="va">text</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">get</span><span class="op">(</span><span class="st">"text"</span><span class="op">)</span></span>
+<span>  <span class="co"># json &lt;- resp$get("json")</span></span>
+<span>  </span>
+<span>  <span class="va">result</span><span class="op">[[</span><span class="va">count</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">text</span></span>
+<span>  <span class="va">count</span> <span class="op">&lt;-</span> <span class="va">count</span> <span class="op">+</span> <span class="fl">1</span></span>
+<span>  </span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">count</span> <span class="op">&gt;</span> <span class="fl">3</span><span class="op">)</span> <span class="kw">break</span>;</span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_page_close.html">rplaywright_page_close</a></span><span class="op">(</span><span class="va">page1</span><span class="op">)</span></span>
-<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_browser_close.html">rplaywright_browser_close</a></span><span class="op">(</span><span class="va">browser</span><span class="op">)</span></span>
-<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/rplaywright_stop_server.html">rplaywright_stop_server</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">chrome</span><span class="op">$</span><span class="fu">close</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/stop_server.html">stop_server</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 </div>
