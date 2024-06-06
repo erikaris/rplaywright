@@ -29,100 +29,125 @@ devtools::install_github("erikaris/rplaywright")
 
 ``` r
 devtools::load_all()
+roxygen2::roxygenise()
 
-rplaywright::rplaywright_npm_install()
+rplaywright::install_rplaywright(force = T)
 
-browser <- rplaywright::rplaywright_browser_new(type = 'chromium') # or firefox or webkit
-context <- rplaywright::rplaywright_context_new(browser)
+chrome <- rplaywright::new_chromium()
+firefox <- rplaywright::new_firefox()
+webkit <- rplaywright::new_webkit()
 
-page1 <- rplaywright::rplaywright_page_new(context, url = 'https://google.com')
-rplaywright::rplaywright_page_goto(page1, url = 'https://amazon.com', async=T)
+context <- chrome$new_context()
 
-page2 <- rplaywright::rplaywright_page_new(context)
-rplaywright::rplaywright_page_set_content(page2, content = 'https://tokopedia.com', async=F)
+page1 <- context$new_page(async = T)
+page1$goto("https://google.com")
 
-rplaywright::rplaywright_page_screenshot(page1, path = './ss1.png')
-rplaywright::rplaywright_page_screenshot(page2, path = './ss2.png')
+page2 <- context$new_page(async = T)
+page2$goto("https://amazon.com")
+
+page3 <- context$new_page(async = F)
+page3$goto("https://tokopedia.com")
+
+ss1 <- page1$screenshot()
+ss2 <- page2$screenshot()
+ss3 <- page3$screenshot()
 
 Sys.sleep(10)
 
-rplaywright::rplaywright_page_close(page1)
-rplaywright::rplaywright_page_close(page2)
+chrome$close()
+firefox$close()
+webkit$close()
 
-rplaywright::rplaywright_browser_close(browser)
-rplaywright::rplaywright_stop_server()
+rplaywright::stop_server()
 ```
 
 ### Use Case Example for Twitter Crawling
 
 ``` r
+devtools::load_all()
 roxygen2::roxygenise()
 
-browser <- rplaywright::rplaywright_browser_new(type = 'chromium') # or firefox or webkit
-context <- rplaywright::rplaywright_context_new(browser, options = list(
-    screen = list(width = 1240, height = 1080),
-    storageState = list(
-        cookies = list(
-            list(
-                name = "auth_token",
-                value = "[your auth_token copied from cookies]", # Use auth_token from cookies
-                domain = "twitter.com",
-                path = "/",
-                expires = -1,
-                httpOnly = T,
-                secure = T,
-                sameSite = "Strict"
-            )
-        ),
-        origins = list()
-    )
+rplaywright::install_rplaywright(force = T)
+
+chrome <- rplaywright::new_chromium(start_server = T)
+context <- chrome$new_context(options = list(
+  screen = list(width = 1240, height = 1080),
+  storage_state = list(
+    cookies = list(
+      list(
+        name = "auth_token",
+        value = "[your auth_token copied from cookies]", # Use auth_token from cookies
+        domain = ".x.com",
+        path = "/",
+        expires = -1,
+        http_only = T,
+        secure = T,
+        same_site = "Strict"
+      )
+    ),
+    origins = list()
+  )
 ))
 
-page1 <- rplaywright::rplaywright_page_new(context, url = 'https://twitter.com/search-advanced')
+page <- context$new_page()
+page$goto("https://x.com/search-advanced")
 
-rplaywright::rplaywright_page_getbylabel(page1, options = list(
-    text = "All of these words",
-    actions = list(
-        list(fill = list(""))
-    )
-))
+event <- page$wait_for_response(
+  "resp => (resp.url().includes('SearchTimeline') || resp.url().includes('TweetDetail')) && resp.status() === 200", 
+  options = list(timeout=15000)
+)
 
-rplaywright::rplaywright_page_getbyrole(page1, options = list(
-    role = "button",
-    options = list(name = "Search"),
-    actions = list(
-        list(click = list())
-    )
-))
+field <- page$get_by_label("All of these words")$fill("playwright")
+button <- page$get_by_role("button", options=list(name="Search"))$click()
 
 result <- list()
 count <- 1
+
+resp <- event$await()
+text <- resp$get("text")
+# json <- resp$get("json")
+
+result[[count]] <- text
+count <- count + 1
+
 while (T) {
-    resp <- rplaywright::rplaywright_page_waitforresponse(page1, options = list(
-        timeout = 5000,
-        filter = list(or = list(
-            list(url = "SearchTimeline"), 
-            list(url = "TweetDetail")
-        ))
-    ))
-
-    if (is.null(resp$statusCode)) resp$statusCode = 200L
-
-    if (!httr::http_error(resp$statusCode) && resp$success == T) {
-        result[[count]] <- resp
-        count <- count + 1
-    }
-
-    rplaywright::rplaywright_page_scrollto(page1, options = list(to = 0))
-
-    rplaywright::rplaywright_page_waitfortimeout(page1, options = list(timeout = 2000))
-
-    rplaywright::rplaywright_page_scrolltobottom(page1, options = list())
-
-    if (count > 10) break;
+  print(paste0("Iteration ", count))
+  
+  event <- page$wait_for_response(
+    "resp => (resp.url().includes('SearchTimeline') || resp.url().includes('TweetDetail')) && resp.status() === 200", 
+    options = list(timeout=15000)
+  )
+  
+  page$evaluate("
+    () => window.scrollTo({
+      behavior: 'smooth',
+      top: 0,
+    })
+  ")
+  
+  page$evaluate("
+     async () => await new Promise((r, j) => setTimeout(() => r(), 2000))
+  ")
+  
+  page$evaluate("
+    () => window.scrollTo({
+      behavior: 'smooth',
+      top: document.body.scrollHeight,
+    })
+  ")
+  
+  resp <- event$await()
+  if (is.null(resp)) next;
+  
+  text <- resp$get("text")
+  # json <- resp$get("json")
+  
+  result[[count]] <- text
+  count <- count + 1
+  
+  if (count > 3) break;
 }
 
-rplaywright::rplaywright_page_close(page1)
-rplaywright::rplaywright_browser_close(browser)
-rplaywright::rplaywright_stop_server()
+chrome$close()
+rplaywright::stop_server()
 ```
