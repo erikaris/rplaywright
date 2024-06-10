@@ -31,7 +31,7 @@ devtools::install_github("erikaris/rplaywright")
 devtools::load_all()
 roxygen2::roxygenise()
 
-rplaywright::install_rplaywright(force = T)
+rplaywright::install_rplaywright(force = TRUE)
 
 chrome <- rplaywright::new_chromium()
 firefox <- rplaywright::new_firefox()
@@ -67,7 +67,7 @@ rplaywright::stop_server()
 devtools::load_all()
 roxygen2::roxygenise()
 
-rplaywright::install_rplaywright(force = T)
+rplaywright::install_rplaywright(force = TRUE)
 
 chrome <- rplaywright::new_chromium(start_server = T)
 context <- chrome$new_context(options = list(
