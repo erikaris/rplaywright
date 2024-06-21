@@ -12,6 +12,7 @@
 2. Built-in features like **auto-waiting** and recording
    
    a. can handle **lazy-loaded** page
+
    b. **infinity loading**  --> Keep scrolling until it reaches the bottom of the page.
 4. Web-first assertions. Playwright assertions are explicitly **created for the dynamic web**. Checks are automatically retried until the necessary conditions are met.
 5. Effortless **Web Automation**: Automate repetitive tasks like web scraping, testing, and end-to-end workflows directly from R.
