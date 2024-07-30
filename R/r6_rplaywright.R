@@ -48,7 +48,9 @@ check_nodejs <- function() {
 #' @param port Rplaywright server port. Default to 3000
 #'
 #' @examples
+#' \dontrun{
 #' rplaywright::start_server()
+#' }
 #'
 #' @export
 start_server <- function(
@@ -135,7 +137,8 @@ new_chromium <- function(
 #'
 #' @export
 new_firefox <- function(
-    start_server = F
+    start_server = T,
+    serverOptions = list(host = "127.0.0.1", port = 3000)
 ){
   if (start_server == T) {
     if (!exists("playwright_server", envir = envpw)) {
@@ -160,7 +163,8 @@ new_firefox <- function(
 #'
 #' @export
 new_webkit <- function(
-    start_server = F
+    start_server = T,
+    serverOptions = list(host = "127.0.0.1", port = 3000)
 ){
   if (start_server == T) {
     if (!exists("playwright_server", envir = envpw)) {

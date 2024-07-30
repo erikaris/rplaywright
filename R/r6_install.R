@@ -5,7 +5,7 @@ future::plan(future::multisession)
 #' @param force Install dependencies without prompt
 #'
 #' @examples
-#' rplaywright::install_rplaywright(force=T)
+#' rplaywright::install_rplaywright(force=TRUE)
 #'
 #' @export
 install_rplaywright <- function(

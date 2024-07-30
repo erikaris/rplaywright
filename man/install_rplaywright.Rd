@@ -13,6 +13,6 @@ install_rplaywright(force = FALSE)
 Install rplaywright and its dependencies
 }
 \examples{
-rplaywright::install_rplaywright(force=T)
+rplaywright::install_rplaywright(force=TRUE)
 
 }

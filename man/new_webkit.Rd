@@ -4,7 +4,10 @@
 \alias{new_webkit}
 \title{Launch new webkit instance}
 \usage{
-new_webkit(start_server = F)
+new_webkit(
+  start_server = T,
+  serverOptions = list(host = "127.0.0.1", port = 3000)
+)
 }
 \description{
 Launch new webkit instance

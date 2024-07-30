@@ -69,8 +69,9 @@ exports.locatorPlugin = (instance, opts, next) => {
       const { page_id, locator } = locators[locator_id];
       const { context_id } = pages[page_id];
       const { browser_id } = contexts[context_id];
+      let result = null;
       if (locator) {
-        await locator[command].call(locator, ...args);
+        result = await locator[command].call(locator, ...args);
       }
 
       reply.send({
@@ -78,6 +79,7 @@ exports.locatorPlugin = (instance, opts, next) => {
         context_id,
         page_id,
         locator_id,
+        result,
       });
     } catch (err) {
       reply.status(500).send(err.message);

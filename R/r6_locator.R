@@ -1,3 +1,31 @@
+fn_return_result = function(options = list()) {
+  if (is.null(self$id)) {
+    logger::log_error("This locator is not found")
+    stop()
+  }
+
+  fn_name <- as.character(match.call()[[1]])[3]
+  arg_values = as.list(environment())
+  arg_sorted <- lapply(formalArgs(args(self$fill)), function (arg) {
+    argv = list()
+    argv[arg] = arg_values[which(names(arg_values) == arg)]
+    argv
+  })
+
+  body <- list(locator_id = self$id, args = arg_sorted)
+
+  resp <- httr::POST(
+    paste0(self$remote_url, "/locator/", fn_name),
+    body = body,
+    encode = "json",
+    httr::accept_json()
+  )
+  body <- httr::content(resp)
+
+  body$result
+}
+
+
 Locator <- R6::R6Class(
   "Locator",
   private = list(
@@ -40,6 +68,8 @@ Locator <- R6::R6Class(
 
       private$.page <- page
     },
+    is_visible = fn_return_result,
+    text_content = fn_return_result,
     fill = function(text, options = list()) {
       if (is.null(self$id)) {
         logger::log_error("This locator is not found")
