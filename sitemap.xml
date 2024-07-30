@@ -1,51 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://erikaris.github.io/rplaywright/404.html</loc>
-  </url>
-  <url>
-    <loc>https://erikaris.github.io/rplaywright/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://erikaris.github.io/rplaywright/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://erikaris.github.io/rplaywright/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://erikaris.github.io/rplaywright/articles/rplaywright.html</loc>
-  </url>
-  <url>
-    <loc>https://erikaris.github.io/rplaywright/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://erikaris.github.io/rplaywright/index.html</loc>
-  </url>
-  <url>
-    <loc>https://erikaris.github.io/rplaywright/notes.html</loc>
-  </url>
-  <url>
-    <loc>https://erikaris.github.io/rplaywright/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://erikaris.github.io/rplaywright/reference/install_rplaywright.html</loc>
-  </url>
-  <url>
-    <loc>https://erikaris.github.io/rplaywright/reference/new_chromium.html</loc>
-  </url>
-  <url>
-    <loc>https://erikaris.github.io/rplaywright/reference/new_firefox.html</loc>
-  </url>
-  <url>
-    <loc>https://erikaris.github.io/rplaywright/reference/new_webkit.html</loc>
-  </url>
-  <url>
-    <loc>https://erikaris.github.io/rplaywright/reference/rplaywright.html</loc>
-  </url>
-  <url>
-    <loc>https://erikaris.github.io/rplaywright/reference/start_server.html</loc>
-  </url>
-  <url>
-    <loc>https://erikaris.github.io/rplaywright/reference/stop_server.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://erikaris.github.io/rplaywright/404.html</loc></url>
+<url><loc>https://erikaris.github.io/rplaywright/LICENSE-text.html</loc></url>
+<url><loc>https://erikaris.github.io/rplaywright/LICENSE.html</loc></url>
+<url><loc>https://erikaris.github.io/rplaywright/articles/index.html</loc></url>
+<url><loc>https://erikaris.github.io/rplaywright/articles/rplaywright.html</loc></url>
+<url><loc>https://erikaris.github.io/rplaywright/authors.html</loc></url>
+<url><loc>https://erikaris.github.io/rplaywright/index.html</loc></url>
+<url><loc>https://erikaris.github.io/rplaywright/notes.html</loc></url>
+<url><loc>https://erikaris.github.io/rplaywright/reference/index.html</loc></url>
+<url><loc>https://erikaris.github.io/rplaywright/reference/install_rplaywright.html</loc></url>
+<url><loc>https://erikaris.github.io/rplaywright/reference/new_chromium.html</loc></url>
+<url><loc>https://erikaris.github.io/rplaywright/reference/new_firefox.html</loc></url>
+<url><loc>https://erikaris.github.io/rplaywright/reference/new_webkit.html</loc></url>
+<url><loc>https://erikaris.github.io/rplaywright/reference/rplaywright.html</loc></url>
+<url><loc>https://erikaris.github.io/rplaywright/reference/start_server.html</loc></url>
+<url><loc>https://erikaris.github.io/rplaywright/reference/stop_server.html</loc></url>
 </urlset>
+
