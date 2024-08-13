@@ -11,6 +11,8 @@ exports.locators = {};
 /** @type {{ [key: string]: VarResponses }} */
 exports.responses = {};
 
+exports.objs = {};
+
 const camelCaseRecursive = (data) => {
   if (Array.isArray(data)) return data.map((rec) => camelCaseRecursive(rec));
   if (isObject(data))

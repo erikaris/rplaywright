@@ -9,8 +9,10 @@ const {
 const { Response } = require("playwright");
 const { IncomingMessage, ServerResponse } = require("http");
 const uuid = require("uuid");
-const { contexts, pages, locators, camelCaseRecursive } = require("./vars");
+const { contexts, pages, locators, camelCaseRecursive, objs } = require("./vars");
+const Context = require("./response/context");
 const { camelCase } = require("lodash");
+const Page = require("./response/page");
 
 // TODO: Implement most crucial APIs from https://playwright.dev/docs/api/class-page
 
@@ -53,30 +55,30 @@ exports.pagePlugin = (instance, opts, next) => {
     }
   );
 
-  instance.post(
-    "/goto",
-    /**
-     * @param {FastifyRequest<{ Body: PageGotoRequestBody }>} request
-     * @param {FastifyReply<{ReplyType : PageGotoResponse}>} reply
-     * */
-    async function (request, reply) {
-      const { context_id, page } = pages[request.body.page_id];
-      const { browser_id } = contexts[context_id];
-      if (page) {
-        if (!!request.body.async) {
-          page.goto(request.body.url);
-        } else {
-          await page.goto(request.body.url);
-        }
+  // instance.post(
+  //   "/goto",
+  //   /**
+  //    * @param {FastifyRequest<{ Body: PageGotoRequestBody }>} request
+  //    * @param {FastifyReply<{ReplyType : PageGotoResponse}>} reply
+  //    * */
+  //   async function (request, reply) {
+  //     const { context_id, page } = pages[request.body.page_id];
+  //     const { browser_id } = contexts[context_id];
+  //     if (page) {
+  //       if (!!request.body.async) {
+  //         page.goto(request.body.url);
+  //       } else {
+  //         await page.goto(request.body.url);
+  //       }
 
-        reply.send({
-          browser_id,
-          context_id,
-          page_id: request.body.page_id,
-        });
-      }
-    }
-  );
+  //       reply.send({
+  //         browser_id,
+  //         context_id,
+  //         page_id: request.body.page_id,
+  //       });
+  //     }
+  //   }
+  // );
 
   instance.post(
     "/set-content",
@@ -153,34 +155,34 @@ exports.pagePlugin = (instance, opts, next) => {
     }
   );
 
-  instance.post(
-    "/getByRole",
-    /**
-     * @param {FastifyRequest<{ Body: PageGetByRoleRequestBody }>} request
-     * @param {FastifyReply<{ReplyType : PageGetByRoleResponse}>} reply
-     * */
-    async function (request, reply) {
-      const { context_id, page } = pages[request.body.page_id];
-      const { browser_id } = contexts[context_id];
-      if (page) {
-        const locator = page.getByRole(request.body.role, {
-          ...(request.body?.options || {}),
-        });
+  // instance.post(
+  //   "/getByRole",
+  //   /**
+  //    * @param {FastifyRequest<{ Body: PageGetByRoleRequestBody }>} request
+  //    * @param {FastifyReply<{ReplyType : PageGetByRoleResponse}>} reply
+  //    * */
+  //   async function (request, reply) {
+  //     const { context_id, page } = pages[request.body.page_id];
+  //     const { browser_id } = contexts[context_id];
+  //     if (page) {
+  //       const locator = page.getByRole(request.body.role, {
+  //         ...(request.body?.options || {}),
+  //       });
 
-        const actions = request.body?.actions || {};
-        for (const action of Object.keys(actions)) {
-          const fn = locator[action];
-          if (fn) await fn.apply(locator, actions[action] || []);
-        }
+  //       const actions = request.body?.actions || {};
+  //       for (const action of Object.keys(actions)) {
+  //         const fn = locator[action];
+  //         if (fn) await fn.apply(locator, actions[action] || []);
+  //       }
 
-        reply.send({
-          browser_id,
-          context_id,
-          page_id: request.body.page_id,
-        });
-      }
-    }
-  );
+  //       reply.send({
+  //         browser_id,
+  //         context_id,
+  //         page_id: request.body.page_id,
+  //       });
+  //     }
+  //   }
+  // );
 
   instance.post(
     "/waitForTimeout",
@@ -378,51 +380,92 @@ exports.pagePlugin = (instance, opts, next) => {
     }
   );
 
+  // instance.post("/:command", async function (request, reply) {
+  //   try {
+  //     let command = camelCase(request.params?.command || "");
+  //     let { page_id, async = false, args = [] } = request.body || {};
+  //     args = camelCaseRecursive(args).map((marg) => {
+  //       let [vmarg] = Object.values(marg);
+  //       return vmarg;
+  //     });
+      
+  //     try {
+  //       args = args.map(arg => eval(arg));
+  //     } catch (err) {}
+
+  //     let { context_id, page } = pages[page_id];
+  //     let { browser_id } = contexts[context_id];
+  //     let locator_id = uuid.v4();
+
+  //     let type = null;
+  //     if (['getByRole'].includes(command)) type = 'Locator';
+
+  //     let value = undefined;
+
+  //     if (page) {
+  //       if (async) {
+  //         // const locator = page.waitForResponse(resp => resp.url().includes('SearchTimeline') && resp.status() === 200, {timeout: 15000})
+  //         const locator = page[command].call(page, ...args);
+  //         locators[locator_id] = { page_id: page_id, locator };
+  //       } else {
+  //         const locator = await page[command].call(page, ...args);
+  //         type =  locator?.constructor?.name
+
+  //         if (type == 'Locator') {
+  //           locators[locator_id] = { page_id: page_id, locator };
+  //         } else {
+  //           locator_id = undefined;
+  //           value = locator;
+  //         }
+  //       }
+  //     }
+
+  //     reply.send({
+  //       browser_id,
+  //       context_id,
+  //       page_id,
+  //       type,
+  //       locator_id,
+  //       value
+  //     });
+  //   } catch (err) {
+  //     reply.status(500).send(err.message);
+  //   }
+  // });
+
   instance.post("/:command", async function (request, reply) {
     try {
       let command = camelCase(request.params?.command || "");
-      let { page_id, async = false, args = [] } = request.body || {};
-      args = camelCaseRecursive(args).map((marg) => {
-        let [vmarg] = Object.values(marg);
-        return vmarg;
-      });
-      
-      try {
-        args = args.map(arg => eval(arg));
-      } catch (err) {}
+      let { id, args = [] } = request.body || {};
+      args = camelCaseRecursive(args);
+      // .map((marg) => {
+      //   let [vmarg] = Object.values(marg);
+      //   return vmarg;
+      // });
 
-      let { context_id, page } = pages[page_id];
-      let { browser_id } = contexts[context_id];
-      let locator_id = uuid.v4();
-      let value = undefined;
-
-      if (page) {
-        if (async) {
-          // const locator = page.waitForResponse(resp => resp.url().includes('SearchTimeline') && resp.status() === 200, {timeout: 15000})
-          const locator = page[command].call(page, ...args);
-          locators[locator_id] = { page_id: page_id, locator };
-        } else {
-          const locator = await page[command].call(page, ...args);
-          const type =  locator?.constructor?.name
-
-          if (type == 'Locator') {
-            locators[locator_id] = { page_id: page_id, locator };
-          } else {
-            locator_id = undefined;
-            value = locator;
-          }
-        }
+      if (command == 'waitForResponse') {
+        args[0] = eval(args[0]);
       }
 
-      reply.send({
-        browser_id,
-        context_id,
-        page_id,
-        locator_id,
-        value
-      });
+      if (command == 'evaluate') {
+        args[0] = eval(args[0]);
+      }
+
+      try {
+        args = args.map((arg) => eval(arg));
+      } catch (err) {}
+
+      /** @type {Page} */
+      let page = objs[id];
+      let ret = null;
+
+      if (page) {
+        ret = page.invoke(command, ...args);
+      }
+
+      reply.type("application/json").send(ret);
     } catch (err) {
-      reply.status(500).send(err.message);
+      reply.type("application/json").send({ type: 'Error', value: err?.message || '' });
     }
   });
 

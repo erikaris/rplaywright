@@ -2,6 +2,7 @@ const args = require("args-parser")(process.argv);
 const fastify = require("fastify")({ logger: true });
 const fastifyListRoutes = require("fastify-list-routes");
 
+const { promisePlugin } = require("./promise");
 const { browserPlugin } = require("./browser");
 const { contextPlugin } = require("./context");
 const { pagePlugin } = require("./page");
@@ -9,6 +10,7 @@ const { locatorPlugin } = require("./locator");
 const { responsePlugin } = require("./response");
 
 fastify.register(fastifyListRoutes, { colors: true });
+fastify.register(promisePlugin, { prefix: "promise" });
 fastify.register(browserPlugin, { prefix: "browser" });
 fastify.register(contextPlugin, { prefix: "context" });
 fastify.register(pagePlugin, { prefix: "page" });

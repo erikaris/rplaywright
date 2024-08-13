@@ -180,4 +180,3 @@ new_webkit <- function(
 
   Browser$new("webkit")
 }
-

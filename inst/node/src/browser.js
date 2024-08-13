@@ -7,9 +7,9 @@ const {
   FastifyReply,
 } = require("fastify");
 const { IncomingMessage, ServerResponse } = require("http");
-const uuid = require("uuid");
-const playwright = require("playwright");
-const { browsers } = require("./vars");
+const { objs, camelCaseRecursive } = require("./vars");
+const Browser = require("./response/browser");
+const { camelCase } = require("lodash");
 
 /**
  *
@@ -25,32 +25,45 @@ exports.browserPlugin = (instance, opts, next) => {
      * @param {FastifyReply<{ReplyType : LaunchBrowserResponse}>} reply
      * */
     async function (request, reply) {
-      if (!['chromium' , 'firefox' , 'webkit'].includes(request.body.type)) {
-        reply.type("application/json").send({ error: true, message: `Browser ${request.body.type} is not supported` });
+      if (!["chromium", "firefox", "webkit"].includes(request.body.type)) {
+        reply
+          .type("application/json")
+          .send({
+            error: true,
+            message: `Browser ${request.body.type} is not supported`,
+          });
       }
 
-      const browser_id = uuid.v4();
-      const browser = await playwright[request.body.type].launch({ headless: false });
-      browsers[browser_id] = { browser };
-
-      reply.type("application/json").send({ browser_id });
+      const b = new Browser();
+      await b.launch(request?.body?.type, { headless: false })
+      objs[b.id] = b;
+      reply.type("application/json").send(b);
     }
   );
 
-  instance.post(
-    "/close",
-    /**
-     * @param {FastifyRequest<{ Body: CloseBrowserRequestBody }>} request
-     * @param {FastifyReply<{ReplyType : CloseBrowserResponse}>} reply
-     * */
-    async function (request, reply) {
-      const { browser } = browsers[request.body.browser_id];
+  instance.post("/:command", async function (request, reply) {
+    try {
+      let command = camelCase(request.params?.command || "");
+      let { id, args = [] } = request.body || {};
+      args = camelCaseRecursive(args);
+
+      try {
+        args = args.map((arg) => eval(arg));
+      } catch (err) {}
+
+      /** @type {Browser} */
+      let browser = objs[id];
+      let ret = null;
+
       if (browser) {
-        await browser.close();
-        reply.send({ browser_id: request.body.browser_id });
+        ret = browser.invoke(command, ...args);
       }
+
+      reply.type("application/json").send(ret);
+    } catch (err) {
+      reply.type("application/json").send({ type: 'Error', value: err?.message || '' });
     }
-  );
+  });
 
   next();
 };

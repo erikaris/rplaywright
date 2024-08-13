@@ -1,34 +1,7 @@
-fn_return_result = function(options = list()) {
-  if (is.null(self$id)) {
-    logger::log_error("This locator is not found")
-    stop()
-  }
-
-  fn_name <- as.character(match.call()[[1]])[3]
-  arg_values = as.list(environment())
-  arg_sorted <- lapply(formalArgs(args(self$fill)), function (arg) {
-    argv = list()
-    argv[arg] = arg_values[which(names(arg_values) == arg)]
-    argv
-  })
-
-  body <- list(locator_id = self$id, args = arg_sorted)
-
-  resp <- httr::POST(
-    paste0(self$remote_url, "/locator/", fn_name),
-    body = body,
-    encode = "json",
-    httr::accept_json()
-  )
-  body <- httr::content(resp)
-
-  body$result
-}
-
-
 Locator <- R6::R6Class(
   "Locator",
   private = list(
+    .prefix = 'locator',
     .page = NULL,
     .meta = NULL
   ),
@@ -37,21 +10,12 @@ Locator <- R6::R6Class(
       if (is.null(private$.page)) return(NULL);
       private$.page$remote_url
     },
-    browser_id = function() {
-      if (is.null(private$.page)) return(NULL);
-      private$.page$browser_id
-    },
-    context_id = function() {
-      if (is.null(private$.page)) return(NULL);
-      private$.page$id
-    },
-    page_id = function() {
-      if (is.null(private$.page)) return(NULL);
-      private$.page$id
+    prefix = function() {
+      private$.prefix
     },
     id = function() {
       if (is.null(private$.meta)) return(NULL);
-      private$.meta$locator_id
+      private$.meta$id
     },
     meta = function(meta) {
       if (!missing(meta)) {
@@ -68,59 +32,63 @@ Locator <- R6::R6Class(
 
       private$.page <- page
     },
-    is_visible = fn_return_result,
-    text_content = fn_return_result,
-    fill = function(text, options = list()) {
-      if (is.null(self$id)) {
-        logger::log_error("This locator is not found")
-        stop()
-      }
-
-      fn_name <- as.character(match.call()[[1]])[3]
-      arg_values = as.list(environment())
-      arg_sorted <- lapply(formalArgs(args(self$fill)), function (arg) {
-        argv = list()
-        argv[arg] = arg_values[which(names(arg_values) == arg)]
-        argv
-      })
-
-      body <- list(locator_id = self$id, args = arg_sorted)
-
-      resp <- httr::POST(
-        paste0(self$remote_url, "/locator/", fn_name),
-        body = body,
-        encode = "json",
-        httr::accept_json()
-      )
-      httr::content(resp)
-
-      return(self)
-    },
-    click = function(options = list()) {
-      if (is.null(self$id)) {
-        logger::log_error("This locator is not found")
-        stop()
-      }
-
-      fn_name <- as.character(match.call()[[1]])[3]
-      arg_values = as.list(environment())
-      arg_sorted <- lapply(formalArgs(args(self$click)), function (arg) {
-        argv = list()
-        argv[arg] = arg_values[which(names(arg_values) == arg)]
-        argv
-      })
-
-      body <- list(locator_id = self$id, args = arg_sorted)
-
-      resp <- httr::POST(
-        paste0(self$remote_url, "/locator/", fn_name),
-        body = body,
-        encode = "json",
-        httr::accept_json()
-      )
-      httr::content(resp)
-
-      return(self)
-    }
+    all = fn_remote_handler,
+    all_inner_texts = fn_remote_handler,
+    all_text_contents = fn_remote_handler,
+    and = unimplemented,
+    blur = fn_remote_handler,
+    bounding_box = fn_remote_handler,
+    check = fn_remote_handler,
+    clear = fn_remote_handler,
+    click = fn_remote_handler,
+    count = fn_remote_handler,
+    content_frame = unimplemented,
+    dblclick = fn_remote_handler,
+    dispatch_event = fn_remote_handler,
+    drag_to = unimplemented,
+    evaluate = unimplemented,
+    evaluate_all = unimplemented,
+    evaluate_handle = unimplemented,
+    filter = unimplemented,
+    fill = fn_remote_handler,
+    first = fn_remote_handler,
+    focus = fn_remote_handler,
+    frame_locator = unimplemented,
+    get_attribute = fn_remote_handler,
+    get_by_alt_text = fn_remote_handler,
+    get_by_label = fn_remote_handler,
+    get_by_placeholder = fn_remote_handler,
+    get_by_role = fn_remote_handler,
+    get_by_test_id = fn_remote_handler,
+    get_by_text = fn_remote_handler,
+    get_by_title = fn_remote_handler,
+    highlight = fn_remote_handler,
+    hover = fn_remote_handler,
+    inner_h_t_m_l = fn_remote_handler,
+    inner_text = fn_remote_handler,
+    input_value = fn_remote_handler,
+    is_checked = fn_remote_handler,
+    is_disabled = fn_remote_handler,
+    is_editable = fn_remote_handler,
+    is_enabled = fn_remote_handler,
+    is_hidden = fn_remote_handler,
+    is_visible = fn_remote_handler,
+    last = fn_remote_handler,
+    locator = fn_remote_handler,
+    nth = fn_remote_handler,
+    or = unimplemented,
+    page = fn_remote_handler,
+    press = fn_remote_handler,
+    press_sequentially = fn_remote_handler,
+    screenshot = fn_remote_handler,
+    scroll_into_view_if_needed = fn_remote_handler,
+    select_option = fn_remote_handler,
+    select_text = fn_remote_handler,
+    set_checked = fn_remote_handler,
+    set_input_files = unimplemented,
+    tap = unimplemented,
+    text_content = fn_remote_handler,
+    uncheck = fn_remote_handler,
+    wait_for = fn_remote_handler
   )
 )

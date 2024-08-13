@@ -1,67 +1,67 @@
-Response <- R6::R6Class(
-  "Response",
-  private = list(
-    .event = NULL,
-    .meta = NULL
-  ),
-  active = list(
-    remote_url = function() {
-      if (is.null(private$.event)) return(NULL);
-      private$.event$remote_url
-    },
-    browser_id = function() {
-      if (is.null(private$.event)) return(NULL);
-      private$.event$browser_id
-    },
-    context_id = function() {
-      if (is.null(private$.event)) return(NULL);
-      private$.event$id
-    },
-    page_id = function() {
-      if (is.null(private$.event)) return(NULL);
-      private$.event$page_id
-    },
-    event_id = function() {
-      if (is.null(private$.event)) return(NULL);
-      private$.event$id
-    },
-    id = function() {
-      if (is.null(private$.meta)) return(NULL);
-      private$.meta$response_id
-    },
-    meta = function(meta) {
-      if (!missing(meta)) {
-        private$.meta = meta
-      }
-    }
-  ),
-  public = list(
-    initialize = function(event) {
-      if (missing(event) || is.null(event)) {
-        logger::log_error("Event cannot be null")
-        stop()
-      }
-
-      private$.event <- event
-    },
-    get = function(field, args = list()) {
-      if (is.null(self$id)) {
-        logger::log_error("This response is not found")
-        stop()
-      }
-
-      body <- list(response_id = self$id, args = args)
-      resp <- httr::POST(
-        paste0(self$remote_url, "/response/", field),
-        body = body,
-        encode = "json",
-        httr::accept_json()
-      )
-      resp <- httr::content(resp)
-      resp$value
-    }
-  )
-)
+# Response <- R6::R6Class(
+#   "Response",
+#   private = list(
+#     .event = NULL,
+#     .meta = NULL
+#   ),
+#   active = list(
+#     remote_url = function() {
+#       if (is.null(private$.event)) return(NULL);
+#       private$.event$remote_url
+#     },
+#     browser_id = function() {
+#       if (is.null(private$.event)) return(NULL);
+#       private$.event$browser_id
+#     },
+#     context_id = function() {
+#       if (is.null(private$.event)) return(NULL);
+#       private$.event$id
+#     },
+#     page_id = function() {
+#       if (is.null(private$.event)) return(NULL);
+#       private$.event$page_id
+#     },
+#     event_id = function() {
+#       if (is.null(private$.event)) return(NULL);
+#       private$.event$id
+#     },
+#     id = function() {
+#       if (is.null(private$.meta)) return(NULL);
+#       private$.meta$response_id
+#     },
+#     meta = function(meta) {
+#       if (!missing(meta)) {
+#         private$.meta = meta
+#       }
+#     }
+#   ),
+#   public = list(
+#     initialize = function(event) {
+#       if (missing(event) || is.null(event)) {
+#         logger::log_error("Event cannot be null")
+#         stop()
+#       }
+#
+#       private$.event <- event
+#     },
+#     get = function(field, args = list()) {
+#       if (is.null(self$id)) {
+#         logger::log_error("This response is not found")
+#         stop()
+#       }
+#
+#       body <- list(response_id = self$id, args = args)
+#       resp <- httr::POST(
+#         paste0(self$remote_url, "/response/", field),
+#         body = body,
+#         encode = "json",
+#         httr::accept_json()
+#       )
+#       resp <- httr::content(resp)
+#       resp$value
+#     }
+#   )
+# )
 
 
 WaitForResponse <- R6::R6Class(

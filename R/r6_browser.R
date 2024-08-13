@@ -3,15 +3,24 @@ Browser <- R6::R6Class(
   private = list(
     .type = NULL,
     .remote_url = NULL,
+    .prefix = 'browser',
     .meta = NULL
   ),
   active = list(
     remote_url = function() {
       private$.remote_url
     },
+    prefix = function() {
+      private$.prefix
+    },
     id = function() {
       if (is.null(private$.meta)) return(NULL);
-      private$.meta$browser_id
+      private$.meta$id
+    },
+    meta = function(meta) {
+      if (!missing(meta)) {
+        private$.meta = meta
+      }
     }
   ),
   public = list(
@@ -35,23 +44,7 @@ Browser <- R6::R6Class(
       )
       private$.meta <- httr::content(resp)
     },
-    close = function() {
-      if (is.null(self$id)) {
-        logger::log_error("This browser not launched")
-        stop()
-      }
-
-      resp <- httr::POST(
-        paste0(self$remote_url, "/browser/close"),
-        body = list(browser_id = self$id),
-        encode = "json",
-        httr::accept_json()
-      )
-      httr::content(resp)
-      private$.meta <- NULL
-    },
-    new_context = function(options = list()) {
-      Context$new(browser = self, options = options)
-    }
+    close = fn_remote_handler,
+    new_context = fn_remote_handler
   )
 )
