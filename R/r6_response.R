@@ -13,18 +13,6 @@ Response <- R6::R6Class(
     prefix = function() {
       private$.prefix
     },
-    browser_id = function() {
-      if (is.null(private$.parent)) return(NULL);
-      private$.parent$browser_id
-    },
-    context_id = function() {
-      if (is.null(private$.parent)) return(NULL);
-      private$.parent$id
-    },
-    parent_id = function() {
-      if (is.null(private$.parent)) return(NULL);
-      private$.parent$id
-    },
     id = function() {
       if (is.null(private$.meta)) return(NULL);
       private$.meta$id

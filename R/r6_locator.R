@@ -2,13 +2,13 @@ Locator <- R6::R6Class(
   "Locator",
   private = list(
     .prefix = 'locator',
-    .page = NULL,
+    .parent = NULL,
     .meta = NULL
   ),
   active = list(
     remote_url = function() {
-      if (is.null(private$.page)) return(NULL);
-      private$.page$remote_url
+      if (is.null(private$.parent)) return(NULL);
+      private$.parent$remote_url
     },
     prefix = function() {
       private$.prefix
@@ -24,13 +24,13 @@ Locator <- R6::R6Class(
     }
   ),
   public = list(
-    initialize = function(page) {
-      if (missing(page) || is.null(page)) {
-        logger::log_error("Page cannot be null")
+    initialize = function(parent) {
+      if (missing(parent) || is.null(parent)) {
+        logger::log_error("parent cannot be null")
         stop()
       }
 
-      private$.page <- page
+      private$.parent <- parent
     },
     all = fn_remote_handler,
     all_inner_texts = fn_remote_handler,
@@ -77,7 +77,8 @@ Locator <- R6::R6Class(
     locator = fn_remote_handler,
     nth = fn_remote_handler,
     or = unimplemented,
-    page = fn_remote_handler,
+    page = unimplemented,
+    parent = fn_remote_handler,
     press = fn_remote_handler,
     press_sequentially = fn_remote_handler,
     screenshot = fn_remote_handler,

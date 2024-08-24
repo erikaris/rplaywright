@@ -5,6 +5,10 @@ const playwright = require("playwright");
 function cast(ret, { Browser, Context, Page, Locator, Response } = {}, level = 0) {
   let type = ret?.constructor?.name;
 
+  if (type == "ElementHandle") {
+    return { type: 'Value', value: null };
+  }
+
   if (type == "Buffer") {
     return { type: 'Value', value: ret.toString('base64') };
   }

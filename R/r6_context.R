@@ -2,20 +2,16 @@ Context <- R6::R6Class(
   "Context",
   private = list(
     .prefix = 'context',
-    .browser = NULL,
+    .parent = NULL,
     .meta = NULL
   ),
   active = list(
     remote_url = function() {
-      if (is.null(private$.browser)) return(NULL);
-      private$.browser$remote_url
+      if (is.null(private$.parent)) return(NULL);
+      private$.parent$remote_url
     },
     prefix = function() {
       private$.prefix
-    },
-    browser_id = function() {
-      if (is.null(private$.browser)) return(NULL);
-      private$.browser$id
     },
     id = function() {
       if (is.null(private$.meta)) return(NULL);
@@ -28,41 +24,14 @@ Context <- R6::R6Class(
     }
   ),
   public = list(
-    initialize = function(browser, options = list()) {
-      if (missing(browser) || is.null(browser)) {
-        logger::log_error("Browser cannot be null")
+    initialize = function(parent, options = list()) {
+      if (missing(parent) || is.null(parent)) {
+        logger::log_error("parent cannot be null")
         stop()
       }
 
-      private$.browser <- browser
-
-      # self$launch(options)
+      private$.parent <- parent
     },
-    # launch = function(options = list()) {
-    #   options$browser_id = self$browser_id
-    #   resp <- httr::POST(
-    #     paste0(self$remote_url, "/context/new"),
-    #     body = options,
-    #     encode = "json",
-    #     httr::accept_json()
-    #   )
-    #   private$.meta <- httr::content(resp)
-    # },
-    # close = function() {
-    #   if (is.null(self$id)) {
-    #     logger::log_error("This context not launched")
-    #     stop()
-    #   }
-    #
-    #   resp <- httr::POST(
-    #     paste0(self$remote_url, "/context/close"),
-    #     body = list(context_id = self$id),
-    #     encode = "json",
-    #     httr::accept_json()
-    #   )
-    #   httr::content(resp)
-    #   private$.meta <- NULL
-    # },
     new_page = fn_remote_handler
   ),
 )

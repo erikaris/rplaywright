@@ -60,6 +60,85 @@ multiple Page instances.
 page <- context$new_page()$then()
 ```
 
+##### [add_init_script](https://playwright.dev/docs/api/class-page#page-add-init-script)
+
+Adds a script which would be evaluated in one of the following
+scenarios:
+
+- Whenever the page is navigated.
+- Whenever the child frame is attached or navigated. In this case, the
+  script is evaluated in the context of the newly attached frame.
+
+The script is evaluated after the document was created but before any of
+its scripts were run. This is useful to amend the JavaScript
+environment, e.g. to seed Math.random.
+
+``` js
+// examples/preload.js
+Math.random = () => 42;
+```
+
+<script>
+// examples/preload.js
+Math.random = () => 42;
+</script>
+
+``` r
+page$add_init_script(list(path=normalizePath("./examples/preload.js")))
+page$goto("https://playwright.dev/")$then()
+result_from_preload <- page$evaluate("() => Math.random()")$then()
+```
+
+##### [add_locator_handler](https://playwright.dev/docs/api/class-page#page-add-locator-handler)
+
+When testing a web page, sometimes unexpected overlays like a “Sign up”
+dialog appear and block actions you want to automate, e.g. clicking a
+button. These overlays don’t always show up in the same way or at the
+same time, making them tricky to handle in automated tests.
+
+This method lets you set up a special function, called a handler, that
+activates when it detects that overlay is visible. The handler’s job is
+to remove the overlay, allowing your test to continue as if the overlay
+wasn’t there.
+
+Things to keep in mind:
+
+- When an overlay is shown predictably, we recommend explicitly waiting
+  for it in your test and dismissing it as a part of your normal test
+  flow, instead of using page.addLocatorHandler().
+- Playwright checks for the overlay every time before executing or
+  retrying an action that requires an actionability check, or before
+  performing an auto-waiting assertion check. When overlay is visible,
+  Playwright calls the handler first, and then proceeds with the
+  action/assertion. Note that the handler is only called when you
+  perform an action/assertion - if the overlay becomes visible but you
+  don’t perform any actions, the handler will not be triggered.
+- After executing the handler, Playwright will ensure that overlay that
+  triggered the handler is not visible anymore. You can opt-out of this
+  behavior with noWaitAfter.
+- The execution time of the handler counts towards the timeout of the
+  action/assertion that executed the handler. If your handler takes too
+  long, it might cause timeouts.
+- You can register multiple handlers. However, only a single handler
+  will be running at a time. Make sure the actions within a handler
+  don’t depend on another handler.
+
+``` r
+page$add_locator_handler()
+page$goto("https://playwright.dev/")$then()
+```
+
+##### [add_script_tag](https://playwright.dev/docs/api/class-page#page-add-script-tag)
+
+Returns the main resource response. In case of multiple redirects, the
+navigation will resolve with the first non-redirect response.
+
+``` r
+page$goto("https://playwright.dev/")$then()
+page$add_script_tag(list(path=normalizePath("./examples/preload.js")))$then()
+page$add_script_tag(list(content="const greet = () => console.log('hello')"))$then()
+```
+
 ##### [goto](https://playwright.dev/docs/api/class-page#page-goto)
 
 Returns the main resource response. In case of multiple redirects, the
@@ -295,9 +374,9 @@ aria-labelledby element, or by the aria-label attribute.
 
 ``` r
 page_2 <- context$new_page()$then()
-page_2$set_content('<input aria-label="Username">
+page_2$set_content('<input aria-label="Username"></input>
   <label for="password-input">Password:</label>
-  <input id="password-input">')
+  <input id="password-input"></input>')
 page_2$get_by_label("Username")$fill("John", list(timeout=100))$then()
 ```
 
@@ -307,7 +386,7 @@ Allows locating input elements by the placeholder text.
 
 ``` r
 page_2 <- context$new_page()$then()
-page_2$set_content('<input type="email" placeholder="name@example.com" />')
+page_2$set_content('<input type="email" placeholder="name@example.com"></input>')
 page_2$get_by_placeholder("name@example.com")$fill("playwright@microsoft.com", list(timeout=100))$then()
 ```
 
@@ -320,7 +399,7 @@ accessible name.
 page_2 <- context$new_page()$then()
 page_2$set_content('<h3>Sign up</h3>
   <label>
-    <input type="checkbox" /> Subscribe
+    <input type="checkbox"></input> Subscribe
   </label>
   <br/>
   <button>Submit</button>')
@@ -398,14 +477,12 @@ inner_text = page$get_by_role("link", list(name="Get started"))$inner_text(list(
 
 ##### [input_value](https://playwright.dev/docs/api/class-locator#locator-input-value)
 
-Returns the value for the matching <input> or
-<textarea>
-
-or <select> element.
+Returns the value for the matching `<input>` or `<textarea>` or
+`<select>` element.
 
 ``` r
 page_2 <- context$new_page()$then()
-page_2$set_content('<input type="text" value="Test" />')
+page_2$set_content('<input type="text" value="Test"></input>')
 input_value <- page_2$get_by_role("text")$first()$input_value(list(timeout=100))$then()
 ```
 
@@ -416,7 +493,7 @@ checkbox or radio input.
 
 ``` r
 page_2 <- context$new_page()$then()
-page_2$set_content('<input type="checkbox" />')
+page_2$set_content('<input type="checkbox"></input>')
 is_checked <- page_2$get_by_role("checkbox")$is_checked(list(timeout=100))$then()
 ```
 
@@ -436,7 +513,7 @@ Returns whether the element is editable.
 
 ``` r
 page_2 <- context$new_page()$then()
-page_2$set_content('<input type="checkbox" />')
+page_2$set_content('<input type="checkbox"></input>')
 is_editable <- page_2$get_by_role("checkbox")$is_editable(list(timeout=100))$then()
 ```
 
@@ -521,7 +598,7 @@ Focuses the matching element and presses a combination of the keys.
 
 ``` r
 page_2 <- context$new_page()$then()
-page_2$set_content('<input type="text" value="Test" />')
+page_2$set_content('<input type="text" value="Test"></input>')
 page_2$locator("input")$press("Backspace", list(timeout=100))$then()
 ```
 
@@ -534,7 +611,7 @@ To press a special key, like Control or ArrowDown, use locator.press().
 
 ``` r
 page_2 <- context$new_page()$then()
-page_2$set_content('<input type="text" />')
+page_2$set_content('<input type="text"></input>')
 page_2$locator("input")$press_sequentially("World", list(delay=100))$then()
 ```
 
@@ -594,7 +671,7 @@ Set the state of a checkbox or a radio element.
 page_2 <- context$new_page()$then()
 page_2$set_content('<h3>Sign up</h3>
   <label>
-    <input type="checkbox" /> Subscribe
+    <input type="checkbox"></input> Subscribe
   </label>
   <br/>
   <button>Submit</button>')
@@ -627,7 +704,7 @@ Ensure that checkbox or radio element is unchecked.
 page_2 <- context$new_page()$then()
 page_2$set_content('<h3>Sign up</h3>
   <label>
-    <input type="checkbox" checked /> Subscribe
+    <input type="checkbox" checked="checked"></input> Subscribe
   </label>
   <br/>
   <button>Submit</button>')
@@ -646,6 +723,176 @@ condition is met.
 page_2 <- context$new_page()$then()
 page_2$set_content('<label>This is a label</label>')
 page_2$locator("label")$wait_for(list(state="visible", timeout=100))$then()
+```
+
+#### [Response](https://playwright.dev/docs/api/class-response)
+
+Response class represents responses which are received by page.
+
+``` r
+page <- context$new_page()$then()
+resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
+```
+
+##### [all_headers](https://playwright.dev/docs/api/class-response#response-all-headers)
+
+An object with all the response HTTP headers associated with this
+response.
+
+``` r
+all_headers <- resp$all_headers()$then()
+```
+
+##### [body](https://playwright.dev/docs/api/class-response#response-body)
+
+Returns the base64 encoded response body.
+
+``` r
+body <- resp$body()$then()
+```
+
+##### [finished](https://playwright.dev/docs/api/class-response#response-finished)
+
+Waits for this response to finish, returns always null.
+
+``` r
+finished <- resp$finished()$then()
+```
+
+##### [frame](https://playwright.dev/docs/api/class-response#response-frame)
+
+Returns the Frame that initiated this response.
+
+``` r
+frame <- resp$frame()
+```
+
+##### [from_service_worker](https://playwright.dev/docs/api/class-response#response-from-service-worker)
+
+Indicates whether this Response was fulfilled by a Service Worker’s
+Fetch Handler (i.e. via FetchEvent.respondWith).
+
+``` r
+from_service_worker <- resp$from_service_worker()
+```
+
+##### [header_value](https://playwright.dev/docs/api/class-response#response-header-value)
+
+Returns the value of the header matching the name. The name is
+case-insensitive. If multiple headers have the same name (except
+set-cookie), they are returned as a list separated by , . For
+set-cookie, the separator is used. If no headers are found, null is
+returned.
+
+``` r
+header_value <- resp$header_value()
+```
+
+##### [header_values](https://playwright.dev/docs/api/class-response#response-header-values)
+
+Returns all values of the headers matching the name, for example
+set-cookie. The name is case-insensitive.
+
+``` r
+header_values <- resp$header_values()
+```
+
+##### [headers](https://playwright.dev/docs/api/class-response#response-headers)
+
+An object with the response HTTP headers. The header names are
+lower-cased. Note that this method does not return security-related
+headers, including cookie-related ones. You can use
+response.allHeaders() for complete list of headers that include cookie
+information.
+
+``` r
+headers <- resp$headers()
+```
+
+##### [headers_array](https://playwright.dev/docs/api/class-response#response-headers-array)
+
+An array with all the request HTTP headers associated with this
+response. Unlike response.allHeaders(), header names are NOT
+lower-cased. Headers with multiple entries, such as Set-Cookie, appear
+in the array multiple times.
+
+``` r
+headers_array <- resp$headers_array()$then()
+```
+
+##### [json](https://playwright.dev/docs/api/class-response#response-json)
+
+Returns the JSON representation of response body. This method will throw
+if the response body is not parsable via JSON.parse.
+
+``` r
+json <- resp$json()$then()
+```
+
+##### [ok](https://playwright.dev/docs/api/class-response#response-ok)
+
+Contains a boolean stating whether the response was successful (status
+in the range 200-299) or not.
+
+``` r
+ok <- resp$ok()
+```
+
+##### [request](https://playwright.dev/docs/api/class-response#response-request)
+
+Returns the matching Request object.
+
+``` r
+request <- resp$request()
+```
+
+##### [security_details](https://playwright.dev/docs/api/class-response#response-security-details)
+
+Returns SSL and other security information.
+
+``` r
+security_details <- resp$security_details()$then()
+```
+
+##### [server_addr](https://playwright.dev/docs/api/class-response#response-server-addr)
+
+Returns the IP address and port of the server.
+
+``` r
+server_addr <- resp$server_addr()$then()
+```
+
+##### [status](https://playwright.dev/docs/api/class-response#response-status)
+
+Contains the status code of the response (e.g., 200 for a success).
+
+``` r
+status <- resp$status()
+```
+
+##### [status_text](https://playwright.dev/docs/api/class-response#response-status-text)
+
+Contains the status text of the response (e.g. usually an “OK” for a
+success).
+
+``` r
+status_text <- resp$status_text()
+```
+
+##### [text](https://playwright.dev/docs/api/class-response#response-text)
+
+Returns the text representation of response body.
+
+``` r
+text <- resp$text()$then()
+```
+
+##### [url](https://playwright.dev/docs/api/class-response#response-url)
+
+Contains the URL of the response.
+
+``` r
+url <- resp$url()
 ```
 
 #### Full Usage Example
@@ -740,21 +987,21 @@ page_2$get_by_alt_text("link")$click(list(timeout=100))$then()
 
 # @link{https://playwright.dev/docs/api/class-locator#locator-get-by-label}
 page_2 <- context$new_page()$then()
-page_2$set_content('<input aria-label="Username">
+page_2$set_content('<input aria-label="Username"></input>
   <label for="password-input">Password:</label>
-  <input id="password-input">')
+  <input id="password-input"></input>')
 page_2$get_by_label("Username")$fill("John", list(timeout=100))$then()
 
 # @link{https://playwright.dev/docs/api/class-locator#locator-get-by-placeholder}
 page_2 <- context$new_page()$then()
-page_2$set_content('<input type="email" placeholder="name@example.com" />')
+page_2$set_content('<input type="email" placeholder="name@example.com"></input>')
 page_2$get_by_placeholder("name@example.com")$fill("playwright@microsoft.com", list(timeout=100))$then()
 
 # @link{https://playwright.dev/docs/api/class-locator#locator-get-by-role}
 page_2 <- context$new_page()$then()
 page_2$set_content('<h3>Sign up</h3>
   <label>
-    <input type="checkbox" /> Subscribe
+    <input type="checkbox"></input> Subscribe
   </label>
   <br/>
   <button>Submit</button>')
@@ -795,12 +1042,12 @@ inner_text = page$get_by_role("link", list(name="Get started"))$inner_text(list(
 
 # @link{https://playwright.dev/docs/api/class-locator#locator-input-value}
 page_2 <- context$new_page()$then()
-page_2$set_content('<input type="text" value="Test" />')
+page_2$set_content('<input type="text" value="Test"></input>')
 input_value <- page_2$get_by_role("text")$first()$input_value(list(timeout=100))$then()
 
 # @link{https://playwright.dev/docs/api/class-locator#locator-is-checked}
 page_2 <- context$new_page()$then()
-page_2$set_content('<input type="checkbox" />')
+page_2$set_content('<input type="checkbox"></input>')
 is_checked <- page_2$get_by_role("checkbox")$is_checked(list(timeout=100))$then()
 
 # @link{https://playwright.dev/docs/api/class-locator#locator-is-disabled}
@@ -810,7 +1057,7 @@ is_disabled <- page_2$get_by_test_id("directions")$is_disabled(list(timeout=100)
 
 # @link{https://playwright.dev/docs/api/class-locator#locator-is-editable}
 page_2 <- context$new_page()$then()
-page_2$set_content('<input type="checkbox" />')
+page_2$set_content('<input type="checkbox"></input>')
 is_editable <- page_2$get_by_role("checkbox")$is_editable(list(timeout=100))$then()
 
 # @link{https://playwright.dev/docs/api/class-locator#locator-is-enabled}
@@ -847,12 +1094,12 @@ locator_page <- page$get_by_role("link")$page()
 
 # @link{https://playwright.dev/docs/api/class-locator#locator-press}
 page_2 <- context$new_page()$then()
-page_2$set_content('<input type="text" value="Test" />')
+page_2$set_content('<input type="text" value="Test"></input>')
 page_2$locator("input")$press("Backspace", list(timeout=100))$then()
 
 # @link{https://playwright.dev/docs/api/class-locator#locator-press-sequentially}
 page_2 <- context$new_page()$then()
-page_2$set_content('<input type="text" />')
+page_2$set_content('<input type="text"></input>')
 page_2$locator("input")$press_sequentially("World", list(delay=100))$then()
 
 # @link{https://playwright.dev/docs/api/class-locator#locator-screenshot}
@@ -864,9 +1111,9 @@ page$get_by_role("link")$last()$scroll_into_view_if_needed(list(delay=100))$then
 # @link{https://playwright.dev/docs/api/class-locator#locator-select-option}
 page_2 <- context$new_page()$then()
 page_2$set_content('<select multiple>
-    <option value="red">Red</div>
-    <option value="green">Green</div>
-    <option value="blue">Blue</div>
+    <option value="red">Red</option>
+    <option value="green">Green</option>
+    <option value="blue">Blue</option>
   </select>')
 select_option <- page_2$locator("select")$select_option("blue", list(delay=100))$then()
 
@@ -879,7 +1126,7 @@ page_2$locator("label")$select_text("label", list(delay=100))$then()
 page_2 <- context$new_page()$then()
 page_2$set_content('<h3>Sign up</h3>
   <label>
-    <input type="checkbox" /> Subscribe
+    <input type="checkbox"></input> Subscribe
   </label>
   <br/>
   <button>Submit</button>')
@@ -897,7 +1144,7 @@ text_content = page_2$locator("label")$text_content(list(delay=100))$then()
 page_2 <- context$new_page()$then()
 page_2$set_content('<h3>Sign up</h3>
   <label>
-    <input type="checkbox" checked /> Subscribe
+    <input type="checkbox" checked="checked"></input> Subscribe
   </label>
   <br/>
   <button>Submit</button>')

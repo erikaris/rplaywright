@@ -1,60 +1,17 @@
-fn_page_return_locator = function(...) {
-  if (is.null(self$id)) {
-    logger::log_error("This page not launched")
-    stop()
-  }
-
-  fn_name <- as.character(match.call()[[1]])[3]
-  fn <- get(fn_name, self)
-  arg_values = as.list(environment())
-  arg_sorted <- lapply(formalArgs(args(fn)), function (arg) {
-    argv = list()
-    argv[arg] = arg_values[which(names(arg_values) == arg)]
-    argv
-  })
-
-  body <- list(page_id = self$id, args = arg_sorted)
-
-  resp <- httr::POST(
-    paste0(self$remote_url, "/page/", fn_name),
-    body = body,
-    encode = "json",
-    httr::accept_json()
-  )
-  meta <- httr::content(resp)
-  # print(meta)
-
-  if (!is.null(meta$type) && meta$type == "Locator") {
-    locator <- Locator$new(self)
-    locator$meta = meta
-    return(locator)
-  }
-
-  return (NULL)
-}
-
 Page <- R6::R6Class(
   "Page",
   private = list(
     .prefix = 'page',
-    .context = NULL,
+    .parent = NULL,
     .meta = NULL
   ),
   active = list(
     remote_url = function() {
-      if (is.null(private$.context)) return(NULL);
-      private$.context$remote_url
+      if (is.null(private$.parent)) return(NULL);
+      private$.parent$remote_url
     },
     prefix = function() {
       private$.prefix
-    },
-    browser_id = function() {
-      if (is.null(private$.context)) return(NULL);
-      private$.context$browser_id
-    },
-    context_id = function() {
-      if (is.null(private$.context)) return(NULL);
-      private$.context$id
     },
     id = function() {
       if (is.null(private$.meta)) return(NULL);
@@ -67,22 +24,22 @@ Page <- R6::R6Class(
     }
   ),
   public = list(
-    initialize = function(context, async = F) {
-      if (missing(context) || is.null(context)) {
-        logger::log_error("Context cannot be null")
+    initialize = function(parent, async = F) {
+      if (missing(parent) || is.null(parent)) {
+        logger::log_error("parent cannot be null")
         stop()
       }
 
-      private$.context <- context
+      private$.parent <- parent
     },
     add_init_script = fn_remote_handler,
-    add_locator_handler = fn_remote_handler,
+    add_locator_handler = unimplemented,
     add_script_tag = fn_remote_handler,
     add_style_tag = fn_remote_handler,
     bring_to_front = fn_remote_handler,
     close = fn_remote_handler,
     content = fn_remote_handler,
-    context = fn_remote_handler,
+    parent = fn_remote_handler,
     drag_and_drop = fn_remote_handler,
     emulate_media = fn_remote_handler,
     evaluate = fn_remote_handler,
