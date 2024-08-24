@@ -86,11 +86,59 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="section level5">
+<h5 id="add_init_script">
+<a href="https://playwright.dev/docs/api/class-page#page-add-init-script" class="external-link">add_init_script</a><a class="anchor" aria-label="anchor" href="#add_init_script"></a>
+</h5>
+<p>Adds a script which would be evaluated in one of the following scenarios:</p>
+<ul>
+<li>Whenever the page is navigated.</li>
+<li>Whenever the child frame is attached or navigated. In this case, the script is evaluated in the context of the newly attached frame.</li>
+</ul>
+<p>The script is evaluated after the document was created but before any of its scripts were run. This is useful to amend the JavaScript environment, e.g. to seed Math.random.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co">// examples/preload.js</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="bu">Math</span><span class="op">.</span><span class="fu">random</span> <span class="op">=</span> () <span class="kw">=&gt;</span> <span class="dv">42</span><span class="op">;</span></span></code></pre></div>
+<script>
+// examples/preload.js
+Math.random = () => 42;
+</script><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">add_init_script</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>path<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/normalizePath.html" class="external-link">normalizePath</a></span><span class="op">(</span><span class="st">"./examples/preload.js"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://playwright.dev/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">result_from_preload</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">evaluate</span><span class="op">(</span><span class="st">"() =&gt; Math.random()"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="add_locator_handler">
+<a href="https://playwright.dev/docs/api/class-page#page-add-locator-handler" class="external-link">add_locator_handler</a><a class="anchor" aria-label="anchor" href="#add_locator_handler"></a>
+</h5>
+<p>When testing a web page, sometimes unexpected overlays like a “Sign up” dialog appear and block actions you want to automate, e.g. clicking a button. These overlays don’t always show up in the same way or at the same time, making them tricky to handle in automated tests.</p>
+<p>This method lets you set up a special function, called a handler, that activates when it detects that overlay is visible. The handler’s job is to remove the overlay, allowing your test to continue as if the overlay wasn’t there.</p>
+<p>Things to keep in mind:</p>
+<ul>
+<li>When an overlay is shown predictably, we recommend explicitly waiting for it in your test and dismissing it as a part of your normal test flow, instead of using page.addLocatorHandler().</li>
+<li>Playwright checks for the overlay every time before executing or retrying an action that requires an actionability check, or before performing an auto-waiting assertion check. When overlay is visible, Playwright calls the handler first, and then proceeds with the action/assertion. Note that the handler is only called when you perform an action/assertion - if the overlay becomes visible but you don’t perform any actions, the handler will not be triggered.</li>
+<li>After executing the handler, Playwright will ensure that overlay that triggered the handler is not visible anymore. You can opt-out of this behavior with noWaitAfter.</li>
+<li>The execution time of the handler counts towards the timeout of the action/assertion that executed the handler. If your handler takes too long, it might cause timeouts.</li>
+<li>You can register multiple handlers. However, only a single handler will be running at a time. Make sure the actions within a handler don’t depend on another handler.</li>
+</ul>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">add_locator_handler</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://playwright.dev/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="add_script_tag">
+<a href="https://playwright.dev/docs/api/class-page#page-add-script-tag" class="external-link">add_script_tag</a><a class="anchor" aria-label="anchor" href="#add_script_tag"></a>
+</h5>
+<p>Returns the main resource response. In case of multiple redirects, the navigation will resolve with the first non-redirect response.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://playwright.dev/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">page</span><span class="op">$</span><span class="fu">add_script_tag</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>path<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/normalizePath.html" class="external-link">normalizePath</a></span><span class="op">(</span><span class="st">"./examples/preload.js"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">page</span><span class="op">$</span><span class="fu">add_script_tag</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>content<span class="op">=</span><span class="st">"const greet = () =&gt; console.log('hello')"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
 <h5 id="goto">
 <a href="https://playwright.dev/docs/api/class-page#page-goto" class="external-link">goto</a><a class="anchor" aria-label="anchor" href="#goto"></a>
 </h5>
 <p>Returns the main resource response. In case of multiple redirects, the navigation will resolve with the first non-redirect response.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://playwright.dev/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">resp</span><span class="op">$</span><span class="fu">status</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -105,7 +153,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-all" class="external-link">all</a><a class="anchor" aria-label="anchor" href="#all"></a>
 </h5>
 <p>When the locator points to a list of elements, this returns an array of locators, pointing to their respective elements.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">all_links</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">all</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -113,7 +161,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-all-inner-texts" class="external-link">all_inner_texts</a><a class="anchor" aria-label="anchor" href="#all_inner_texts"></a>
 </h5>
 <p>Returns an array of node.innerText values for all matching nodes.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">all_inner_texts</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">all_inner_texts</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -121,7 +169,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-all-text-contents" class="external-link">all_text_contents</a><a class="anchor" aria-label="anchor" href="#all_text_contents"></a>
 </h5>
 <p>Returns an array of node.textContent values for all matching nodes.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">all_text_contents</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">all_text_contents</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -129,7 +177,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-and" class="external-link">and</a><a class="anchor" aria-label="anchor" href="#and"></a>
 </h5>
 <p>Creates a locator that matches both this locator and the argument locator.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">and_unimplemented</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">and</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -137,7 +185,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-blur" class="external-link">blur</a><a class="anchor" aria-label="anchor" href="#blur"></a>
 </h5>
 <p>Calls <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/blur" class="external-link">blur</a> on the element.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name<span class="op">=</span><span class="st">"Get started"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">blur</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -145,7 +193,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-bounding-box" class="external-link">bounding_box</a><a class="anchor" aria-label="anchor" href="#bounding_box"></a>
 </h5>
 <p>This method returns the bounding box of the element matching the locator, or null if the element is not visible. The bounding box is calculated relative to the main frame viewport - which is usually the same as the browser window.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bounding_box</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name<span class="op">=</span><span class="st">"Get started"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">bounding_box</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -153,7 +201,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-check" class="external-link">check</a><a class="anchor" aria-label="anchor" href="#check"></a>
 </h5>
 <p>Ensure that checkbox or radio element is checked.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"checkbox"</span><span class="op">)</span><span class="op">$</span><span class="fu">check</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -161,7 +209,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-clear" class="external-link">clear</a><a class="anchor" aria-label="anchor" href="#clear"></a>
 </h5>
 <p>Clear the input field.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"textbox"</span><span class="op">)</span><span class="op">$</span><span class="fu">clear</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -169,7 +217,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-click" class="external-link">click</a><a class="anchor" aria-label="anchor" href="#click"></a>
 </h5>
 <p>Click an element.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name<span class="op">=</span><span class="st">"Get started"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -179,7 +227,7 @@
 <p>Returns a FrameLocator object pointing to the same iframe as this locator.</p>
 <p>Useful when you have a Locator object obtained somewhere, and later on would like to interact with the content inside the frame.</p>
 <p>For a reverse operation, use frameLocator.owner().</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">content_frame_unimplemented</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">content_frame</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -187,7 +235,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-count" class="external-link">count</a><a class="anchor" aria-label="anchor" href="#count"></a>
 </h5>
 <p>Returns the number of elements matching the locator.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">count</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">count</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -195,7 +243,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-dblclick" class="external-link">dblclick</a><a class="anchor" aria-label="anchor" href="#dblclick"></a>
 </h5>
 <p>Double-click an element.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name<span class="op">=</span><span class="st">"Get started"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">dblclick</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -203,7 +251,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-dispatch-event" class="external-link">dispatch_event</a><a class="anchor" aria-label="anchor" href="#dispatch_event"></a>
 </h5>
 <p>Programmatically dispatch an event on the matching element.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name<span class="op">=</span><span class="st">"Get started"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">dispatch_event</span><span class="op">(</span><span class="st">'click'</span>, <span class="cn">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -211,7 +259,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-drag-to" class="external-link">drag_to</a><a class="anchor" aria-label="anchor" href="#drag_to"></a>
 </h5>
 <p>Drag the source element towards the target element and drop it.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">drag_to_unimplemented</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">drag_to</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -219,7 +267,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-evaluate" class="external-link">evaluate</a><a class="anchor" aria-label="anchor" href="#evaluate"></a>
 </h5>
 <p>Execute JavaScript code in the page, taking the matching element as an argument.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">evaluate_unimplemented</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">evaluate</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -227,7 +275,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-evaluate-all" class="external-link">evaluate_all</a><a class="anchor" aria-label="anchor" href="#evaluate_all"></a>
 </h5>
 <p>Execute JavaScript code in the page, taking all matching elements as an argument.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">evaluate_all_unimplemented</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">evaluate_all</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -235,7 +283,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-evaluate-handle" class="external-link">evaluate_handle</a><a class="anchor" aria-label="anchor" href="#evaluate_handle"></a>
 </h5>
 <p>Execute JavaScript code in the page, taking the matching element as an argument, and return a JSHandle with the result.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">evaluate_handle_unimplemented</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">evaluate_handle</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -243,7 +291,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-fill" class="external-link">fill</a><a class="anchor" aria-label="anchor" href="#fill"></a>
 </h5>
 <p>Set a value to the input field.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"textbox"</span><span class="op">)</span><span class="op">$</span><span class="fu">fill</span><span class="op">(</span><span class="st">"example value"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -251,7 +299,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-filter" class="external-link">filter</a><a class="anchor" aria-label="anchor" href="#filter"></a>
 </h5>
 <p>This method narrows existing locator according to the options, for example filters by text. It can be chained to filter multiple times.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">filter_unimplemented</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">filter</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -259,7 +307,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-first" class="external-link">first</a><a class="anchor" aria-label="anchor" href="#first"></a>
 </h5>
 <p>Returns locator to the first matching element.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">first</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -267,7 +315,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-focus" class="external-link">focus</a><a class="anchor" aria-label="anchor" href="#focus"></a>
 </h5>
 <p>Calls focus on the matching element.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">focus</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -275,7 +323,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-frame-locator" class="external-link">frame_locator</a><a class="anchor" aria-label="anchor" href="#frame_locator"></a>
 </h5>
 <p>When working with iframes, you can create a frame locator that will enter the iframe and allow locating elements in that iframe:</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">frame_locator_unimplemented</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">frame_locator</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -283,7 +331,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-get-attribute" class="external-link">get_attribute</a><a class="anchor" aria-label="anchor" href="#get_attribute"></a>
 </h5>
 <p>Returns the matching element’s attribute value.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">attribute</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">get_attribute</span><span class="op">(</span><span class="st">"title"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -291,7 +339,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-get-by-alt-text" class="external-link">get_by_alt_text</a><a class="anchor" aria-label="anchor" href="#get_by_alt_text"></a>
 </h5>
 <p>Allows locating elements by their alt text.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">"&lt;img alt='Playwright logo'&gt;"</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_alt_text</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -301,11 +349,11 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-get-by-label" class="external-link">get_by_label</a><a class="anchor" aria-label="anchor" href="#get_by_label"></a>
 </h5>
 <p>Allows locating input elements by the text of the associated <label> or aria-labelledby element, or by the aria-label attribute.</label></p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input aria-label="Username"&gt;</span></span>
+<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input aria-label="Username"&gt;&lt;/input&gt;</span></span>
 <span><span class="st">  &lt;label for="password-input"&gt;Password:&lt;/label&gt;</span></span>
-<span><span class="st">  &lt;input id="password-input"&gt;'</span><span class="op">)</span></span>
+<span><span class="st">  &lt;input id="password-input"&gt;&lt;/input&gt;'</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_label</span><span class="op">(</span><span class="st">"Username"</span><span class="op">)</span><span class="op">$</span><span class="fu">fill</span><span class="op">(</span><span class="st">"John"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -313,9 +361,9 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-get-by-placeholder" class="external-link">get_by_placeholder</a><a class="anchor" aria-label="anchor" href="#get_by_placeholder"></a>
 </h5>
 <p>Allows locating input elements by the placeholder text.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="email" placeholder="name@example.com" /&gt;'</span><span class="op">)</span></span>
+<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="email" placeholder="name@example.com"&gt;&lt;/input&gt;'</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_placeholder</span><span class="op">(</span><span class="st">"name@example.com"</span><span class="op">)</span><span class="op">$</span><span class="fu">fill</span><span class="op">(</span><span class="st">"playwright@microsoft.com"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -323,11 +371,11 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-get-by-role" class="external-link">get_by_role</a><a class="anchor" aria-label="anchor" href="#get_by_role"></a>
 </h5>
 <p>Allows locating elements by their ARIA role, ARIA attributes and accessible name.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;h3&gt;Sign up&lt;/h3&gt;</span></span>
 <span><span class="st">  &lt;label&gt;</span></span>
-<span><span class="st">    &lt;input type="checkbox" /&gt; Subscribe</span></span>
+<span><span class="st">    &lt;input type="checkbox"&gt;&lt;/input&gt; Subscribe</span></span>
 <span><span class="st">  &lt;/label&gt;</span></span>
 <span><span class="st">  &lt;br/&gt;</span></span>
 <span><span class="st">  &lt;button&gt;Submit&lt;/button&gt;'</span><span class="op">)</span></span>
@@ -338,7 +386,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-get-by-test-id" class="external-link">get_by_test_id</a><a class="anchor" aria-label="anchor" href="#get_by_test_id"></a>
 </h5>
 <p>Locate element by the test id.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;button data-testid="directions"&gt;Itinéraire&lt;/button&gt;'</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_test_id</span><span class="op">(</span><span class="st">"directions"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -349,7 +397,7 @@
 </h5>
 <p>Allows locating elements that contain given text.</p>
 <p>See also locator.filter() that allows to match by another criteria, like an accessible role, and then filter by the text content.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;div&gt;Hello &lt;span&gt;world&lt;/span&gt;&lt;/div&gt;</span></span>
 <span><span class="st">  &lt;div&gt;Hello&lt;/div&gt;'</span><span class="op">)</span></span>
@@ -360,7 +408,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-get-by-title" class="external-link">get_by_title</a><a class="anchor" aria-label="anchor" href="#get_by_title"></a>
 </h5>
 <p>Allows locating elements by their title attribute.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">"&lt;span title='Issues count'&gt;25 issues&lt;/span&gt;"</span><span class="op">)</span></span>
 <span><span class="va">get_by_title</span> <span class="op">&lt;-</span> <span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_title</span><span class="op">(</span><span class="st">"Issues count"</span><span class="op">)</span><span class="op">$</span><span class="fu">text_content</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -370,7 +418,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-highlight" class="external-link">highlight</a><a class="anchor" aria-label="anchor" href="#highlight"></a>
 </h5>
 <p>Highlight the corresponding element(s) on the screen. Useful for debugging, don’t commit the code that uses locator.highlight().</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">"&lt;span title='Issues count'&gt;25 issues&lt;/span&gt;"</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_title</span><span class="op">(</span><span class="st">"Issues count"</span><span class="op">)</span><span class="op">$</span><span class="fu">highlight</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -380,7 +428,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-hover" class="external-link">hover</a><a class="anchor" aria-label="anchor" href="#hover"></a>
 </h5>
 <p>Hover over the matching element.</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name<span class="op">=</span><span class="st">"Get started"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">hover</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -388,7 +436,7 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-inner-html" class="external-link">inner_h_t_m_l</a><a class="anchor" aria-label="anchor" href="#inner_h_t_m_l"></a>
 </h5>
 <p>Returns the element.innerHTML.</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">inner_html</span> <span class="op">=</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name<span class="op">=</span><span class="st">"Get started"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">inner_h_t_m_l</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -396,29 +444,27 @@
 <a href="https://playwright.dev/docs/api/class-locator#locator-inner-text" class="external-link">inner_text</a><a class="anchor" aria-label="anchor" href="#inner_text"></a>
 </h5>
 <p>Returns the element.innerText.</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">inner_text</span> <span class="op">=</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name<span class="op">=</span><span class="st">"Get started"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">inner_text</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
 <h5 id="input_value">
 <a href="https://playwright.dev/docs/api/class-locator#locator-input-value" class="external-link">input_value</a><a class="anchor" aria-label="anchor" href="#input_value"></a>
 </h5>
-Returns the value for the matching <input> or
-<textarea><p>or <select> element.</select></p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<p>Returns the value for the matching <code>&lt;input&gt;</code> or <code>&lt;textarea&gt;</code> or <code>&lt;select&gt;</code> element.</p>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="text" value="Test" /&gt;'</span><span class="op">)</span></span>
+<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="text" value="Test"&gt;&lt;/input&gt;'</span><span class="op">)</span></span>
 <span><span class="va">input_value</span> <span class="op">&lt;-</span> <span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"text"</span><span class="op">)</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">input_value</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-</textarea>
 </div>
 <div class="section level5">
 <h5 id="is_checked">
 <a href="https://playwright.dev/docs/api/class-locator#locator-is-checked" class="external-link">is_checked</a><a class="anchor" aria-label="anchor" href="#is_checked"></a>
 </h5>
 <p>Returns whether the element is checked. Throws if the element is not a checkbox or radio input.</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="checkbox" /&gt;'</span><span class="op">)</span></span>
+<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="checkbox"&gt;&lt;/input&gt;'</span><span class="op">)</span></span>
 <span><span class="va">is_checked</span> <span class="op">&lt;-</span> <span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"checkbox"</span><span class="op">)</span><span class="op">$</span><span class="fu">is_checked</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -426,7 +472,7 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-is-disabled" class="external-link">is_disabled</a><a class="anchor" aria-label="anchor" href="#is_disabled"></a>
 </h5>
 <p>Returns whether the element is disabled, the opposite of enabled.</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;button data-testid="directions"&gt;Itinéraire&lt;/button&gt;'</span><span class="op">)</span></span>
 <span><span class="va">is_disabled</span> <span class="op">&lt;-</span> <span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_test_id</span><span class="op">(</span><span class="st">"directions"</span><span class="op">)</span><span class="op">$</span><span class="fu">is_disabled</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -436,9 +482,9 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-is-editable" class="external-link">is_editable</a><a class="anchor" aria-label="anchor" href="#is_editable"></a>
 </h5>
 <p>Returns whether the element is editable.</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="checkbox" /&gt;'</span><span class="op">)</span></span>
+<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="checkbox"&gt;&lt;/input&gt;'</span><span class="op">)</span></span>
 <span><span class="va">is_editable</span> <span class="op">&lt;-</span> <span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"checkbox"</span><span class="op">)</span><span class="op">$</span><span class="fu">is_editable</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -446,7 +492,7 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-is-enabled" class="external-link">is_enabled</a><a class="anchor" aria-label="anchor" href="#is_enabled"></a>
 </h5>
 <p>Returns whether the element is enabled.</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;button data-testid="directions"&gt;Itinéraire&lt;/button&gt;'</span><span class="op">)</span></span>
 <span><span class="va">is_enabled</span> <span class="op">&lt;-</span> <span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_test_id</span><span class="op">(</span><span class="st">"directions"</span><span class="op">)</span><span class="op">$</span><span class="fu">is_enabled</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -456,7 +502,7 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-is-hidden" class="external-link">is_hidden</a><a class="anchor" aria-label="anchor" href="#is_hidden"></a>
 </h5>
 <p>Returns whether the element is hidden, the opposite of visible.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;button data-testid="directions"&gt;Itinéraire&lt;/button&gt;'</span><span class="op">)</span></span>
 <span><span class="va">is_hidden</span> <span class="op">&lt;-</span> <span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_test_id</span><span class="op">(</span><span class="st">"directions"</span><span class="op">)</span><span class="op">$</span><span class="fu">is_hidden</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -466,7 +512,7 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-is-visible" class="external-link">is_visible</a><a class="anchor" aria-label="anchor" href="#is_visible"></a>
 </h5>
 <p>Returns whether the element is visible.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;button data-testid="directions"&gt;Itinéraire&lt;/button&gt;'</span><span class="op">)</span></span>
 <span><span class="va">is_visible</span> <span class="op">&lt;-</span> <span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_test_id</span><span class="op">(</span><span class="st">"directions"</span><span class="op">)</span><span class="op">$</span><span class="fu">is_visible</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -476,7 +522,7 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-last" class="external-link">last</a><a class="anchor" aria-label="anchor" href="#last"></a>
 </h5>
 <p>Returns locator to the last matching element.</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">last</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">last</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -484,7 +530,7 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-locator" class="external-link">locator</a><a class="anchor" aria-label="anchor" href="#locator-1"></a>
 </h5>
 <p>The method finds an element matching the specified selector in the locator’s subtree. It also accepts filter options, similar to locator.filter() method.</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;button data-testid="directions"&gt;Itinéraire&lt;/button&gt;'</span><span class="op">)</span></span>
 <span><span class="va">locator_inner_text</span> <span class="op">&lt;-</span> <span class="va">page_2</span><span class="op">$</span><span class="fu">locator</span><span class="op">(</span><span class="st">'[data-testid="directions"]'</span><span class="op">)</span><span class="op">$</span><span class="fu">inner_text</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -494,7 +540,7 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-nth" class="external-link">nth</a><a class="anchor" aria-label="anchor" href="#nth"></a>
 </h5>
 <p>Returns locator to the n-th matching element. It’s zero based, nth(0) selects the first element.</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">nth_inner_text</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">nth</span><span class="op">(</span><span class="fl">2</span><span class="op">)</span><span class="op">$</span><span class="fu">inner_text</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -502,7 +548,7 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-or" class="external-link">or</a><a class="anchor" aria-label="anchor" href="#or"></a>
 </h5>
 <p>Creates a locator that matches either of the two locators.</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">or_unimplemented</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">or</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -510,7 +556,7 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-page" class="external-link">page</a><a class="anchor" aria-label="anchor" href="#page-1"></a>
 </h5>
 <p>A page this locator belongs to.</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">locator_page</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">page</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -518,9 +564,9 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-press" class="external-link">press</a><a class="anchor" aria-label="anchor" href="#press"></a>
 </h5>
 <p>Focuses the matching element and presses a combination of the keys.</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="text" value="Test" /&gt;'</span><span class="op">)</span></span>
+<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="text" value="Test"&gt;&lt;/input&gt;'</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">locator</span><span class="op">(</span><span class="st">"input"</span><span class="op">)</span><span class="op">$</span><span class="fu">press</span><span class="op">(</span><span class="st">"Backspace"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -529,9 +575,9 @@ Returns the value for the matching <input> or
 </h5>
 <p>Focuses the element, and then sends a keydown, keypress/input, and keyup event for each character in the text.</p>
 <p>To press a special key, like Control or ArrowDown, use locator.press().</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="text" /&gt;'</span><span class="op">)</span></span>
+<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="text"&gt;&lt;/input&gt;'</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">locator</span><span class="op">(</span><span class="st">"input"</span><span class="op">)</span><span class="op">$</span><span class="fu">press_sequentially</span><span class="op">(</span><span class="st">"World"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>delay<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -539,7 +585,7 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-screenshot" class="external-link">screenshot</a><a class="anchor" aria-label="anchor" href="#screenshot"></a>
 </h5>
 <p>Take a screenshot of the element matching the locator.</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">locator_screenshot</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">screenshot</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -548,7 +594,7 @@ Returns the value for the matching <input> or
 </h5>
 <p>This method waits for actionability checks, then tries to scroll element into view, unless it is completely visible as defined by IntersectionObserver’s ratio.</p>
 <p>See scrolling for alternative ways to scroll.</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span><span class="op">)</span><span class="op">$</span><span class="fu">last</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">scroll_into_view_if_needed</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>delay<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -556,7 +602,7 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-select-option" class="external-link">select_option</a><a class="anchor" aria-label="anchor" href="#select_option"></a>
 </h5>
 <p>Selects option or options in <select>.</select></p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;select multiple&gt;</span></span>
 <span><span class="st">    &lt;option value="red"&gt;Red&lt;/div&gt;</span></span>
@@ -571,7 +617,7 @@ Returns the value for the matching <input> or
 </h5>
 <p>This method waits for actionability checks, then focuses the element and selects all its text content.</p>
 <p>If the element is inside the <label> element that has an associated control, focuses and selects text in the control instead.</label></p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;label&gt;This is a label&lt;/label&gt;'</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">locator</span><span class="op">(</span><span class="st">"label"</span><span class="op">)</span><span class="op">$</span><span class="fu">select_text</span><span class="op">(</span><span class="st">"label"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>delay<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -581,11 +627,11 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-set-checked" class="external-link">set_checked</a><a class="anchor" aria-label="anchor" href="#set_checked"></a>
 </h5>
 <p>Set the state of a checkbox or a radio element.</p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;h3&gt;Sign up&lt;/h3&gt;</span></span>
 <span><span class="st">  &lt;label&gt;</span></span>
-<span><span class="st">    &lt;input type="checkbox" /&gt; Subscribe</span></span>
+<span><span class="st">    &lt;input type="checkbox"&gt;&lt;/input&gt; Subscribe</span></span>
 <span><span class="st">  &lt;/label&gt;</span></span>
 <span><span class="st">  &lt;br/&gt;</span></span>
 <span><span class="st">  &lt;button&gt;Submit&lt;/button&gt;'</span><span class="op">)</span></span>
@@ -596,7 +642,7 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-tap" class="external-link">tap</a><a class="anchor" aria-label="anchor" href="#tap"></a>
 </h5>
 <p>Perform a tap gesture on the element matching the locator.</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"link"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name<span class="op">=</span><span class="st">"Get started"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">tap</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -604,7 +650,7 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-text-content" class="external-link">text_content</a><a class="anchor" aria-label="anchor" href="#text_content"></a>
 </h5>
 <p>Returns the node.textContent.</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;label&gt;This is a label&lt;/label&gt;'</span><span class="op">)</span></span>
 <span><span class="va">text_content</span> <span class="op">=</span> <span class="va">page_2</span><span class="op">$</span><span class="fu">locator</span><span class="op">(</span><span class="st">"label"</span><span class="op">)</span><span class="op">$</span><span class="fu">text_content</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>delay<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -614,11 +660,11 @@ Returns the value for the matching <input> or
 <a href="https://playwright.dev/docs/api/class-locator#locator-uncheck" class="external-link">uncheck</a><a class="anchor" aria-label="anchor" href="#uncheck"></a>
 </h5>
 <p>Ensure that checkbox or radio element is unchecked.</p>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;h3&gt;Sign up&lt;/h3&gt;</span></span>
 <span><span class="st">  &lt;label&gt;</span></span>
-<span><span class="st">    &lt;input type="checkbox" checked /&gt; Subscribe</span></span>
+<span><span class="st">    &lt;input type="checkbox" checked="checked"&gt;&lt;/input&gt; Subscribe</span></span>
 <span><span class="st">  &lt;/label&gt;</span></span>
 <span><span class="st">  &lt;br/&gt;</span></span>
 <span><span class="st">  &lt;button&gt;Submit&lt;/button&gt;'</span><span class="op">)</span></span>
@@ -630,16 +676,169 @@ Returns the value for the matching <input> or
 </h5>
 <p>Returns when element specified by locator satisfies the state option.</p>
 <p>If target element already satisfies the condition, the method returns immediately. Otherwise, waits for up to timeout milliseconds until the condition is met.</p>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;label&gt;This is a label&lt;/label&gt;'</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">locator</span><span class="op">(</span><span class="st">"label"</span><span class="op">)</span><span class="op">$</span><span class="fu">wait_for</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>state<span class="op">=</span><span class="st">"visible"</span>, timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level4">
+<h4 id="response">
+<a href="https://playwright.dev/docs/api/class-response" class="external-link">Response</a><a class="anchor" aria-label="anchor" href="#response"></a>
+</h4>
+<p>Response class represents responses which are received by page.</p>
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">page</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="section level5">
+<h5 id="all_headers">
+<a href="https://playwright.dev/docs/api/class-response#response-all-headers" class="external-link">all_headers</a><a class="anchor" aria-label="anchor" href="#all_headers"></a>
+</h5>
+<p>An object with all the response HTTP headers associated with this response.</p>
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">all_headers</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">all_headers</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="body">
+<a href="https://playwright.dev/docs/api/class-response#response-body" class="external-link">body</a><a class="anchor" aria-label="anchor" href="#body"></a>
+</h5>
+<p>Returns the base64 encoded response body.</p>
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">body</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">body</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="finished">
+<a href="https://playwright.dev/docs/api/class-response#response-finished" class="external-link">finished</a><a class="anchor" aria-label="anchor" href="#finished"></a>
+</h5>
+<p>Waits for this response to finish, returns always null.</p>
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">finished</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">finished</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="frame">
+<a href="https://playwright.dev/docs/api/class-response#response-frame" class="external-link">frame</a><a class="anchor" aria-label="anchor" href="#frame"></a>
+</h5>
+<p>Returns the Frame that initiated this response.</p>
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">frame</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">frame</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="from_service_worker">
+<a href="https://playwright.dev/docs/api/class-response#response-from-service-worker" class="external-link">from_service_worker</a><a class="anchor" aria-label="anchor" href="#from_service_worker"></a>
+</h5>
+<p>Indicates whether this Response was fulfilled by a Service Worker’s Fetch Handler (i.e. via FetchEvent.respondWith).</p>
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">from_service_worker</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">from_service_worker</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="header_value">
+<a href="https://playwright.dev/docs/api/class-response#response-header-value" class="external-link">header_value</a><a class="anchor" aria-label="anchor" href="#header_value"></a>
+</h5>
+<p>Returns the value of the header matching the name. The name is case-insensitive. If multiple headers have the same name (except set-cookie), they are returned as a list separated by , . For set-cookie, the separator is used. If no headers are found, null is returned.</p>
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">header_value</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">header_value</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="header_values">
+<a href="https://playwright.dev/docs/api/class-response#response-header-values" class="external-link">header_values</a><a class="anchor" aria-label="anchor" href="#header_values"></a>
+</h5>
+<p>Returns all values of the headers matching the name, for example set-cookie. The name is case-insensitive.</p>
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">header_values</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">header_values</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="headers">
+<a href="https://playwright.dev/docs/api/class-response#response-headers" class="external-link">headers</a><a class="anchor" aria-label="anchor" href="#headers"></a>
+</h5>
+<p>An object with the response HTTP headers. The header names are lower-cased. Note that this method does not return security-related headers, including cookie-related ones. You can use response.allHeaders() for complete list of headers that include cookie information.</p>
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">headers</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">headers</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="headers_array">
+<a href="https://playwright.dev/docs/api/class-response#response-headers-array" class="external-link">headers_array</a><a class="anchor" aria-label="anchor" href="#headers_array"></a>
+</h5>
+<p>An array with all the request HTTP headers associated with this response. Unlike response.allHeaders(), header names are NOT lower-cased. Headers with multiple entries, such as Set-Cookie, appear in the array multiple times.</p>
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">headers_array</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">headers_array</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="json">
+<a href="https://playwright.dev/docs/api/class-response#response-json" class="external-link">json</a><a class="anchor" aria-label="anchor" href="#json"></a>
+</h5>
+<p>Returns the JSON representation of response body. This method will throw if the response body is not parsable via JSON.parse.</p>
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">json</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">json</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="ok">
+<a href="https://playwright.dev/docs/api/class-response#response-ok" class="external-link">ok</a><a class="anchor" aria-label="anchor" href="#ok"></a>
+</h5>
+<p>Contains a boolean stating whether the response was successful (status in the range 200-299) or not.</p>
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ok</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">ok</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="request">
+<a href="https://playwright.dev/docs/api/class-response#response-request" class="external-link">request</a><a class="anchor" aria-label="anchor" href="#request"></a>
+</h5>
+<p>Returns the matching Request object.</p>
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">request</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">request</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="security_details">
+<a href="https://playwright.dev/docs/api/class-response#response-security-details" class="external-link">security_details</a><a class="anchor" aria-label="anchor" href="#security_details"></a>
+</h5>
+<p>Returns SSL and other security information.</p>
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">security_details</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">security_details</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="server_addr">
+<a href="https://playwright.dev/docs/api/class-response#response-server-addr" class="external-link">server_addr</a><a class="anchor" aria-label="anchor" href="#server_addr"></a>
+</h5>
+<p>Returns the IP address and port of the server.</p>
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">server_addr</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">server_addr</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="status">
+<a href="https://playwright.dev/docs/api/class-response#response-status" class="external-link">status</a><a class="anchor" aria-label="anchor" href="#status"></a>
+</h5>
+<p>Contains the status code of the response (e.g., 200 for a success).</p>
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">status</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">status</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="status_text">
+<a href="https://playwright.dev/docs/api/class-response#response-status-text" class="external-link">status_text</a><a class="anchor" aria-label="anchor" href="#status_text"></a>
+</h5>
+<p>Contains the status text of the response (e.g. usually an “OK” for a success).</p>
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">status_text</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">status_text</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="text">
+<a href="https://playwright.dev/docs/api/class-response#response-text" class="external-link">text</a><a class="anchor" aria-label="anchor" href="#text"></a>
+</h5>
+<p>Returns the text representation of response body.</p>
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">text</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">text</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="url">
+<a href="https://playwright.dev/docs/api/class-response#response-url" class="external-link">url</a><a class="anchor" aria-label="anchor" href="#url"></a>
+</h5>
+<p>Contains the URL of the response.</p>
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">url</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">url</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level4">
 <h4 id="full-usage-example">Full Usage Example<a class="anchor" aria-label="anchor" href="#full-usage-example"></a>
 </h4>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">load_all</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu">roxygen2</span><span class="fu">::</span><span class="fu">roxygenise</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -729,21 +928,21 @@ Returns the value for the matching <input> or
 <span></span>
 <span><span class="co"># @link{https://playwright.dev/docs/api/class-locator#locator-get-by-label}</span></span>
 <span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input aria-label="Username"&gt;</span></span>
+<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input aria-label="Username"&gt;&lt;/input&gt;</span></span>
 <span><span class="st">  &lt;label for="password-input"&gt;Password:&lt;/label&gt;</span></span>
-<span><span class="st">  &lt;input id="password-input"&gt;'</span><span class="op">)</span></span>
+<span><span class="st">  &lt;input id="password-input"&gt;&lt;/input&gt;'</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_label</span><span class="op">(</span><span class="st">"Username"</span><span class="op">)</span><span class="op">$</span><span class="fu">fill</span><span class="op">(</span><span class="st">"John"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># @link{https://playwright.dev/docs/api/class-locator#locator-get-by-placeholder}</span></span>
 <span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="email" placeholder="name@example.com" /&gt;'</span><span class="op">)</span></span>
+<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="email" placeholder="name@example.com"&gt;&lt;/input&gt;'</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_placeholder</span><span class="op">(</span><span class="st">"name@example.com"</span><span class="op">)</span><span class="op">$</span><span class="fu">fill</span><span class="op">(</span><span class="st">"playwright@microsoft.com"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># @link{https://playwright.dev/docs/api/class-locator#locator-get-by-role}</span></span>
 <span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;h3&gt;Sign up&lt;/h3&gt;</span></span>
 <span><span class="st">  &lt;label&gt;</span></span>
-<span><span class="st">    &lt;input type="checkbox" /&gt; Subscribe</span></span>
+<span><span class="st">    &lt;input type="checkbox"&gt;&lt;/input&gt; Subscribe</span></span>
 <span><span class="st">  &lt;/label&gt;</span></span>
 <span><span class="st">  &lt;br/&gt;</span></span>
 <span><span class="st">  &lt;button&gt;Submit&lt;/button&gt;'</span><span class="op">)</span></span>
@@ -784,12 +983,12 @@ Returns the value for the matching <input> or
 <span></span>
 <span><span class="co"># @link{https://playwright.dev/docs/api/class-locator#locator-input-value}</span></span>
 <span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="text" value="Test" /&gt;'</span><span class="op">)</span></span>
+<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="text" value="Test"&gt;&lt;/input&gt;'</span><span class="op">)</span></span>
 <span><span class="va">input_value</span> <span class="op">&lt;-</span> <span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"text"</span><span class="op">)</span><span class="op">$</span><span class="fu">first</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">input_value</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># @link{https://playwright.dev/docs/api/class-locator#locator-is-checked}</span></span>
 <span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="checkbox" /&gt;'</span><span class="op">)</span></span>
+<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="checkbox"&gt;&lt;/input&gt;'</span><span class="op">)</span></span>
 <span><span class="va">is_checked</span> <span class="op">&lt;-</span> <span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"checkbox"</span><span class="op">)</span><span class="op">$</span><span class="fu">is_checked</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># @link{https://playwright.dev/docs/api/class-locator#locator-is-disabled}</span></span>
@@ -799,7 +998,7 @@ Returns the value for the matching <input> or
 <span></span>
 <span><span class="co"># @link{https://playwright.dev/docs/api/class-locator#locator-is-editable}</span></span>
 <span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="checkbox" /&gt;'</span><span class="op">)</span></span>
+<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="checkbox"&gt;&lt;/input&gt;'</span><span class="op">)</span></span>
 <span><span class="va">is_editable</span> <span class="op">&lt;-</span> <span class="va">page_2</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"checkbox"</span><span class="op">)</span><span class="op">$</span><span class="fu">is_editable</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># @link{https://playwright.dev/docs/api/class-locator#locator-is-enabled}</span></span>
@@ -836,12 +1035,12 @@ Returns the value for the matching <input> or
 <span></span>
 <span><span class="co"># @link{https://playwright.dev/docs/api/class-locator#locator-press}</span></span>
 <span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="text" value="Test" /&gt;'</span><span class="op">)</span></span>
+<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="text" value="Test"&gt;&lt;/input&gt;'</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">locator</span><span class="op">(</span><span class="st">"input"</span><span class="op">)</span><span class="op">$</span><span class="fu">press</span><span class="op">(</span><span class="st">"Backspace"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># @link{https://playwright.dev/docs/api/class-locator#locator-press-sequentially}</span></span>
 <span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="text" /&gt;'</span><span class="op">)</span></span>
+<span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;input type="text"&gt;&lt;/input&gt;'</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">locator</span><span class="op">(</span><span class="st">"input"</span><span class="op">)</span><span class="op">$</span><span class="fu">press_sequentially</span><span class="op">(</span><span class="st">"World"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>delay<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># @link{https://playwright.dev/docs/api/class-locator#locator-screenshot}</span></span>
@@ -853,9 +1052,9 @@ Returns the value for the matching <input> or
 <span><span class="co"># @link{https://playwright.dev/docs/api/class-locator#locator-select-option}</span></span>
 <span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;select multiple&gt;</span></span>
-<span><span class="st">    &lt;option value="red"&gt;Red&lt;/div&gt;</span></span>
-<span><span class="st">    &lt;option value="green"&gt;Green&lt;/div&gt;</span></span>
-<span><span class="st">    &lt;option value="blue"&gt;Blue&lt;/div&gt;</span></span>
+<span><span class="st">    &lt;option value="red"&gt;Red&lt;/option&gt;</span></span>
+<span><span class="st">    &lt;option value="green"&gt;Green&lt;/option&gt;</span></span>
+<span><span class="st">    &lt;option value="blue"&gt;Blue&lt;/option&gt;</span></span>
 <span><span class="st">  &lt;/select&gt;'</span><span class="op">)</span></span>
 <span><span class="va">select_option</span> <span class="op">&lt;-</span> <span class="va">page_2</span><span class="op">$</span><span class="fu">locator</span><span class="op">(</span><span class="st">"select"</span><span class="op">)</span><span class="op">$</span><span class="fu">select_option</span><span class="op">(</span><span class="st">"blue"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>delay<span class="op">=</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -868,7 +1067,7 @@ Returns the value for the matching <input> or
 <span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;h3&gt;Sign up&lt;/h3&gt;</span></span>
 <span><span class="st">  &lt;label&gt;</span></span>
-<span><span class="st">    &lt;input type="checkbox" /&gt; Subscribe</span></span>
+<span><span class="st">    &lt;input type="checkbox"&gt;&lt;/input&gt; Subscribe</span></span>
 <span><span class="st">  &lt;/label&gt;</span></span>
 <span><span class="st">  &lt;br/&gt;</span></span>
 <span><span class="st">  &lt;button&gt;Submit&lt;/button&gt;'</span><span class="op">)</span></span>
@@ -886,7 +1085,7 @@ Returns the value for the matching <input> or
 <span><span class="va">page_2</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">page_2</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">'&lt;h3&gt;Sign up&lt;/h3&gt;</span></span>
 <span><span class="st">  &lt;label&gt;</span></span>
-<span><span class="st">    &lt;input type="checkbox" checked /&gt; Subscribe</span></span>
+<span><span class="st">    &lt;input type="checkbox" checked="checked"&gt;&lt;/input&gt; Subscribe</span></span>
 <span><span class="st">  &lt;/label&gt;</span></span>
 <span><span class="st">  &lt;br/&gt;</span></span>
 <span><span class="st">  &lt;button&gt;Submit&lt;/button&gt;'</span><span class="op">)</span></span>
@@ -904,7 +1103,7 @@ Returns the value for the matching <input> or
 <div class="section level3">
 <h3 id="use-case-example-for-twitter-crawling">Use Case Example for Twitter Crawling<a class="anchor" aria-label="anchor" href="#use-case-example-for-twitter-crawling"></a>
 </h3>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chrome</span> <span class="op">&lt;-</span> <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/new_chromium.html">new_chromium</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">context</span> <span class="op">&lt;-</span> <span class="va">chrome</span><span class="op">$</span><span class="fu">new_context</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>

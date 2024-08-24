@@ -3,7 +3,7 @@ pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   rplaywright: rplaywright.html
-last_built: 2024-08-13T16:51Z
+last_built: 2024-08-24T03:11Z
 urls:
   reference: https://erikaris.github.io/rplaywright/reference
   article: https://erikaris.github.io/rplaywright/articles
