@@ -80,80 +80,80 @@ exports.pagePlugin = (instance, opts, next) => {
   //   }
   // );
 
-  instance.post(
-    "/set-content",
-    /**
-     * @param {FastifyRequest<{ Body: PageSetContentRequestBody }>} request
-     * @param {FastifyReply<{ReplyType : PageSetContentResponse}>} reply
-     * */
-    async function (request, reply) {
-      const { context_id, page } = pages[request.body.page_id];
-      const { browser_id } = contexts[context_id];
-      if (page && !!request.body.content) {
-        await page.setContent(request.body.content);
+  // instance.post(
+  //   "/set-content",
+  //   /**
+  //    * @param {FastifyRequest<{ Body: PageSetContentRequestBody }>} request
+  //    * @param {FastifyReply<{ReplyType : PageSetContentResponse}>} reply
+  //    * */
+  //   async function (request, reply) {
+  //     const { context_id, page } = pages[request.body.page_id];
+  //     const { browser_id } = contexts[context_id];
+  //     if (page && !!request.body.content) {
+  //       await page.setContent(request.body.content);
 
-        reply.send({
-          browser_id,
-          context_id,
-          page_id: request.body.page_id,
-        });
-      }
-    }
-  );
+  //       reply.send({
+  //         browser_id,
+  //         context_id,
+  //         page_id: request.body.page_id,
+  //       });
+  //     }
+  //   }
+  // );
 
-  instance.post(
-    "/screenshot",
-    /**
-     * @param {FastifyRequest<{ Body: PageScreenshotRequestBody }>} request
-     * @param {FastifyReply<{ReplyType : PageScreenshotResponse}>} reply
-     * */
-    async function (request, reply) {
-      const { context_id, page } = pages[request.body.page_id];
-      const { browser_id } = contexts[context_id];
-      if (page) {
-        const buffer = await page.screenshot({
-          path: request.body.path || undefined,
-        });
-        const base64_image = buffer.toString("base64");
+  // instance.post(
+  //   "/screenshot",
+  //   /**
+  //    * @param {FastifyRequest<{ Body: PageScreenshotRequestBody }>} request
+  //    * @param {FastifyReply<{ReplyType : PageScreenshotResponse}>} reply
+  //    * */
+  //   async function (request, reply) {
+  //     const { context_id, page } = pages[request.body.page_id];
+  //     const { browser_id } = contexts[context_id];
+  //     if (page) {
+  //       const buffer = await page.screenshot({
+  //         path: request.body.path || undefined,
+  //       });
+  //       const base64_image = buffer.toString("base64");
 
-        reply.send({
-          browser_id,
-          context_id,
-          page_id: request.body.page_id,
-          base64_image: `data:image/png;base64,${base64_image}`,
-        });
-      }
-    }
-  );
+  //       reply.send({
+  //         browser_id,
+  //         context_id,
+  //         page_id: request.body.page_id,
+  //         base64_image: `data:image/png;base64,${base64_image}`,
+  //       });
+  //     }
+  //   }
+  // );
 
-  instance.post(
-    "/getByLabel",
-    /**
-     * @param {FastifyRequest<{ Body: PageGetByLabelRequestBody }>} request
-     * @param {FastifyReply<{ReplyType : PageGetByLabelResponse}>} reply
-     * */
-    async function (request, reply) {
-      const { context_id, page } = pages[request.body.page_id];
-      const { browser_id } = contexts[context_id];
-      if (page) {
-        const locator = page.getByLabel(request.body.text, {
-          ...(request.body?.options || {}),
-        });
+  // instance.post(
+  //   "/getByLabel",
+  //   /**
+  //    * @param {FastifyRequest<{ Body: PageGetByLabelRequestBody }>} request
+  //    * @param {FastifyReply<{ReplyType : PageGetByLabelResponse}>} reply
+  //    * */
+  //   async function (request, reply) {
+  //     const { context_id, page } = pages[request.body.page_id];
+  //     const { browser_id } = contexts[context_id];
+  //     if (page) {
+  //       const locator = page.getByLabel(request.body.text, {
+  //         ...(request.body?.options || {}),
+  //       });
 
-        const actions = request.body?.actions || {};
-        for (const action of Object.keys(actions)) {
-          const fn = locator[action];
-          if (fn) await fn.apply(locator, actions[action] || []);
-        }
+  //       const actions = request.body?.actions || {};
+  //       for (const action of Object.keys(actions)) {
+  //         const fn = locator[action];
+  //         if (fn) await fn.apply(locator, actions[action] || []);
+  //       }
 
-        reply.send({
-          browser_id,
-          context_id,
-          page_id: request.body.page_id,
-        });
-      }
-    }
-  );
+  //       reply.send({
+  //         browser_id,
+  //         context_id,
+  //         page_id: request.body.page_id,
+  //       });
+  //     }
+  //   }
+  // );
 
   // instance.post(
   //   "/getByRole",
@@ -184,26 +184,26 @@ exports.pagePlugin = (instance, opts, next) => {
   //   }
   // );
 
-  instance.post(
-    "/waitForTimeout",
-    /**
-     * @param {FastifyRequest<{ Body: PageWaitForTimeoutRequestBody }>} request
-     * @param {FastifyReply<{ReplyType : PageWaitForTimeoutResponse}>} reply
-     * */
-    async function (request, reply) {
-      const { context_id, page } = pages[request.body.page_id];
-      const { browser_id } = contexts[context_id];
-      if (page) {
-        await page.waitForTimeout(request.body.timeout);
+  // instance.post(
+  //   "/waitForTimeout",
+  //   /**
+  //    * @param {FastifyRequest<{ Body: PageWaitForTimeoutRequestBody }>} request
+  //    * @param {FastifyReply<{ReplyType : PageWaitForTimeoutResponse}>} reply
+  //    * */
+  //   async function (request, reply) {
+  //     const { context_id, page } = pages[request.body.page_id];
+  //     const { browser_id } = contexts[context_id];
+  //     if (page) {
+  //       await page.waitForTimeout(request.body.timeout);
 
-        reply.send({
-          browser_id,
-          context_id,
-          page_id: request.body.page_id,
-        });
-      }
-    }
-  );
+  //       reply.send({
+  //         browser_id,
+  //         context_id,
+  //         page_id: request.body.page_id,
+  //       });
+  //     }
+  //   }
+  // );
 
   /**
    * @param {Response} resp
@@ -360,25 +360,25 @@ exports.pagePlugin = (instance, opts, next) => {
     }
   );
 
-  instance.post(
-    "/close",
-    /**
-     * @param {FastifyRequest<{ Body: ClosePageRequestBody }>} request
-     * @param {FastifyReply<{ReplyType : ClosePageResponse}>} reply
-     * */
-    async function (request, reply) {
-      const { context_id, page } = pages[request.body.page_id];
-      const { browser_id } = contexts[context_id];
-      if (page) {
-        await page.close();
-        reply.send({
-          browser_id,
-          context_id,
-          page_id: request.body.page_id,
-        });
-      }
-    }
-  );
+  // instance.post(
+  //   "/close",
+  //   /**
+  //    * @param {FastifyRequest<{ Body: ClosePageRequestBody }>} request
+  //    * @param {FastifyReply<{ReplyType : ClosePageResponse}>} reply
+  //    * */
+  //   async function (request, reply) {
+  //     const { context_id, page } = pages[request.body.page_id];
+  //     const { browser_id } = contexts[context_id];
+  //     if (page) {
+  //       await page.close();
+  //       reply.send({
+  //         browser_id,
+  //         context_id,
+  //         page_id: request.body.page_id,
+  //       });
+  //     }
+  //   }
+  // );
 
   // instance.post("/:command", async function (request, reply) {
   //   try {
@@ -448,7 +448,15 @@ exports.pagePlugin = (instance, opts, next) => {
       }
 
       if (command == 'evaluate') {
-        args[0] = eval(args[0]);
+        if (args[0]) args[0] = eval(args[0]);
+      }
+
+      if (command == 'exposeBinding') {
+        if (args[1]) args[1] = eval(args[1]);
+      }
+
+      if (command == 'exposeFunction') {
+        if (args[1]) args[1] = eval(args[1]);
       }
 
       try {

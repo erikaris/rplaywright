@@ -24,8 +24,10 @@ class IPromise {
       const Page = (await import("./page.js")).default;
       const Locator = (await import("./locator.js")).default;
       const Response = (await import("./response.js")).default;
+      const Frame = (await import("./frame.js")).default;
+      const FrameLocator = (await import("./frame-locator.js")).default;
 
-      ret = cast(ret, { Browser, Context, Page, Locator, Response });
+      ret = cast(ret, { Browser, Context, Page, Locator, Response, Frame, FrameLocator });
       return ret;
     } catch (err) {
       return { type: 'Error', value: err?.message || '' };

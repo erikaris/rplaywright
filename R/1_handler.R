@@ -34,6 +34,18 @@ cast <- function(meta, selff) {
     return(response)
   }
 
+  if (!is.null(meta$type) && meta$type == "Frame") {
+    frame <- Frame$new(selff)
+    frame$meta = meta
+    return(frame)
+  }
+
+  if (!is.null(meta$type) && meta$type == "FrameLocator") {
+    frameLocator <- FrameLocator$new(selff)
+    frameLocator$meta = meta
+    return(frameLocator)
+  }
+
   if (!is.null(meta$type) && meta$type == "Value") {
     return(meta$value)
   }

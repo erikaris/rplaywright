@@ -2,7 +2,7 @@ const { objs } = require("../vars.js");
 const { isObject, camelCase } = require("lodash");
 const playwright = require("playwright");
 
-function cast(ret, { Browser, Context, Page, Locator, Response } = {}, level = 0) {
+function cast(ret, { Browser, Context, Page, Locator, Response, Frame, FrameLocator } = {}, level = 0) {
   let type = ret?.constructor?.name;
 
   if (type == "ElementHandle") {
@@ -41,15 +41,27 @@ function cast(ret, { Browser, Context, Page, Locator, Response } = {}, level = 0
     return b;
   }
 
+  if (type == "Frame" && Frame) {
+    const b = new Frame(ret);
+    objs[b.id] = b;
+    return b;
+  }
+
+  if (type == "FrameLocator" && FrameLocator) {
+    const b = new FrameLocator(ret);
+    objs[b.id] = b;
+    return b;
+  }
+
   if (Array.isArray(ret)) {
-    ret = ret.map((rec) => cast(rec, { Browser, Context, Page, Locator, Response }, level+1));
+    ret = ret.map((rec) => cast(rec, { Browser, Context, Page, Locator, Response, Frame, FrameLocator }, level+1));
   }
 
   if (isObject(ret)) {
     ret = Object.keys(ret).reduce(
       (obj, key) => ({
         ...obj,
-        [key]: cast(ret[key], { Browser, Context, Page, Locator, Response }, level+1),
+        [key]: cast(ret[key], { Browser, Context, Page, Locator, Response, Frame, FrameLocator }, level+1),
       }),
       {}
     );

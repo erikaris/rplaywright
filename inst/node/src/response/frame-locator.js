@@ -2,17 +2,11 @@ const uuid = require("uuid");
 const playwright = require("playwright");
 const IPromise = require("./promise");
 const cast = require("./cast");
-const Browser = require("./browser");
-const Context = require("./context");
-const Page = require("./page");
-const Response = require("./response");
-const Frame = require("./frame");
-const FrameLocator = require("./frame-locator");
 
-class Locator {
-  type = 'Locator'
+class FrameLocator {
+  type = 'FrameLocator'
   id = null;
-  /** @type {playwright.Locator} */
+  /** @type {playwright.FrameLocator} */
   #obj = null;
 
   constructor(obj = null) {
@@ -31,9 +25,9 @@ class Locator {
       return IPromise.resolve(ret);
     }
 
-    ret = cast(ret, {Browser, Context, Page, Locator, Response, Frame, FrameLocator})
+    ret = cast(ret)
     return ret;
   }
 }
 
-module.exports = Locator
+module.exports = FrameLocator

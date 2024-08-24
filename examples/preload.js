@@ -1,0 +1,1 @@
+Math.random = () => 42;

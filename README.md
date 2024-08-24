@@ -139,6 +139,324 @@ page$add_script_tag(list(path=normalizePath("./examples/preload.js")))$then()
 page$add_script_tag(list(content="const greet = () => console.log('hello')"))$then()
 ```
 
+##### [add_style_tag](https://playwright.dev/docs/api/class-page#page-add-style-tag)
+
+Adds a `<link rel="stylesheet">` tag into the page with the desired url
+or a `<style type="text/css">` tag with the content. Returns the added
+tag when the stylesheet’s onload fires or when the CSS content was
+injected into frame.
+
+``` r
+page$goto("https://playwright.dev/")$then()
+page$add_style_tag(list(path=normalizePath("./examples/style.css")))$then()
+page$add_style_tag(list(content=
+  ".highlight_gXVj {
+    color: red;
+  }"))$then()
+```
+
+##### [bring_to_front](https://playwright.dev/docs/api/class-page#page-bring-to-front)
+
+Brings page to front (activates tab).
+
+``` r
+page2 <- context$new_page()$then()
+page2$goto("https://demo.playwright.dev/todomvc/#/")$then()
+page$bring_to_front()$then()
+```
+
+##### [close](https://playwright.dev/docs/api/class-page#page-close)
+
+If runBeforeUnload is false, does not run any unload handlers and waits
+for the page to be closed. If runBeforeUnload is true the method will
+run unload handlers, but will not wait for the page to close.
+
+By default, page.close() does not run beforeunload handlers.
+
+``` r
+page2$close()
+```
+
+##### [content](https://playwright.dev/docs/api/class-page#page-content)
+
+Gets the full HTML contents of the page, including the doctype.
+
+``` r
+content <- page$content()$then()
+```
+
+##### [context](https://playwright.dev/docs/api/class-page#page-context)
+
+Get the browser context that the page belongs to.
+
+``` r
+page_context <- page$context()
+```
+
+##### [drag_and_drop](https://playwright.dev/docs/api/class-page#page-drag-and-drop)
+
+This method drags the source element to the target element. It will
+first move to the source element, perform a mousedown, then move to the
+target element and perform a mouseup.
+
+``` r
+page$drag_and_drop("#source", "#target")$then()
+```
+
+##### [emulate_media](https://playwright.dev/docs/api/class-page#page-emulate-media)
+
+This method changes the CSS media type through the media argument,
+and/or the ‘prefers-colors-scheme’ media feature, using the colorScheme
+argument.
+
+``` r
+page$emulate_media(list(media="print"))$then()
+page$evaluate("() => matchMedia('screen').matches")$then()
+page$evaluate("() => matchMedia('print').matches")$then()
+```
+
+##### [evaluate](https://playwright.dev/docs/api/class-page#page-evaluate)
+
+Returns the value of the pageFunction invocation.
+
+If the function passed to the page.evaluate() returns a Promise, then
+page.evaluate() would wait for the promise to resolve and return its
+value.
+
+If the function passed to the page.evaluate() returns a non-Serializable
+value, then page.evaluate() resolves to undefined. Playwright also
+supports transferring some additional values that are not serializable
+by JSON: -0, NaN, Infinity, -Infinity.
+
+``` r
+page$emulate_media(list(media="print"))$then()
+page$evaluate("() => matchMedia('screen').matches")$then()
+page$evaluate("() => matchMedia('print').matches")$then()
+page$evaluate(
+  "([x, y]) => {
+    return Promise.resolve(x * y);
+  }",
+  c(7, 8)
+)$then()
+page$evaluate(
+  "({ x, y }) => {
+    return Promise.resolve(x * y);
+  }",
+  list(x=7, y=10)
+)$then()
+```
+
+##### [evaluate_handle](https://playwright.dev/docs/api/class-page#page-evaluate-handle)
+
+Returns the value of the pageFunction invocation as a JSHandle.
+
+The only difference between page.evaluate() and page.evaluateHandle() is
+that page.evaluateHandle() returns JSHandle.
+
+If the function passed to the page.evaluateHandle() returns a Promise,
+then page.evaluateHandle() would wait for the promise to resolve and
+return its value.
+
+``` r
+page$evaluate_handle()
+```
+
+##### [expose_binding](https://playwright.dev/docs/api/class-page#page-expose-binding)
+
+The method adds a function called name on the window object of every
+frame in this page. When called, the function executes callback and
+returns a Promise which resolves to the return value of callback. If the
+callback returns a Promise, it will be awaited.
+
+The first argument of the callback function contains information about
+the caller: { browserContext: BrowserContext, page: Page, frame: Frame
+}.
+
+``` r
+page$expose_binding("pageURL", "({ page }) => page.url()")
+page$set_content("
+  <script>
+      async function onClick() {
+        document.querySelector('div').textContent = await window.pageURL();
+      }
+  </script>
+  <button onclick='onClick()'>Click me</button>
+  <div></div>"
+)$then()
+page$get_by_role("button")$click("button")$then()
+```
+
+##### [expose_function](https://playwright.dev/docs/api/class-page#page-expose-function)
+
+The method adds a function called name on the window object of every
+frame in the page. When called, the function executes callback and
+returns a Promise which resolves to the return value of callback.
+
+If the callback returns a Promise, it will be awaited.
+
+``` r
+page$expose_function("base64", "(text) => btoa(text)")
+page$set_content("
+  <script>
+      async function onClick() {
+        document.querySelector('div').textContent = await base64('PLAYWRIGHT');
+      }
+  </script>
+  <button onclick='onClick()'>Click me</button>
+  <div></div>"
+)$then()
+page$get_by_role("button")$click("button")$then()
+```
+
+##### [frame](https://playwright.dev/docs/api/class-page#page-frame)
+
+Returns frame matching the specified criteria. Either name or url must
+be specified.
+
+``` r
+page$goto("https://playwright.dev/")$then()
+frame <- page$frame("main")
+```
+
+##### [frame_locator](https://playwright.dev/docs/api/class-page#page-frame-locator)
+
+When working with iframes, you can create a frame locator that will
+enter the iframe and allow selecting elements in that iframe.
+
+``` r
+page$set_content(
+  "<iframe id='myframe'>
+    <button>Button</button>
+  </iframe>"
+)
+myframe <- page$frame_locator("#myframe")
+```
+
+##### [frames](https://playwright.dev/docs/api/class-page#page-frames)
+
+An array of all frames attached to the page.
+
+``` r
+page$set_content(
+  "<iframe id='myframe'>
+    <button>Button</button>
+  </iframe>"
+)
+frames <- page$frames()
+```
+
+##### [get_by_alt_text](https://playwright.dev/docs/api/class-page#page-get-by-alt-text)
+
+Allows locating elements by their alt text.
+
+``` r
+page_2 <- context$new_page()$then()
+page_2$set_content("<img alt='Playwright logo'>")
+page_2$get_by_alt_text("link")$click(list(timeout=100))$then()
+```
+
+##### [get_by_label](https://playwright.dev/docs/api/class-page#page-get-by-label)
+
+Allows locating input elements by the text of the associated <label> or
+aria-labelledby element, or by the aria-label attribute.
+
+``` r
+page_2 <- context$new_page()$then()
+page_2$set_content('<input aria-label="Username"></input>
+  <label for="password-input">Password:</label>
+  <input id="password-input"></input>')
+page_2$get_by_label("Username")$fill("John", list(timeout=100))$then()
+```
+
+##### [get_by_placeholder](https://playwright.dev/docs/api/class-page#page-get-by-placeholder)
+
+Allows locating input elements by the placeholder text.
+
+``` r
+page_2 <- context$new_page()$then()
+page_2$set_content('<input type="email" placeholder="name@example.com"></input>')
+page_2$get_by_placeholder("name@example.com")$fill("playwright@microsoft.com", list(timeout=100))$then()
+```
+
+##### [get_by_role](https://playwright.dev/docs/api/class-page#page-get-by-role)
+
+Allows locating elements by their ARIA role, ARIA attributes and
+accessible name.
+
+``` r
+page_2 <- context$new_page()$then()
+page_2$set_content('<h3>Sign up</h3>
+  <label>
+    <input type="checkbox"></input> Subscribe
+  </label>
+  <br/>
+  <button>Submit</button>')
+page_2$get_by_role("checkbox", list(name="Subscribe"))$check(list(timeout=100))$then()
+```
+
+##### [get_by_test_id](https://playwright.dev/docs/api/class-page#page-get-by-test-id)
+
+Locate element by the test id.
+
+``` r
+page_2 <- context$new_page()$then()
+page_2$set_content('<button data-testid="directions">Itinéraire</button>')
+page_2$get_by_test_id("directions")$click(list(timeout=100))$then()
+```
+
+##### [get_by_text](https://playwright.dev/docs/api/class-page#page-get-by-text)
+
+Allows locating elements that contain given text.
+
+See also locator.filter() that allows to match by another criteria, like
+an accessible role, and then filter by the text content.
+
+``` r
+page_2 <- context$new_page()$then()
+page_2$set_content('<div>Hello <span>world</span></div>
+  <div>Hello</div>')
+page_2$get_by_text("Hello", list(exact=FALSE))$click(list(timeout=100))$then()
+```
+
+##### [get_by_title](https://playwright.dev/docs/api/class-page#page-get-by-title)
+
+Allows locating elements by their title attribute.
+
+``` r
+page_2 <- context$new_page()$then()
+page_2$set_content("<span title='Issues count'>25 issues</span>")
+get_by_title <- page_2$get_by_title("Issues count")$text_content()$then()
+```
+
+##### [go_back]()
+
+Returns the main resource response. In case of multiple redirects, the
+navigation will resolve with the response of the last redirect. If
+cannot go back, returns null.
+
+Navigate to the previous page in history.
+
+``` r
+page$goto("https://playwright.dev/docs/api/class-page#page-get-by-title")
+page$goto("https://playwright.dev/docs/api/class-page#page-go-back")
+page$go_back()$then()
+```
+
+##### [go_forward]()
+
+Returns the main resource response. In case of multiple redirects, the
+navigation will resolve with the response of the last redirect. If
+cannot go forward, returns null.
+
+Navigate to the next page in history.
+
+``` r
+page$goto("https://playwright.dev/docs/api/class-page#page-get-by-title")
+page$goto("https://playwright.dev/docs/api/class-page#page-go-back")
+page$go_back()$then()
+page$go_forward()$then()
+```
+
 ##### [goto](https://playwright.dev/docs/api/class-page#page-goto)
 
 Returns the main resource response. In case of multiple redirects, the
@@ -148,6 +466,213 @@ navigation will resolve with the first non-redirect response.
 resp <- page$goto("https://playwright.dev/")$then()
 resp$status()
 ```
+
+##### [is_closed](https://playwright.dev/docs/api/class-page#page-is-closed)
+
+Indicates that the page has been closed.
+
+``` r
+page2 <- context$new_page()$then()
+page2$goto("https://playwright.dev/")$then()
+page2$close()$then()
+is_closed <- page2$is_closed()
+```
+
+##### [locator](https://playwright.dev/docs/api/class-page#page-locator)
+
+The method finds an element matching the specified selector in the
+locator’s subtree. It also accepts filter options, similar to
+locator.filter() method.
+
+``` r
+page_2 <- context$new_page()$then()
+page_2$set_content('<button data-testid="directions">Itinéraire</button>')
+locator_inner_text <- page_2$locator('[data-testid="directions"]')$inner_text(list(timeout=100))$then()
+```
+
+##### [main_frame](https://playwright.dev/docs/api/class-page#page-main-frame)
+
+The page’s main frame. Page is guaranteed to have a main frame which
+persists during navigations.
+
+``` r
+page2 <- context$new_page()$then()
+page2$goto("https://playwright.dev/")$then()
+main_frame <- page2$main_frame()
+```
+
+##### [opener](https://playwright.dev/docs/api/class-page#page-opener)
+
+Returns the opener for popup pages and null for others. If the opener
+has been closed already the returns null.
+
+``` r
+page2 <- context$new_page()$then()
+page2$goto("https://playwright.dev/")$then()
+opener <- page2$opener()$then()
+```
+
+##### [pause](https://playwright.dev/docs/api/class-page#page-pause)
+
+Pauses script execution. Playwright will stop executing the script and
+wait for the user to either press ‘Resume’ button in the page overlay or
+to call playwright.resume() in the DevTools console.
+
+User can inspect selectors or perform manual steps while paused. Resume
+will continue running the original script from the place it was paused.
+
+``` r
+page2 <- context$new_page()$then()
+page2$goto("https://playwright.dev/")$then()
+page2$pause()$then()
+```
+
+##### [pdf](https://playwright.dev/docs/api/class-page#page-pdf)
+
+Returns the PDF buffer.
+
+``` r
+page2 <- context$new_page()$then()
+page2$goto("https://playwright.dev/")$then()
+page2$emulate_media(list(media="screen"))$then()
+pdf <- page2$pdf()$then()
+```
+
+##### [reload](https://playwright.dev/docs/api/class-page#page-reload)
+
+This method reloads the current page, in the same way as if the user had
+triggered a browser refresh. Returns the main resource response. In case
+of multiple redirects, the navigation will resolve with the response of
+the last redirect.
+
+``` r
+page2 <- context$new_page()$then()
+page2$goto("https://playwright.dev/")$then()
+page2$reload()$then()$status()
+```
+
+##### [remove_locator_handler]()
+
+Removes all locator handlers added by page.addLocatorHandler() for a
+specific locator.
+
+##### [route]()
+
+Routing provides the capability to modify network requests that are made
+by a page.
+
+Once routing is enabled, every request matching the url pattern will
+stall unless it’s continued, fulfilled or aborted.
+
+##### [route_from_h_a_r]()
+
+If specified the network requests that are made in the page will be
+served from the HAR file. Read more about Replaying from HAR.
+
+Playwright will not serve requests intercepted by Service Worker from
+the HAR file. See this issue. We recommend disabling Service Workers
+when using request interception by setting
+Browser.newContext.serviceWorkers to ‘block’.
+
+##### [screenshot]()
+
+Returns the buffer with the captured screenshot.
+
+##### [set_content]()
+
+This method internally calls document.write(), inheriting all its
+specific characteristics and behaviors.
+
+##### [set_default_navigation_timeout]()
+
+This setting will change the default maximum navigation time for the
+following methods and related shortcuts:
+
+page.goBack() page.goForward() page.goto() page.reload()
+page.setContent() page.waitForNavigation() page.waitForURL()
+
+##### [set_default_timeout]()
+
+This setting will change the default maximum time for all the methods
+accepting timeout option.
+
+##### [set_extra_h_t_t_p_headers]()
+
+The extra HTTP headers will be sent with every request the page
+initiates.
+
+##### [set_viewport_size]()
+
+In the case of multiple pages in a single browser, each page can have
+its own viewport size. However, browser.newContext() allows to set
+viewport size (and more) for all pages in the context at once.
+
+page.setViewportSize() will resize the page. A lot of websites don’t
+expect phones to change size, so you should set the viewport size before
+navigating to the page. page.setViewportSize() will also reset screen
+size, use browser.newContext() with screen and viewport parameters if
+you need better control of these properties.
+
+##### [title]()
+
+Returns the page’s title.
+
+##### [unroute]()
+
+Removes a route created with page.route(). When handler is not
+specified, removes all routes for the url.
+
+##### [unroute_all]()
+
+Removes all routes created with page.route() and page.routeFromHAR().
+
+##### [url]()
+
+##### [video]()
+
+Video object associated with this page.
+
+##### [viewport_size]()
+
+##### [wait_for_event]()
+
+Waits for event to fire and passes its value into the predicate
+function. Returns when the predicate returns truthy value. Will throw an
+error if the page is closed before the event is fired. Returns the event
+data value.
+
+##### [wait_for_function]()
+
+Returns when the pageFunction returns a truthy value. It resolves to a
+JSHandle of the truthy value.
+
+##### [wait_for_load_state]()
+
+Returns when the required load state has been reached.
+
+This resolves when the page reaches a required load state, load by
+default. The navigation must have been committed when this method is
+called. If current document has already reached the required state,
+resolves immediately.
+
+##### [wait_for_request]()
+
+Waits for the matching request and returns it. See waiting for event for
+more details about events.
+
+##### [wait_for_response]()
+
+Returns the matched response. See waiting for event for more details
+about events.
+
+##### [wait_for_u_r_l]()
+
+Waits for the main frame to navigate to the given URL.
+
+##### [workers]()
+
+This method returns all of the dedicated WebWorkers associated with the
+page.
 
 #### [Locator](https://playwright.dev/docs/api/class-locator)
 
@@ -637,7 +1162,7 @@ page$get_by_role("link")$last()$scroll_into_view_if_needed(list(delay=100))$then
 
 ##### [select_option](https://playwright.dev/docs/api/class-locator#locator-select-option)
 
-Selects option or options in <select>.
+Selects option or options in `<select>`.
 
 ``` r
 page_2 <- context$new_page()$then()

@@ -6,6 +6,8 @@ const Browser = require("./browser");
 const Context = require("./context");
 const Locator = require("./locator");
 const Response = require("./response");
+const Frame = require("./frame");
+const FrameLocator = require("./frame-locator");
 
 class Page {
   type = 'Page'
@@ -29,7 +31,7 @@ class Page {
       return IPromise.resolve(ret);
     }
 
-    ret = cast(ret, {Browser, Context, Page, Locator, Response})
+    ret = cast(ret, {Browser, Context, Page, Locator, Response, Frame, FrameLocator})
     return ret;
   }
 }

@@ -33,13 +33,15 @@ exports.promisePlugin = (instance, opts, next) => {
       if (promise) {
         ret = await promise.then();
       } else {
-        const Browser = (await import("./browser.js")).default;
-        const Context = (await import("./context.js")).default;
-        const Page = (await import("./page.js")).default;
-        const Locator = (await import("./locator.js")).default;
-        const Response = (await import("./response.js")).default;
+        const Browser = (await import("./response/browser.js")).default;
+        const Context = (await import("./response/context.js")).default;
+        const Page = (await import("./response/page.js")).default;
+        const Locator = (await import("./response/locator.js")).default;
+        const Response = (await import("./response/response.js")).default;
+        const Frame = (await import("./response/frame.js")).default;
+        const FrameLocator = (await import("./response/frame-locator.js")).default;
         
-        ret = cast(ret, { Browser, Context, Page, Locator, Response });
+        ret = cast(ret, { Browser, Context, Page, Locator, Response, Frame, FrameLocator });
       }
 
       reply.type("application/json").send(ret);
