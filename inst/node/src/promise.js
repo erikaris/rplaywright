@@ -38,10 +38,14 @@ exports.promisePlugin = (instance, opts, next) => {
         const Page = (await import("./response/page.js")).default;
         const Locator = (await import("./response/locator.js")).default;
         const Response = (await import("./response/response.js")).default;
+        const Request = (await import("./response/request.js")).default;
         const Frame = (await import("./response/frame.js")).default;
         const FrameLocator = (await import("./response/frame-locator.js")).default;
+        const Video = (await import("./response/video.js")).default;
+        const JSHandle = (await import("./response/jshandle.js")).default;
+        const Worker = (await import("./response/worker.js")).default;
         
-        ret = cast(ret, { Browser, Context, Page, Locator, Response, Frame, FrameLocator });
+        ret = cast(ret, { Browser, Context, Page, Locator, Request, Response, JSHandle, Frame, FrameLocator, Video, Worker });
       }
 
       reply.type("application/json").send(ret);

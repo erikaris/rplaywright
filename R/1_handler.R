@@ -28,10 +28,22 @@ cast <- function(meta, selff) {
     return(locator)
   }
 
+  if (!is.null(meta$type) && meta$type == "Request") {
+    response <- Request$new(selff)
+    response$meta = meta
+    return(response)
+  }
+
   if (!is.null(meta$type) && meta$type == "Response") {
     response <- Response$new(selff)
     response$meta = meta
     return(response)
+  }
+
+  if (!is.null(meta$type) && meta$type == "JSHandle") {
+    jshandle <- JSHandle$new(selff)
+    jshandle$meta = meta
+    return(jshandle)
   }
 
   if (!is.null(meta$type) && meta$type == "Frame") {
@@ -44,6 +56,18 @@ cast <- function(meta, selff) {
     frameLocator <- FrameLocator$new(selff)
     frameLocator$meta = meta
     return(frameLocator)
+  }
+
+  if (!is.null(meta$type) && meta$type == "Video") {
+    video <- Video$new(selff)
+    video$meta = meta
+    return(video)
+  }
+
+  if (!is.null(meta$type) && meta$type == "Worker") {
+    worker <- Worker$new(selff)
+    worker$meta = meta
+    return(worker)
   }
 
   if (!is.null(meta$type) && meta$type == "Value") {

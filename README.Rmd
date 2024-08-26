@@ -470,27 +470,51 @@ page2$reload()$then()$status()
 
 Removes all locator handlers added by page.addLocatorHandler() for a specific locator.
 
-##### [route]()
+``` {r remove_locator_handler, eval=FALSE}
+page$remove_locator_handler()
+page$goto("https://playwright.dev/")$then()
+```
+
+##### [route](https://playwright.dev/docs/api/class-page#page-route)
 
 Routing provides the capability to modify network requests that are made by a page.
 
 Once routing is enabled, every request matching the url pattern will stall unless it's continued, fulfilled or aborted.
 
-##### [route_from_h_a_r]()
+``` {r route, eval=FALSE}
+page$route("**/*.{png,jpg,jpeg}", "route => route.abort()")$then()
+page$goto("https://playwright.dev/")$then()
+```
+
+##### [route_from_h_a_r](https://playwright.dev/docs/api/class-page#page-route-from-har)
 
 If specified the network requests that are made in the page will be served from the HAR file. Read more about Replaying from HAR.
 
 Playwright will not serve requests intercepted by Service Worker from the HAR file. See this issue. We recommend disabling Service Workers when using request interception by setting Browser.newContext.serviceWorkers to 'block'.
 
-##### [screenshot]()
+``` {r route_from_h_a_r, eval=FALSE}
+page$route_from_h_a_r("/path/to/har")
+page$goto("https://playwright.dev/")$then()
+```
+
+##### [screenshot](https://playwright.dev/docs/api/class-page#page-screenshot)
 
 Returns the buffer with the captured screenshot.
 
-##### [set_content]()
+``` {r page_screenshot, eval=FALSE}
+page$goto("https://playwright.dev/")$then()
+page_screenshot <- page$screenshot()$then()
+```
+
+##### [set_content](https://playwright.dev/docs/api/class-page#page-set-content)
 
 This method internally calls document.write(), inheriting all its specific characteristics and behaviors.
 
-##### [set_default_navigation_timeout]()
+``` {r set_content, eval=FALSE}
+page$set_content('<button data-testid="directions">Itinéraire</button>')$then()
+```
+
+##### [set_default_navigation_timeout](https://playwright.dev/docs/api/class-page#page-set-default-navigation-timeout)
 
 This setting will change the default maximum navigation time for the following methods and related shortcuts:
 
@@ -502,73 +526,158 @@ page.setContent()
 page.waitForNavigation()
 page.waitForURL()
 
-##### [set_default_timeout]()
+``` {r set_default_navigation_timeout, eval=FALSE}
+page$set_default_navigation_timeout(100)
+```
+
+##### [set_default_timeout](https://playwright.dev/docs/api/class-page#page-set-default-timeout)
 
 This setting will change the default maximum time for all the methods accepting timeout option.
+
+``` {r set_default_timeout, eval=FALSE}
+page$set_default_timeout(100)
+```
 
 ##### [set_extra_h_t_t_p_headers]()
 
 The extra HTTP headers will be sent with every request the page initiates.
 
-##### [set_viewport_size]()
+``` {r set_extra_h_t_t_p_headers, eval=FALSE}
+page$set_extra_h_t_t_p_headers(list("setCookies", "token=token"))$then()
+page$set_content('<button data-testid="directions">Itinéraire</button>')$then()
+```
+
+##### [set_viewport_size](https://playwright.dev/docs/api/class-page#page-set-viewport-size)
 
 In the case of multiple pages in a single browser, each page can have its own viewport size. However, browser.newContext() allows to set viewport size (and more) for all pages in the context at once.
 
 page.setViewportSize() will resize the page. A lot of websites don't expect phones to change size, so you should set the viewport size before navigating to the page. page.setViewportSize() will also reset screen size, use browser.newContext() with screen and viewport parameters if you need better control of these properties.
 
-##### [title]()
+``` {r set_viewport_size, eval=FALSE}
+page$set_viewport_size(list(width=800, height=600))$then()
+page$goto("https://playwright.dev/")$then()
+```
+
+##### [title](https://playwright.dev/docs/api/class-page#page-title)
 
 Returns the page's title.
 
-##### [unroute]()
+``` {r title, eval=FALSE}
+page$goto("https://playwright.dev/")$then()
+title <- page$title()$then()
+```
+
+##### [unroute](https://playwright.dev/docs/api/class-page#page-unroute)
 
 Removes a route created with page.route(). When handler is not specified, removes all routes for the url.
 
-##### [unroute_all]()
+``` {r unroute, eval=FALSE}
+page$unroute("**/*.{png,jpg,jpeg}", "route => route.abort()")$then()
+page$goto("https://playwright.dev/")$then()
+```
+
+##### [unroute_all](https://playwright.dev/docs/api/class-page#page-unroute-all)
 
 Removes all routes created with page.route() and page.routeFromHAR().
 
-##### [url]()
+``` {r unroute_all, eval=FALSE}
+page$unroute_all()$then()
+page$goto("https://playwright.dev/")$then()
+```
 
+##### [url](https://playwright.dev/docs/api/class-page#page-url)
 
+``` {r page_url, eval=FALSE}
+page$goto("https://playwright.dev/")$then()
+url <- page$url()
+```
 
-##### [video]()
+##### [video](https://playwright.dev/docs/api/class-page#page-video)
 
 Video object associated with this page.
 
-##### [viewport_size]()
+``` {r video, eval=FALSE}
+page$goto("https://playwright.dev/")$then()
+video <- page$video()
+```
 
+##### [viewport_size](https://playwright.dev/docs/api/class-page#page-viewport-size)
 
+``` {r viewport_size, eval=FALSE}
+page$goto("https://playwright.dev/")$then()
+viewport_size <- page$viewport_size()
+```
 
-##### [wait_for_event]()
+##### [wait_for_event](https://playwright.dev/docs/api/class-page#page-wait-for-event)
 
 Waits for event to fire and passes its value into the predicate function. Returns when the predicate returns truthy value. Will throw an error if the page is closed before the event is fired. Returns the event data value.
 
-##### [wait_for_function]()
+``` {r wait_for_event, eval=FALSE}
+ev_promise <- page$wait_for_event("load")
+page$goto("https://playwright.dev/")$then()
+ev <- ev_promise$then()
+```
+
+##### [wait_for_function](https://playwright.dev/docs/api/class-page#page-wait-for-function)
 
 Returns when the pageFunction returns a truthy value. It resolves to a JSHandle of the truthy value.
 
-##### [wait_for_load_state]()
+``` {r wait_for_function, eval=FALSE}
+fn_promise <- page$wait_for_function("() => window.innerWidth < 100")
+page$set_viewport_size(list(width=50, height=50))$then()
+js <- fn_promise$then()
+```
+
+##### [wait_for_load_state](https://playwright.dev/docs/api/class-page#page-wait-for-load-state)
 
 Returns when the required load state has been reached.
 
 This resolves when the page reaches a required load state, load by default. The navigation must have been committed when this method is called. If current document has already reached the required state, resolves immediately.
 
-##### [wait_for_request]()
+``` {r wait_for_load_state, eval=FALSE}
+ev_promise <- page$wait_for_load_state("load")
+page$goto("https://playwright.dev/")$then()
+ev <- ev_promise$then()
+```
+
+##### [wait_for_request](https://playwright.dev/docs/api/class-page#page-wait-for-request)
 
 Waits for the matching request and returns it. See waiting for event for more details about events.
 
-##### [wait_for_response]()
+``` {r wait_for_request, eval=FALSE}
+req_promise <- page$wait_for_request("(req) => req.url().includes('playwright.dev')")
+page$goto("https://playwright.dev/")$then()
+req <- req_promise$then()
+```
+
+##### [wait_for_response](https://playwright.dev/docs/api/class-page#page-wait-for-response)
 
 Returns the matched response. See waiting for event for more details about events.
 
-##### [wait_for_u_r_l]()
+``` {r wait_for_response, eval=FALSE}
+resp_promise <- page$wait_for_response("(resp) => resp.url().includes('playwright.dev')")
+page$goto("https://playwright.dev/")$then()
+resp <- resp_promise$then()
+```
+
+##### [wait_for_u_r_l](https://playwright.dev/docs/api/class-page#page-wait-for-url)
 
 Waits for the main frame to navigate to the given URL.
+
+``` {r wait_for_u_r_l, eval=FALSE}
+resp_promise <- page$wait_for_u_r_l("https://playwright.dev/")
+page$goto("https://playwright.dev/")$then()
+resp_promise$then()
+```
 
 ##### [workers]()
 
 This method returns all of the dedicated WebWorkers associated with the page.
+
+``` {r workers, eval=FALSE}
+page$goto("https://playwright.dev/")$then()
+workers <- page$workers()
+```
 
 
 #### [Locator](https://playwright.dev/docs/api/class-locator)
@@ -1015,7 +1124,7 @@ page_2$locator("input")$press_sequentially("World", list(delay=100))$then()
 
 Take a screenshot of the element matching the locator.
 
-``` {r screenshot, eval=FALSE}
+``` {r locator_screenshot, eval=FALSE}
 locator_screenshot <- page$get_by_role("link")$first()$screenshot()$then()
 ```
 
@@ -1265,7 +1374,7 @@ text <- resp$text()$then()
 
 Contains the URL of the response.
 
-``` {r url, eval=FALSE}
+``` {r response_url, eval=FALSE}
 url <- resp$url()
 ```
 

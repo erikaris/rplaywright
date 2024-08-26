@@ -23,37 +23,37 @@ const Page = require("./response/page");
  * @param {(err?: Error | undefined) => void} next
  */
 exports.pagePlugin = (instance, opts, next) => {
-  instance.post(
-    "/new",
-    /**
-     * @param {FastifyRequest<{ Body: NewPageRequestBody }>} request
-     * @param {FastifyReply<{ReplyType : NewPageResponse}>} reply
-     * */
-    async function (request, reply) {
-      const page_id = uuid.v4();
-      const { browser_id, context } = contexts[request.body.context_id];
-      if (context) {
-        const page = await context.newPage();
-        pages[page_id] = { context_id: request.body.context_id, page };
+  // instance.post(
+  //   "/new",
+  //   /**
+  //    * @param {FastifyRequest<{ Body: NewPageRequestBody }>} request
+  //    * @param {FastifyReply<{ReplyType : NewPageResponse}>} reply
+  //    * */
+  //   async function (request, reply) {
+  //     const page_id = uuid.v4();
+  //     const { browser_id, context } = contexts[request.body.context_id];
+  //     if (context) {
+  //       const page = await context.newPage();
+  //       pages[page_id] = { context_id: request.body.context_id, page };
 
-        if (!!request.body.url) {
-          if (!!request.body.async) {
-            page.goto(request.body.url);
-          } else {
-            await page.goto(request.body.url);
-          }
-        } else if (!!request.body.content) {
-          await page.setContent(request.body.content);
-        }
+  //       if (!!request.body.url) {
+  //         if (!!request.body.async) {
+  //           page.goto(request.body.url);
+  //         } else {
+  //           await page.goto(request.body.url);
+  //         }
+  //       } else if (!!request.body.content) {
+  //         await page.setContent(request.body.content);
+  //       }
 
-        reply.send({
-          browser_id,
-          context_id: request.body.context_id,
-          page_id,
-        });
-      }
-    }
-  );
+  //       reply.send({
+  //         browser_id,
+  //         context_id: request.body.context_id,
+  //         page_id,
+  //       });
+  //     }
+  //   }
+  // );
 
   // instance.post(
   //   "/goto",
@@ -205,160 +205,160 @@ exports.pagePlugin = (instance, opts, next) => {
   //   }
   // );
 
-  /**
-   * @param {Response} resp
-   * @param {PageWaitForResponseFilter} f
-   */
-  const includes = async (resp, f) => {
-    if (f?.url) return resp.url().includes(f?.url);
-    return false;
-  };
+  // /**
+  //  * @param {Response} resp
+  //  * @param {PageWaitForResponseFilter} f
+  //  */
+  // const includes = async (resp, f) => {
+  //   if (f?.url) return resp.url().includes(f?.url);
+  //   return false;
+  // };
 
-  /**
-   * @param {Response} resp
-   * @param {PageWaitForResponseFilterAnd | PageWaitForResponseFilterOr} f
-   */
-  const filter = async (resp, f) => {
-    if (f?.or) {
-      let isTrue = false;
-      for (const _f of f?.or || []) {
-        if (_f?.or || _f?.and) isTrue = isTrue || (await filter(resp, _f));
-        else isTrue = isTrue || (await includes(resp, _f));
-      }
-      return isTrue;
-    } else if (f?.and) {
-      let isTrue = false;
-      for (const _f of f?.and || []) {
-        if (_f?.or || _f?.and) isTrue = isTrue && (await filter(resp, _f));
-        else isTrue = isTrue && (await includes(resp, _f));
-      }
-      return isTrue;
-    }
+  // /**
+  //  * @param {Response} resp
+  //  * @param {PageWaitForResponseFilterAnd | PageWaitForResponseFilterOr} f
+  //  */
+  // const filter = async (resp, f) => {
+  //   if (f?.or) {
+  //     let isTrue = false;
+  //     for (const _f of f?.or || []) {
+  //       if (_f?.or || _f?.and) isTrue = isTrue || (await filter(resp, _f));
+  //       else isTrue = isTrue || (await includes(resp, _f));
+  //     }
+  //     return isTrue;
+  //   } else if (f?.and) {
+  //     let isTrue = false;
+  //     for (const _f of f?.and || []) {
+  //       if (_f?.or || _f?.and) isTrue = isTrue && (await filter(resp, _f));
+  //       else isTrue = isTrue && (await includes(resp, _f));
+  //     }
+  //     return isTrue;
+  //   }
 
-    return true;
-  };
+  //   return true;
+  // };
 
-  instance.post(
-    "/waitForResponseV1",
-    /**
-     * @param {FastifyRequest<{ Body: PageWaitForResponseRequestBody }>} request
-     * @param {FastifyReply<{ReplyType : PageWaitForResponseResponse}>} reply
-     * */
-    async function (request, reply) {
-      const { context_id, page } = pages[request.body.page_id];
-      const { browser_id } = contexts[context_id];
-      if (page) {
-        const resp = await Promise.race([
-          page
-            .waitForResponse(
-              async (resp) => {
-                return await filter(resp, request.body?.filter);
-              },
-              { timeout: request.body.timeout }
-            )
-            .then(async (r) => {
-              if (r.ok())
-                return { success: true, url: r.url(), message: await r.text() };
-              else
-                return {
-                  success: false,
-                  url: r.url(),
-                  message: await r.text(),
-                };
-            }),
-          page.waitForTimeout(request.body.timeout),
-        ]);
+  // instance.post(
+  //   "/waitForResponseV1",
+  //   /**
+  //    * @param {FastifyRequest<{ Body: PageWaitForResponseRequestBody }>} request
+  //    * @param {FastifyReply<{ReplyType : PageWaitForResponseResponse}>} reply
+  //    * */
+  //   async function (request, reply) {
+  //     const { context_id, page } = pages[request.body.page_id];
+  //     const { browser_id } = contexts[context_id];
+  //     if (page) {
+  //       const resp = await Promise.race([
+  //         page
+  //           .waitForResponse(
+  //             async (resp) => {
+  //               return await filter(resp, request.body?.filter);
+  //             },
+  //             { timeout: request.body.timeout }
+  //           )
+  //           .then(async (r) => {
+  //             if (r.ok())
+  //               return { success: true, url: r.url(), message: await r.text() };
+  //             else
+  //               return {
+  //                 success: false,
+  //                 url: r.url(),
+  //                 message: await r.text(),
+  //               };
+  //           }),
+  //         page.waitForTimeout(request.body.timeout),
+  //       ]);
 
-        if (!resp) resp = { success: false, url: "", message: "Timeout" };
+  //       if (!resp) resp = { success: false, url: "", message: "Timeout" };
 
-        reply.send({
-          browser_id,
-          context_id,
-          page_id: request.body.page_id,
-          ...resp,
-        });
-      }
-    }
-  );
+  //       reply.send({
+  //         browser_id,
+  //         context_id,
+  //         page_id: request.body.page_id,
+  //         ...resp,
+  //       });
+  //     }
+  //   }
+  // );
 
-  instance.post(
-    "/scrollTo",
-    /**
-     * @param {FastifyRequest<{ Body: PageScrollDownRequestBody }>} request
-     * @param {FastifyReply<{ReplyType : PageScrollDownResponse}>} reply
-     * */
-    async function (request, reply) {
-      const { context_id, page } = pages[request.body.page_id];
-      const { browser_id } = contexts[context_id];
-      if (page) {
-        await page.evaluate((args) => {
-          // console.log(JSON.stringify(args))
-          window.scrollTo({
-            behavior: "smooth",
-            ...(args || {}),
-          });
-        }, request.body);
+  // instance.post(
+  //   "/scrollTo",
+  //   /**
+  //    * @param {FastifyRequest<{ Body: PageScrollDownRequestBody }>} request
+  //    * @param {FastifyReply<{ReplyType : PageScrollDownResponse}>} reply
+  //    * */
+  //   async function (request, reply) {
+  //     const { context_id, page } = pages[request.body.page_id];
+  //     const { browser_id } = contexts[context_id];
+  //     if (page) {
+  //       await page.evaluate((args) => {
+  //         // console.log(JSON.stringify(args))
+  //         window.scrollTo({
+  //           behavior: "smooth",
+  //           ...(args || {}),
+  //         });
+  //       }, request.body);
 
-        reply.send({
-          browser_id,
-          context_id,
-          page_id: request.body.page_id,
-        });
-      }
-    }
-  );
+  //       reply.send({
+  //         browser_id,
+  //         context_id,
+  //         page_id: request.body.page_id,
+  //       });
+  //     }
+  //   }
+  // );
 
-  instance.post(
-    "/scrollToBottom",
-    /**
-     * @param {FastifyRequest<{ Body: PageScrollToBottomRequestBody }>} request
-     * @param {FastifyReply<{ReplyType : PageScrollToBottomResponse}>} reply
-     * */
-    async function (request, reply) {
-      const { context_id, page } = pages[request.body.page_id];
-      const { browser_id } = contexts[context_id];
-      if (page) {
-        await page.evaluate(() =>
-          window.scrollTo({
-            behavior: "smooth",
-            top: document.body.scrollHeight,
-          })
-        );
+  // instance.post(
+  //   "/scrollToBottom",
+  //   /**
+  //    * @param {FastifyRequest<{ Body: PageScrollToBottomRequestBody }>} request
+  //    * @param {FastifyReply<{ReplyType : PageScrollToBottomResponse}>} reply
+  //    * */
+  //   async function (request, reply) {
+  //     const { context_id, page } = pages[request.body.page_id];
+  //     const { browser_id } = contexts[context_id];
+  //     if (page) {
+  //       await page.evaluate(() =>
+  //         window.scrollTo({
+  //           behavior: "smooth",
+  //           top: document.body.scrollHeight,
+  //         })
+  //       );
 
-        reply.send({
-          browser_id,
-          context_id,
-          page_id: request.body.page_id,
-        });
-      }
-    }
-  );
+  //       reply.send({
+  //         browser_id,
+  //         context_id,
+  //         page_id: request.body.page_id,
+  //       });
+  //     }
+  //   }
+  // );
 
-  instance.post(
-    "/scrollToRight",
-    /**
-     * @param {FastifyRequest<{ Body: PageScrollToBottomRequestBody }>} request
-     * @param {FastifyReply<{ReplyType : PageScrollToBottomResponse}>} reply
-     * */
-    async function (request, reply) {
-      const { context_id, page } = pages[request.body.page_id];
-      const { browser_id } = contexts[context_id];
-      if (page) {
-        await page.evaluate(() =>
-          window.scrollTo({
-            behavior: "smooth",
-            top: document.body.scrollWidth,
-          })
-        );
+  // instance.post(
+  //   "/scrollToRight",
+  //   /**
+  //    * @param {FastifyRequest<{ Body: PageScrollToBottomRequestBody }>} request
+  //    * @param {FastifyReply<{ReplyType : PageScrollToBottomResponse}>} reply
+  //    * */
+  //   async function (request, reply) {
+  //     const { context_id, page } = pages[request.body.page_id];
+  //     const { browser_id } = contexts[context_id];
+  //     if (page) {
+  //       await page.evaluate(() =>
+  //         window.scrollTo({
+  //           behavior: "smooth",
+  //           top: document.body.scrollWidth,
+  //         })
+  //       );
 
-        reply.send({
-          browser_id,
-          context_id,
-          page_id: request.body.page_id,
-        });
-      }
-    }
-  );
+  //       reply.send({
+  //         browser_id,
+  //         context_id,
+  //         page_id: request.body.page_id,
+  //       });
+  //     }
+  //   }
+  // );
 
   // instance.post(
   //   "/close",
@@ -443,7 +443,15 @@ exports.pagePlugin = (instance, opts, next) => {
       //   return vmarg;
       // });
 
+      if (command == 'waitForRequest') {
+        args[0] = eval(args[0]);
+      }
+
       if (command == 'waitForResponse') {
+        args[0] = eval(args[0]);
+      }
+
+      if (command == 'waitForFunction') {
         args[0] = eval(args[0]);
       }
 
@@ -456,6 +464,10 @@ exports.pagePlugin = (instance, opts, next) => {
       }
 
       if (command == 'exposeFunction') {
+        if (args[1]) args[1] = eval(args[1]);
+      }
+
+      if (command == 'route') {
         if (args[1]) args[1] = eval(args[1]);
       }
 

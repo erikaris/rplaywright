@@ -2,7 +2,7 @@ const { objs } = require("../vars.js");
 const { isObject, camelCase } = require("lodash");
 const playwright = require("playwright");
 
-function cast(ret, { Browser, Context, Page, Locator, Response, Frame, FrameLocator } = {}, level = 0) {
+function cast(ret, { Browser, Context, Page, Locator, Request, Response, JSHandle, Frame, FrameLocator, Video, Worker } = {}, level = 0) {
   let type = ret?.constructor?.name;
 
   if (type == "ElementHandle") {
@@ -35,8 +35,20 @@ function cast(ret, { Browser, Context, Page, Locator, Response, Frame, FrameLoca
     return b;
   }
 
+  if (type == "Request" && Request) {
+    const b = new Request(ret);
+    objs[b.id] = b;
+    return b;
+  }
+
   if (type == "Response" && Response) {
     const b = new Response(ret);
+    objs[b.id] = b;
+    return b;
+  }
+
+  if (type == "JSHandle" && JSHandle) {
+    const b = new JSHandle(ret);
     objs[b.id] = b;
     return b;
   }
@@ -53,15 +65,27 @@ function cast(ret, { Browser, Context, Page, Locator, Response, Frame, FrameLoca
     return b;
   }
 
+  if (type == "Video" && Video) {
+    const b = new Video(ret);
+    objs[b.id] = b;
+    return b;
+  }
+
+  if (type == "Worker" && Worker) {
+    const b = new Worker(ret);
+    objs[b.id] = b;
+    return b;
+  }
+
   if (Array.isArray(ret)) {
-    ret = ret.map((rec) => cast(rec, { Browser, Context, Page, Locator, Response, Frame, FrameLocator }, level+1));
+    ret = ret.map((rec) => cast(rec, { Browser, Context, Page, Locator, Request, Response, JSHandle, Frame, FrameLocator, Video, Worker }, level+1));
   }
 
   if (isObject(ret)) {
     ret = Object.keys(ret).reduce(
       (obj, key) => ({
         ...obj,
-        [key]: cast(ret[key], { Browser, Context, Page, Locator, Response, Frame, FrameLocator }, level+1),
+        [key]: cast(ret[key], { Browser, Context, Page, Locator, Request, Response, JSHandle, Frame, FrameLocator, Video, Worker }, level+1),
       }),
       {}
     );
