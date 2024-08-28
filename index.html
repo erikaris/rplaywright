@@ -1399,7 +1399,8 @@ Math.random = () => 42;
 <li><p>page.on(‘framedetached’) - fired when the frame gets detached from the page. A Frame can be detached from the page only once.</p></li>
 </ul>
 <div class="section level5">
-<h5 id="add_script_tag-1">[add_script_tag]<a class="anchor" aria-label="anchor" href="#add_script_tag-1"></a>
+<h5 id="add_script_tag-1">
+<a href="https://playwright.dev/docs/api/class-frame#frame-add-script-tag" class="external-link">add_script_tag</a><a class="anchor" aria-label="anchor" href="#add_script_tag-1"></a>
 </h5>
 <p>Returns the added tag when the script’s onload fires or when the script content was injected into frame.</p>
 <p>Adds a <code>&lt;script&gt;</code> tag into the page with the desired url or content.</p>
@@ -1412,7 +1413,8 @@ Math.random = () => 42;
 <span><span class="va">child_frame</span><span class="op">$</span><span class="fu">add_script_tag</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>content<span class="op">=</span><span class="st">"document.querySelector('[name=mytext1]').value = 'value from add_script_tag'"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="add_style_tag-1">[add_style_tag]<a class="anchor" aria-label="anchor" href="#add_style_tag-1"></a>
+<h5 id="add_style_tag-1">
+<a href="https://playwright.dev/docs/api/class-frame#frame-add-style-tag" class="external-link">add_style_tag</a><a class="anchor" aria-label="anchor" href="#add_style_tag-1"></a>
 </h5>
 <p>Returns the added tag when the stylesheet’s onload fires or when the CSS content was injected into frame.</p>
 <p>Adds a <code>&lt;link rel="stylesheet"&gt;</code> tag into the page with the desired url or a <code>&lt;style type="text/css"&gt;</code> tag with the content.</p>
@@ -1425,7 +1427,8 @@ Math.random = () => 42;
 <span><span class="va">child_frame</span><span class="op">$</span><span class="fu">add_style_tag</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>content<span class="op">=</span><span class="st">"body { background-color: red }"</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="child_frames">[child_frames]<a class="anchor" aria-label="anchor" href="#child_frames"></a>
+<h5 id="child_frames">
+<a href="https://playwright.dev/docs/api/class-frame#frame-child-frames" class="external-link">child_frames</a><a class="anchor" aria-label="anchor" href="#child_frames"></a>
 </h5>
 <div class="sourceCode" id="cb142"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
@@ -1435,7 +1438,8 @@ Math.random = () => 42;
 <span><span class="va">child_frame_content</span> <span class="op">&lt;-</span> <span class="va">child_frames</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">content</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="content-1">[content]<a class="anchor" aria-label="anchor" href="#content-1"></a>
+<h5 id="content-1">
+<a href="https://playwright.dev/docs/api/class-frame#frame-content" class="external-link">content</a><a class="anchor" aria-label="anchor" href="#content-1"></a>
 </h5>
 <p>Gets the full HTML contents of the frame, including the doctype.</p>
 <div class="sourceCode" id="cb143"><pre class="downlit sourceCode r">
@@ -1446,13 +1450,15 @@ Math.random = () => 42;
 <span><span class="va">child_frame_content</span> <span class="op">&lt;-</span> <span class="va">child_frames</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">content</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="drag_and_drop-1">[drag_and_drop]<a class="anchor" aria-label="anchor" href="#drag_and_drop-1"></a>
+<h5 id="drag_and_drop-1">
+<a href="https://playwright.dev/docs/api/class-frame#frame-drag-and-drop" class="external-link">drag_and_drop</a><a class="anchor" aria-label="anchor" href="#drag_and_drop-1"></a>
 </h5>
 <div class="sourceCode" id="cb144"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">drag_and_drop</span><span class="op">(</span><span class="st">"#source"</span>, <span class="st">"#target"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="evaluate-2">[evaluate]<a class="anchor" aria-label="anchor" href="#evaluate-2"></a>
+<h5 id="evaluate-2">
+<a href="https://playwright.dev/docs/api/class-frame#frame-evaluate" class="external-link">evaluate</a><a class="anchor" aria-label="anchor" href="#evaluate-2"></a>
 </h5>
 <p>Returns the return value of pageFunction.</p>
 <p>If the function passed to the frame.evaluate() returns a Promise, then frame.evaluate() would wait for the promise to resolve and return its value.</p>
@@ -1465,7 +1471,8 @@ Math.random = () => 42;
 <span><span class="va">evaluate_result</span> <span class="op">&lt;-</span> <span class="va">child_frames</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">evaluate</span><span class="op">(</span><span class="st">"([a, b]) =&gt; a * b"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>, <span class="fl">7</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="evaluate_handle-2">[evaluate_handle]<a class="anchor" aria-label="anchor" href="#evaluate_handle-2"></a>
+<h5 id="evaluate_handle-2">
+<a href="https://playwright.dev/docs/api/class-frame#frame-evaluate-handle" class="external-link">evaluate_handle</a><a class="anchor" aria-label="anchor" href="#evaluate_handle-2"></a>
 </h5>
 <p>Returns the return value of pageFunction as a JSHandle.</p>
 <p>The only difference between frame.evaluate() and frame.evaluateHandle() is that frame.evaluateHandle() returns JSHandle.</p>
@@ -1478,7 +1485,8 @@ Math.random = () => 42;
 <span><span class="va">child_frames</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">evaluate_handle</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="frame_element">[frame_element]<a class="anchor" aria-label="anchor" href="#frame_element"></a>
+<h5 id="frame_element">
+<a href="https://playwright.dev/docs/api/class-frame#frame-frame-element" class="external-link">frame_element</a><a class="anchor" aria-label="anchor" href="#frame_element"></a>
 </h5>
 <p>Returns the frame or iframe element handle which corresponds to this frame.</p>
 <p>This is an inverse of elementHandle.contentFrame(). Note that returned handle actually belongs to the parent frame.</p>
@@ -1491,7 +1499,8 @@ Math.random = () => 42;
 <span><span class="va">frame_element</span> <span class="op">&lt;-</span> <span class="va">child_frames</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">frame_element</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="frame_locator-2">[frame_locator]<a class="anchor" aria-label="anchor" href="#frame_locator-2"></a>
+<h5 id="frame_locator-2">
+<a href="https://playwright.dev/docs/api/class-frame#frame-frame-locator" class="external-link">frame_locator</a><a class="anchor" aria-label="anchor" href="#frame_locator-2"></a>
 </h5>
 <p>When working with iframes, you can create a frame locator that will enter the iframe and allow selecting elements in that iframe.</p>
 <div class="sourceCode" id="cb148"><pre class="downlit sourceCode r">
@@ -1500,7 +1509,8 @@ Math.random = () => 42;
 <span><span class="va">frame3</span><span class="op">$</span><span class="fu">get_by_text</span><span class="op">(</span><span class="st">"Berikutnya"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="get_by_alt_text-2">[get_by_alt_text]<a class="anchor" aria-label="anchor" href="#get_by_alt_text-2"></a>
+<h5 id="get_by_alt_text-2">
+<a href="https://playwright.dev/docs/api/class-frame#frame-get-by-alt-text" class="external-link">get_by_alt_text</a><a class="anchor" aria-label="anchor" href="#get_by_alt_text-2"></a>
 </h5>
 <p>Allows locating elements by their alt text.</p>
 <div class="sourceCode" id="cb149"><pre class="downlit sourceCode r">
@@ -1509,7 +1519,8 @@ Math.random = () => 42;
 <span><span class="va">frame3</span><span class="op">$</span><span class="fu">get_by_alt_text</span><span class="op">(</span><span class="st">"Berikutnya"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="get_by_label-2">[get_by_label]<a class="anchor" aria-label="anchor" href="#get_by_label-2"></a>
+<h5 id="get_by_label-2">
+<a href="https://playwright.dev/docs/api/class-frame#frame-get-by-label" class="external-link">get_by_label</a><a class="anchor" aria-label="anchor" href="#get_by_label-2"></a>
 </h5>
 <p>Allows locating input elements by the text of the associated <label> or aria-labelledby element, or by the aria-label attribute.</label></p>
 <div class="sourceCode" id="cb150"><pre class="downlit sourceCode r">
@@ -1518,7 +1529,8 @@ Math.random = () => 42;
 <span><span class="va">frame3</span><span class="op">$</span><span class="fu">get_by_label</span><span class="op">(</span><span class="st">"Berikutnya"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="get_by_placeholder-2">[get_by_placeholder]<a class="anchor" aria-label="anchor" href="#get_by_placeholder-2"></a>
+<h5 id="get_by_placeholder-2">
+<a href="https://playwright.dev/docs/api/class-frame#frame-get-by-placeholder" class="external-link">get_by_placeholder</a><a class="anchor" aria-label="anchor" href="#get_by_placeholder-2"></a>
 </h5>
 <p>Allows locating input elements by the placeholder text.</p>
 <div class="sourceCode" id="cb151"><pre class="downlit sourceCode r">
@@ -1527,7 +1539,8 @@ Math.random = () => 42;
 <span><span class="va">frame3</span><span class="op">$</span><span class="fu">get_by_placeholder</span><span class="op">(</span><span class="st">"Berikutnya"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="get_by_role-2">[get_by_role]<a class="anchor" aria-label="anchor" href="#get_by_role-2"></a>
+<h5 id="get_by_role-2">
+<a href="https://playwright.dev/docs/api/class-frame#frame-get-by-role" class="external-link">get_by_role</a><a class="anchor" aria-label="anchor" href="#get_by_role-2"></a>
 </h5>
 <p>Allows locating elements by their ARIA role, ARIA attributes and accessible name.</p>
 <div class="sourceCode" id="cb152"><pre class="downlit sourceCode r">
@@ -1536,7 +1549,8 @@ Math.random = () => 42;
 <span><span class="va">frame3</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"Berikutnya"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="get_by_test_id-2">[get_by_test_id]<a class="anchor" aria-label="anchor" href="#get_by_test_id-2"></a>
+<h5 id="get_by_test_id-2">
+<a href="https://playwright.dev/docs/api/class-frame#frame-get-by-test-id" class="external-link">get_by_test_id</a><a class="anchor" aria-label="anchor" href="#get_by_test_id-2"></a>
 </h5>
 <p>Locate element by the test id.</p>
 <div class="sourceCode" id="cb153"><pre class="downlit sourceCode r">
@@ -1545,7 +1559,8 @@ Math.random = () => 42;
 <span><span class="va">frame3</span><span class="op">$</span><span class="fu">get_by_test_id</span><span class="op">(</span><span class="st">"Berikutnya"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="get_by_text-2">[get_by_text]<a class="anchor" aria-label="anchor" href="#get_by_text-2"></a>
+<h5 id="get_by_text-2">
+<a href="https://playwright.dev/docs/api/class-frame#frame-get-by-text" class="external-link">get_by_text</a><a class="anchor" aria-label="anchor" href="#get_by_text-2"></a>
 </h5>
 <p>Allows locating elements that contain given text.</p>
 <p>See also locator.filter() that allows to match by another criteria, like an accessible role, and then filter by the text content.</p>
@@ -1555,7 +1570,8 @@ Math.random = () => 42;
 <span><span class="va">frame3</span><span class="op">$</span><span class="fu">get_by_text</span><span class="op">(</span><span class="st">"Berikutnya"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="get_by_title-2">[get_by_title]<a class="anchor" aria-label="anchor" href="#get_by_title-2"></a>
+<h5 id="get_by_title-2">
+<a href="https://playwright.dev/docs/api/class-frame#frame-get-by-title" class="external-link">get_by_title</a><a class="anchor" aria-label="anchor" href="#get_by_title-2"></a>
 </h5>
 <p>Allows locating elements by their title attribute.</p>
 <div class="sourceCode" id="cb155"><pre class="downlit sourceCode r">
@@ -1564,7 +1580,8 @@ Math.random = () => 42;
 <span><span class="va">frame3</span><span class="op">$</span><span class="fu">get_by_title</span><span class="op">(</span><span class="st">"Berikutnya"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="goto-1">[goto]<a class="anchor" aria-label="anchor" href="#goto-1"></a>
+<h5 id="goto-1">
+<a href="https://playwright.dev/docs/api/class-frame#frame-goto" class="external-link">goto</a><a class="anchor" aria-label="anchor" href="#goto-1"></a>
 </h5>
 <p>Returns the main resource response. In case of multiple redirects, the navigation will resolve with the response of the last redirect.</p>
 <p>The method will throw an error if:</p>
@@ -1582,7 +1599,8 @@ Math.random = () => 42;
 <span><span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="is_detached">[is_detached]<a class="anchor" aria-label="anchor" href="#is_detached"></a>
+<h5 id="is_detached">
+<a href="https://playwright.dev/docs/api/class-frame#frame-is-detached" class="external-link">is_detached</a><a class="anchor" aria-label="anchor" href="#is_detached"></a>
 </h5>
 <p>Returns true if the frame has been detached, or false otherwise.</p>
 <div class="sourceCode" id="cb157"><pre class="downlit sourceCode r">
@@ -1591,7 +1609,8 @@ Math.random = () => 42;
 <span><span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">is_detached</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="is_enabled-1">[is_enabled]<a class="anchor" aria-label="anchor" href="#is_enabled-1"></a>
+<h5 id="is_enabled-1">
+<a href="https://playwright.dev/docs/api/class-frame#frame-is-enabled" class="external-link">is_enabled</a><a class="anchor" aria-label="anchor" href="#is_enabled-1"></a>
 </h5>
 <p>Returns whether the element is enabled.</p>
 <div class="sourceCode" id="cb158"><pre class="downlit sourceCode r">
@@ -1600,7 +1619,8 @@ Math.random = () => 42;
 <span><span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">is_enabled</span><span class="op">(</span><span class="st">"[name=mytext3]"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">200</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="locator-3">[locator]<a class="anchor" aria-label="anchor" href="#locator-3"></a>
+<h5 id="locator-3">
+<a href="https://playwright.dev/docs/api/class-frame#frame-locator" class="external-link">locator</a><a class="anchor" aria-label="anchor" href="#locator-3"></a>
 </h5>
 <p>The method returns an element locator that can be used to perform actions on this page / frame. Locator is resolved to the element immediately before performing an action, so a series of actions on the same locator can in fact be performed on different DOM elements. That would happen if the DOM structure between those actions has changed.</p>
 <div class="sourceCode" id="cb159"><pre class="downlit sourceCode r">
@@ -1609,7 +1629,8 @@ Math.random = () => 42;
 <span><span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">locator</span><span class="op">(</span><span class="st">"[name=mytext3]"</span><span class="op">)</span><span class="op">$</span><span class="fu">focus</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="name">[name]<a class="anchor" aria-label="anchor" href="#name"></a>
+<h5 id="name">
+<a href="https://playwright.dev/docs/api/class-frame#frame-name" class="external-link">name</a><a class="anchor" aria-label="anchor" href="#name"></a>
 </h5>
 <p>Returns frame’s name attribute as specified in the tag.</p>
 <p>If the name is empty, returns the id attribute instead.</p>
@@ -1619,7 +1640,8 @@ Math.random = () => 42;
 <span><span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">name</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="page-2">[page]<a class="anchor" aria-label="anchor" href="#page-2"></a>
+<h5 id="page-2">
+<a href="https://playwright.dev/docs/api/class-frame#frame-page" class="external-link">page</a><a class="anchor" aria-label="anchor" href="#page-2"></a>
 </h5>
 <p>Returns the page containing this frame.</p>
 <div class="sourceCode" id="cb161"><pre class="downlit sourceCode r">
@@ -1628,7 +1650,8 @@ Math.random = () => 42;
 <span><span class="va">frame_page_content</span> <span class="op">&lt;-</span> <span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">content</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="parent_frame">[parent_frame]<a class="anchor" aria-label="anchor" href="#parent_frame"></a>
+<h5 id="parent_frame">
+<a href="https://playwright.dev/docs/api/class-frame#frame-parent-frame" class="external-link">parent_frame</a><a class="anchor" aria-label="anchor" href="#parent_frame"></a>
 </h5>
 <p>Parent frame, if any. Detached frames and main frames return null.</p>
 <div class="sourceCode" id="cb162"><pre class="downlit sourceCode r">
@@ -1637,7 +1660,8 @@ Math.random = () => 42;
 <span><span class="va">frame_parent_frame</span> <span class="op">&lt;-</span> <span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">parent_frame</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="set_content-1">[set_content]<a class="anchor" aria-label="anchor" href="#set_content-1"></a>
+<h5 id="set_content-1">
+<a href="https://playwright.dev/docs/api/class-frame#frame-set-content" class="external-link">set_content</a><a class="anchor" aria-label="anchor" href="#set_content-1"></a>
 </h5>
 <p>This method internally calls document.write(), inheriting all its specific characteristics and behaviors.</p>
 <div class="sourceCode" id="cb163"><pre class="downlit sourceCode r">
@@ -1646,7 +1670,8 @@ Math.random = () => 42;
 <span><span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">"content from set_content"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="title-1">[title]<a class="anchor" aria-label="anchor" href="#title-1"></a>
+<h5 id="title-1">
+<a href="https://playwright.dev/docs/api/class-frame#frame-title" class="external-link">title</a><a class="anchor" aria-label="anchor" href="#title-1"></a>
 </h5>
 <p>Returns the page title.</p>
 <div class="sourceCode" id="cb164"><pre class="downlit sourceCode r">
@@ -1655,7 +1680,8 @@ Math.random = () => 42;
 <span><span class="va">frame_title</span> <span class="op">&lt;-</span> <span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">title</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="url-2">[url]<a class="anchor" aria-label="anchor" href="#url-2"></a>
+<h5 id="url-2">
+<a href="https://playwright.dev/docs/api/class-frame#frame-url" class="external-link">url</a><a class="anchor" aria-label="anchor" href="#url-2"></a>
 </h5>
 <p>Returns frame’s url.</p>
 <div class="sourceCode" id="cb165"><pre class="downlit sourceCode r">
@@ -1664,7 +1690,8 @@ Math.random = () => 42;
 <span><span class="va">frame_url</span> <span class="op">&lt;-</span> <span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">url</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="wait_for_function-1">[wait_for_function]<a class="anchor" aria-label="anchor" href="#wait_for_function-1"></a>
+<h5 id="wait_for_function-1">
+<a href="https://playwright.dev/docs/api/class-frame#frame-wait-for-function" class="external-link">wait_for_function</a><a class="anchor" aria-label="anchor" href="#wait_for_function-1"></a>
 </h5>
 <p>Returns when the pageFunction returns a truthy value, returns that value.</p>
 <div class="sourceCode" id="cb166"><pre class="downlit sourceCode r">
@@ -1677,7 +1704,8 @@ Math.random = () => 42;
 <span><span class="va">js</span> <span class="op">&lt;-</span> <span class="va">fn_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="wait_for_load_state-1">[wait_for_load_state]<a class="anchor" aria-label="anchor" href="#wait_for_load_state-1"></a>
+<h5 id="wait_for_load_state-1">
+<a href="https://playwright.dev/docs/api/class-frame#frame-wait-for-load-state" class="external-link">wait_for_load_state</a><a class="anchor" aria-label="anchor" href="#wait_for_load_state-1"></a>
 </h5>
 <p>Waits for the required load state to be reached.</p>
 <p>This returns when the frame reaches a required load state, load by default. The navigation must have been committed when this method is called. If current document has already reached the required state, resolves immediately.</p>
@@ -1691,7 +1719,8 @@ Math.random = () => 42;
 <span><span class="va">ev</span> <span class="op">&lt;-</span> <span class="va">ev_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="wait_for_u_r_l-1">[wait_for_u_r_l]<a class="anchor" aria-label="anchor" href="#wait_for_u_r_l-1"></a>
+<h5 id="wait_for_u_r_l-1">
+<a href="https://playwright.dev/docs/api/class-frame#frame-wait-for-url" class="external-link">wait_for_u_r_l</a><a class="anchor" aria-label="anchor" href="#wait_for_u_r_l-1"></a>
 </h5>
 <p>Waits for the frame to navigate to the given URL.</p>
 <div class="sourceCode" id="cb168"><pre class="downlit sourceCode r">
