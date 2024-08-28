@@ -1235,19 +1235,247 @@ Math.random = () => 42;
 </div>
 </div>
 <div class="section level4">
-<h4 id="response">
-<a href="https://playwright.dev/docs/api/class-response" class="external-link">Response</a><a class="anchor" aria-label="anchor" href="#response"></a>
+<h4 id="request">
+<a href="https://playwright.dev/docs/api/class-request" class="external-link">Request</a><a class="anchor" aria-label="anchor" href="#request"></a>
+</h4>
+<p>Whenever the page sends a request for a network resource the following sequence of events are emitted by Page:</p>
+<ul>
+<li>page.on(‘request’) emitted when the request is issued by the page.</li>
+<li>page.on(‘response’) emitted when/if the response status and headers are received for the request.</li>
+<li>page.on(‘requestfinished’) emitted when the response body is downloaded and the request is complete.</li>
+</ul>
+<p>If request fails at some point, then instead of ‘requestfinished’ event (and possibly instead of ‘response’ event), the page.on(‘requestfailed’) event is emitted.</p>
+<div class="sourceCode" id="cb121"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="section level5">
+<h5 id="all_headers">[all_headers]<a class="anchor" aria-label="anchor" href="#all_headers"></a>
+</h5>
+<p>An object with all the request HTTP headers associated with this request. The header names are lower-cased.</p>
+<div class="sourceCode" id="cb122"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_all_headers</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">all_headers</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="failure">[failure]<a class="anchor" aria-label="anchor" href="#failure"></a>
+</h5>
+<p>The method returns null unless this request has failed, as reported by requestfailed event.</p>
+<div class="sourceCode" id="cb123"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_failure</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">failure</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="frame-1">[frame]<a class="anchor" aria-label="anchor" href="#frame-1"></a>
+</h5>
+<p>Returns the Frame that initiated this request.</p>
+<div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_frame</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">frame</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req_frame</span><span class="op">$</span><span class="fu">url</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="header_value">[header_value]<a class="anchor" aria-label="anchor" href="#header_value"></a>
+</h5>
+<p>Returns the value of the header matching the name. The name is case-insensitive.</p>
+<div class="sourceCode" id="cb125"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_headers_accept</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">header_value</span><span class="op">(</span><span class="st">"accept"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="headers">[headers]<a class="anchor" aria-label="anchor" href="#headers"></a>
+</h5>
+<p>An object with the request HTTP headers. The header names are lower-cased. Note that this method does not return security-related headers, including cookie-related ones. You can use request.allHeaders() for complete list of headers that include cookie information.</p>
+<div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_headers</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">headers</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="headers_array">[headers_array]<a class="anchor" aria-label="anchor" href="#headers_array"></a>
+</h5>
+<p>An array with all the request HTTP headers associated with this request. Unlike request.allHeaders(), header names are NOT lower-cased. Headers with multiple entries, such as Set-Cookie, appear in the array multiple times.</p>
+<div class="sourceCode" id="cb127"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_headers_array</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">headers_array</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="is_navigation_request">[is_navigation_request]<a class="anchor" aria-label="anchor" href="#is_navigation_request"></a>
+</h5>
+<p>Whether this request is driving frame’s navigation.</p>
+<p>Some navigation requests are issued before the corresponding frame is created, and therefore do not have request.frame() available.</p>
+<div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_is_navigation_request</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">is_navigation_request</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="method">[method]<a class="anchor" aria-label="anchor" href="#method"></a>
+</h5>
+<p>Request’s method (GET, POST, etc.)</p>
+<div class="sourceCode" id="cb129"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_method</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">method</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="post_data">[post_data]<a class="anchor" aria-label="anchor" href="#post_data"></a>
+</h5>
+<p>Request’s post body, if any.</p>
+<div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_post_data</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">post_data</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="post_data_buffer">[post_data_buffer]<a class="anchor" aria-label="anchor" href="#post_data_buffer"></a>
+</h5>
+<p>Request’s post body in a binary form, if any.</p>
+<div class="sourceCode" id="cb131"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_post_data_buffer</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">post_data_buffer</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="post_data_j_s_o_n">[post_data_j_s_o_n]<a class="anchor" aria-label="anchor" href="#post_data_j_s_o_n"></a>
+</h5>
+<p>Returns parsed request’s body for form-urlencoded and JSON as a fallback if any.</p>
+<p>When the response is application/x-www-form-urlencoded then a key/value object of the values will be returned. Otherwise it will be parsed as JSON.</p>
+<div class="sourceCode" id="cb132"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_post_data_j_s_o_n</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">post_data_j_s_o_n</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="redirected_from">[redirected_from]<a class="anchor" aria-label="anchor" href="#redirected_from"></a>
+</h5>
+<p>Request that was redirected by the server to this one, if any.</p>
+<p>When the server responds with a redirect, Playwright creates a new Request object. The two requests are connected by redirectedFrom() and redirectedTo() methods. When multiple server redirects has happened, it is possible to construct the whole redirect chain by repeatedly calling redirectedFrom().</p>
+<div class="sourceCode" id="cb133"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_redirected_from</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">redirected_from</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="redirected_to">[redirected_to]<a class="anchor" aria-label="anchor" href="#redirected_to"></a>
+</h5>
+<p>New request issued by the browser if the server responded with redirect.</p>
+<div class="sourceCode" id="cb134"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_redirected_to</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">redirected_to</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="resource_type">[resource_type]<a class="anchor" aria-label="anchor" href="#resource_type"></a>
+</h5>
+<p>Contains the request’s resource type as it was perceived by the rendering engine. ResourceType will be one of the following: document, stylesheet, image, media, font, script, texttrack, xhr, fetch, eventsource, websocket, manifest, other.</p>
+<div class="sourceCode" id="cb135"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_resource_type</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">resource_type</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="response">[response]<a class="anchor" aria-label="anchor" href="#response"></a>
+</h5>
+<p>Returns the matching Response object, or null if the response was not received due to error.</p>
+<div class="sourceCode" id="cb136"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_response</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">response</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req_response</span><span class="op">$</span><span class="fu">ok</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="service_worker">[service_worker]<a class="anchor" aria-label="anchor" href="#service_worker"></a>
+</h5>
+<p>The Service Worker that is performing the request.</p>
+<div class="sourceCode" id="cb137"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_service_worker</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">service_worker</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="sizes">[sizes]<a class="anchor" aria-label="anchor" href="#sizes"></a>
+</h5>
+<p>Returns resource size information for given request.</p>
+<div class="sourceCode" id="cb138"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_sizes</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">sizes</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="timing">[timing]<a class="anchor" aria-label="anchor" href="#timing"></a>
+</h5>
+<p>Returns resource timing information for given request. Most of the timing values become available upon the response, responseEnd becomes available when request finishes. Find more information at Resource Timing API.</p>
+<div class="sourceCode" id="cb139"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_timing</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">timing</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level5">
+<h5 id="url-1">[url]<a class="anchor" aria-label="anchor" href="#url-1"></a>
+</h5>
+<p>URL of the request.</p>
+<div class="sourceCode" id="cb140"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">req_url</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">url</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level4">
+<h4 id="response-1">
+<a href="https://playwright.dev/docs/api/class-response" class="external-link">Response</a><a class="anchor" aria-label="anchor" href="#response-1"></a>
 </h4>
 <p>Response class represents responses which are received by page.</p>
-<div class="sourceCode" id="cb121"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb141"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span> <span class="op">&lt;-</span> <span class="va">context</span><span class="op">$</span><span class="fu">new_page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="section level5">
-<h5 id="all_headers">
-<a href="https://playwright.dev/docs/api/class-response#response-all-headers" class="external-link">all_headers</a><a class="anchor" aria-label="anchor" href="#all_headers"></a>
+<h5 id="all_headers-1">
+<a href="https://playwright.dev/docs/api/class-response#response-all-headers" class="external-link">all_headers</a><a class="anchor" aria-label="anchor" href="#all_headers-1"></a>
 </h5>
 <p>An object with all the response HTTP headers associated with this response.</p>
-<div class="sourceCode" id="cb122"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb142"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">all_headers</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">all_headers</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -1255,7 +1483,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-response#response-body" class="external-link">body</a><a class="anchor" aria-label="anchor" href="#body"></a>
 </h5>
 <p>Returns the base64 encoded response body.</p>
-<div class="sourceCode" id="cb123"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb143"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">body</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">body</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -1263,15 +1491,15 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-response#response-finished" class="external-link">finished</a><a class="anchor" aria-label="anchor" href="#finished"></a>
 </h5>
 <p>Waits for this response to finish, returns always null.</p>
-<div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb144"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">finished</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">finished</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="frame-1">
-<a href="https://playwright.dev/docs/api/class-response#response-frame" class="external-link">frame</a><a class="anchor" aria-label="anchor" href="#frame-1"></a>
+<h5 id="frame-2">
+<a href="https://playwright.dev/docs/api/class-response#response-frame" class="external-link">frame</a><a class="anchor" aria-label="anchor" href="#frame-2"></a>
 </h5>
 <p>Returns the Frame that initiated this response.</p>
-<div class="sourceCode" id="cb125"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb145"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">frame</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">frame</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -1279,15 +1507,15 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-response#response-from-service-worker" class="external-link">from_service_worker</a><a class="anchor" aria-label="anchor" href="#from_service_worker"></a>
 </h5>
 <p>Indicates whether this Response was fulfilled by a Service Worker’s Fetch Handler (i.e. via FetchEvent.respondWith).</p>
-<div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb146"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">from_service_worker</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">from_service_worker</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="header_value">
-<a href="https://playwright.dev/docs/api/class-response#response-header-value" class="external-link">header_value</a><a class="anchor" aria-label="anchor" href="#header_value"></a>
+<h5 id="header_value-1">
+<a href="https://playwright.dev/docs/api/class-response#response-header-value" class="external-link">header_value</a><a class="anchor" aria-label="anchor" href="#header_value-1"></a>
 </h5>
 <p>Returns the value of the header matching the name. The name is case-insensitive. If multiple headers have the same name (except set-cookie), they are returned as a list separated by , . For set-cookie, the separator is used. If no headers are found, null is returned.</p>
-<div class="sourceCode" id="cb127"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb147"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">header_value</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">header_value</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -1295,23 +1523,23 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-response#response-header-values" class="external-link">header_values</a><a class="anchor" aria-label="anchor" href="#header_values"></a>
 </h5>
 <p>Returns all values of the headers matching the name, for example set-cookie. The name is case-insensitive.</p>
-<div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb148"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">header_values</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">header_values</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="headers">
-<a href="https://playwright.dev/docs/api/class-response#response-headers" class="external-link">headers</a><a class="anchor" aria-label="anchor" href="#headers"></a>
+<h5 id="headers-1">
+<a href="https://playwright.dev/docs/api/class-response#response-headers" class="external-link">headers</a><a class="anchor" aria-label="anchor" href="#headers-1"></a>
 </h5>
 <p>An object with the response HTTP headers. The header names are lower-cased. Note that this method does not return security-related headers, including cookie-related ones. You can use response.allHeaders() for complete list of headers that include cookie information.</p>
-<div class="sourceCode" id="cb129"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb149"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">headers</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">headers</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="headers_array">
-<a href="https://playwright.dev/docs/api/class-response#response-headers-array" class="external-link">headers_array</a><a class="anchor" aria-label="anchor" href="#headers_array"></a>
+<h5 id="headers_array-1">
+<a href="https://playwright.dev/docs/api/class-response#response-headers-array" class="external-link">headers_array</a><a class="anchor" aria-label="anchor" href="#headers_array-1"></a>
 </h5>
 <p>An array with all the request HTTP headers associated with this response. Unlike response.allHeaders(), header names are NOT lower-cased. Headers with multiple entries, such as Set-Cookie, appear in the array multiple times.</p>
-<div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb150"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">headers_array</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">headers_array</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -1319,7 +1547,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-response#response-json" class="external-link">json</a><a class="anchor" aria-label="anchor" href="#json"></a>
 </h5>
 <p>Returns the JSON representation of response body. This method will throw if the response body is not parsable via JSON.parse.</p>
-<div class="sourceCode" id="cb131"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb151"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">json</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">json</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -1327,15 +1555,15 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-response#response-ok" class="external-link">ok</a><a class="anchor" aria-label="anchor" href="#ok"></a>
 </h5>
 <p>Contains a boolean stating whether the response was successful (status in the range 200-299) or not.</p>
-<div class="sourceCode" id="cb132"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb152"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ok</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">ok</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="request">
-<a href="https://playwright.dev/docs/api/class-response#response-request" class="external-link">request</a><a class="anchor" aria-label="anchor" href="#request"></a>
+<h5 id="request-1">
+<a href="https://playwright.dev/docs/api/class-response#response-request" class="external-link">request</a><a class="anchor" aria-label="anchor" href="#request-1"></a>
 </h5>
 <p>Returns the matching Request object.</p>
-<div class="sourceCode" id="cb133"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb153"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">request</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">request</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -1343,7 +1571,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-response#response-security-details" class="external-link">security_details</a><a class="anchor" aria-label="anchor" href="#security_details"></a>
 </h5>
 <p>Returns SSL and other security information.</p>
-<div class="sourceCode" id="cb134"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb154"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">security_details</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">security_details</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -1351,7 +1579,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-response#response-server-addr" class="external-link">server_addr</a><a class="anchor" aria-label="anchor" href="#server_addr"></a>
 </h5>
 <p>Returns the IP address and port of the server.</p>
-<div class="sourceCode" id="cb135"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb155"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">server_addr</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">server_addr</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -1359,7 +1587,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-response#response-status" class="external-link">status</a><a class="anchor" aria-label="anchor" href="#status"></a>
 </h5>
 <p>Contains the status code of the response (e.g., 200 for a success).</p>
-<div class="sourceCode" id="cb136"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb156"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">status</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">status</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -1367,7 +1595,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-response#response-status-text" class="external-link">status_text</a><a class="anchor" aria-label="anchor" href="#status_text"></a>
 </h5>
 <p>Contains the status text of the response (e.g. usually an “OK” for a success).</p>
-<div class="sourceCode" id="cb137"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb157"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">status_text</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">status_text</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -1375,21 +1603,21 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-response#response-text" class="external-link">text</a><a class="anchor" aria-label="anchor" href="#text"></a>
 </h5>
 <p>Returns the text representation of response body.</p>
-<div class="sourceCode" id="cb138"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb158"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">text</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">text</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="url-1">
-<a href="https://playwright.dev/docs/api/class-response#response-url" class="external-link">url</a><a class="anchor" aria-label="anchor" href="#url-1"></a>
+<h5 id="url-2">
+<a href="https://playwright.dev/docs/api/class-response#response-url" class="external-link">url</a><a class="anchor" aria-label="anchor" href="#url-2"></a>
 </h5>
 <p>Contains the URL of the response.</p>
-<div class="sourceCode" id="cb139"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb159"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">url</span> <span class="op">&lt;-</span> <span class="va">resp</span><span class="op">$</span><span class="fu">url</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level4">
-<h4 id="frame-2">
-<a href="https://playwright.dev/docs/api/class-frame" class="external-link">Frame</a><a class="anchor" aria-label="anchor" href="#frame-2"></a>
+<h4 id="frame-3">
+<a href="https://playwright.dev/docs/api/class-frame" class="external-link">Frame</a><a class="anchor" aria-label="anchor" href="#frame-3"></a>
 </h4>
 <p>At every point of time, page exposes its current frame tree via the page.mainFrame() and frame.childFrames() methods.</p>
 <p>Frame object’s lifecycle is controlled by three events, dispatched on the page object:</p>
@@ -1404,7 +1632,7 @@ Math.random = () => 42;
 </h5>
 <p>Returns the added tag when the script’s onload fires or when the script content was injected into frame.</p>
 <p>Adds a <code>&lt;script&gt;</code> tag into the page with the desired url or content.</p>
-<div class="sourceCode" id="cb140"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb160"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">main_frame</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">main_frame</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
@@ -1418,7 +1646,7 @@ Math.random = () => 42;
 </h5>
 <p>Returns the added tag when the stylesheet’s onload fires or when the CSS content was injected into frame.</p>
 <p>Adds a <code>&lt;link rel="stylesheet"&gt;</code> tag into the page with the desired url or a <code>&lt;style type="text/css"&gt;</code> tag with the content.</p>
-<div class="sourceCode" id="cb141"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb161"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">main_frame</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">main_frame</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
@@ -1430,7 +1658,7 @@ Math.random = () => 42;
 <h5 id="child_frames">
 <a href="https://playwright.dev/docs/api/class-frame#frame-child-frames" class="external-link">child_frames</a><a class="anchor" aria-label="anchor" href="#child_frames"></a>
 </h5>
-<div class="sourceCode" id="cb142"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb162"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">main_frame</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">main_frame</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
@@ -1442,7 +1670,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-content" class="external-link">content</a><a class="anchor" aria-label="anchor" href="#content-1"></a>
 </h5>
 <p>Gets the full HTML contents of the frame, including the doctype.</p>
-<div class="sourceCode" id="cb143"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb163"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">main_frame</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">main_frame</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
@@ -1453,7 +1681,7 @@ Math.random = () => 42;
 <h5 id="drag_and_drop-1">
 <a href="https://playwright.dev/docs/api/class-frame#frame-drag-and-drop" class="external-link">drag_and_drop</a><a class="anchor" aria-label="anchor" href="#drag_and_drop-1"></a>
 </h5>
-<div class="sourceCode" id="cb144"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb164"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">drag_and_drop</span><span class="op">(</span><span class="st">"#source"</span>, <span class="st">"#target"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
@@ -1463,7 +1691,7 @@ Math.random = () => 42;
 <p>Returns the return value of pageFunction.</p>
 <p>If the function passed to the frame.evaluate() returns a Promise, then frame.evaluate() would wait for the promise to resolve and return its value.</p>
 <p>If the function passed to the frame.evaluate() returns a non-Serializable value, then frame.evaluate() returns undefined. Playwright also supports transferring some additional values that are not serializable by JSON: -0, NaN, Infinity, -Infinity.</p>
-<div class="sourceCode" id="cb145"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb165"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">main_frame</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">main_frame</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
@@ -1477,7 +1705,7 @@ Math.random = () => 42;
 <p>Returns the return value of pageFunction as a JSHandle.</p>
 <p>The only difference between frame.evaluate() and frame.evaluateHandle() is that frame.evaluateHandle() returns JSHandle.</p>
 <p>If the function, passed to the frame.evaluateHandle(), returns a Promise, then frame.evaluateHandle() would wait for the promise to resolve and return its value.</p>
-<div class="sourceCode" id="cb146"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb166"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">main_frame</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">main_frame</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
@@ -1491,7 +1719,7 @@ Math.random = () => 42;
 <p>Returns the frame or iframe element handle which corresponds to this frame.</p>
 <p>This is an inverse of elementHandle.contentFrame(). Note that returned handle actually belongs to the parent frame.</p>
 <p>This method throws an error if the frame has been detached before frameElement() returns.</p>
-<div class="sourceCode" id="cb147"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb167"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">main_frame</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">main_frame</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
@@ -1503,7 +1731,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-frame-locator" class="external-link">frame_locator</a><a class="anchor" aria-label="anchor" href="#frame_locator-2"></a>
 </h5>
 <p>When working with iframes, you can create a frame locator that will enter the iframe and allow selecting elements in that iframe.</p>
-<div class="sourceCode" id="cb148"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb168"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">frame3</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">frame_locator</span><span class="op">(</span><span class="st">"[url=https://ui.vision/demo/webtest/frames/frame_3.html]"</span><span class="op">)</span></span>
 <span><span class="va">frame3</span><span class="op">$</span><span class="fu">get_by_text</span><span class="op">(</span><span class="st">"Berikutnya"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1513,7 +1741,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-get-by-alt-text" class="external-link">get_by_alt_text</a><a class="anchor" aria-label="anchor" href="#get_by_alt_text-2"></a>
 </h5>
 <p>Allows locating elements by their alt text.</p>
-<div class="sourceCode" id="cb149"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb169"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">frame3</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">frame_locator</span><span class="op">(</span><span class="st">"[url=https://ui.vision/demo/webtest/frames/frame_3.html]"</span><span class="op">)</span></span>
 <span><span class="va">frame3</span><span class="op">$</span><span class="fu">get_by_alt_text</span><span class="op">(</span><span class="st">"Berikutnya"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1523,7 +1751,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-get-by-label" class="external-link">get_by_label</a><a class="anchor" aria-label="anchor" href="#get_by_label-2"></a>
 </h5>
 <p>Allows locating input elements by the text of the associated <label> or aria-labelledby element, or by the aria-label attribute.</label></p>
-<div class="sourceCode" id="cb150"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb170"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">frame3</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">frame_locator</span><span class="op">(</span><span class="st">"[url=https://ui.vision/demo/webtest/frames/frame_3.html]"</span><span class="op">)</span></span>
 <span><span class="va">frame3</span><span class="op">$</span><span class="fu">get_by_label</span><span class="op">(</span><span class="st">"Berikutnya"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1533,7 +1761,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-get-by-placeholder" class="external-link">get_by_placeholder</a><a class="anchor" aria-label="anchor" href="#get_by_placeholder-2"></a>
 </h5>
 <p>Allows locating input elements by the placeholder text.</p>
-<div class="sourceCode" id="cb151"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb171"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">frame3</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">frame_locator</span><span class="op">(</span><span class="st">"[url=https://ui.vision/demo/webtest/frames/frame_3.html]"</span><span class="op">)</span></span>
 <span><span class="va">frame3</span><span class="op">$</span><span class="fu">get_by_placeholder</span><span class="op">(</span><span class="st">"Berikutnya"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1543,7 +1771,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-get-by-role" class="external-link">get_by_role</a><a class="anchor" aria-label="anchor" href="#get_by_role-2"></a>
 </h5>
 <p>Allows locating elements by their ARIA role, ARIA attributes and accessible name.</p>
-<div class="sourceCode" id="cb152"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb172"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">frame3</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">frame_locator</span><span class="op">(</span><span class="st">"[url=https://ui.vision/demo/webtest/frames/frame_3.html]"</span><span class="op">)</span></span>
 <span><span class="va">frame3</span><span class="op">$</span><span class="fu">get_by_role</span><span class="op">(</span><span class="st">"Berikutnya"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1553,7 +1781,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-get-by-test-id" class="external-link">get_by_test_id</a><a class="anchor" aria-label="anchor" href="#get_by_test_id-2"></a>
 </h5>
 <p>Locate element by the test id.</p>
-<div class="sourceCode" id="cb153"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb173"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">frame3</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">frame_locator</span><span class="op">(</span><span class="st">"[url=https://ui.vision/demo/webtest/frames/frame_3.html]"</span><span class="op">)</span></span>
 <span><span class="va">frame3</span><span class="op">$</span><span class="fu">get_by_test_id</span><span class="op">(</span><span class="st">"Berikutnya"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1564,7 +1792,7 @@ Math.random = () => 42;
 </h5>
 <p>Allows locating elements that contain given text.</p>
 <p>See also locator.filter() that allows to match by another criteria, like an accessible role, and then filter by the text content.</p>
-<div class="sourceCode" id="cb154"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb174"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">frame3</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">frame_locator</span><span class="op">(</span><span class="st">"[url=https://ui.vision/demo/webtest/frames/frame_3.html]"</span><span class="op">)</span></span>
 <span><span class="va">frame3</span><span class="op">$</span><span class="fu">get_by_text</span><span class="op">(</span><span class="st">"Berikutnya"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1574,7 +1802,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-get-by-title" class="external-link">get_by_title</a><a class="anchor" aria-label="anchor" href="#get_by_title-2"></a>
 </h5>
 <p>Allows locating elements by their title attribute.</p>
-<div class="sourceCode" id="cb155"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb175"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">frame3</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">frame_locator</span><span class="op">(</span><span class="st">"[url=https://ui.vision/demo/webtest/frames/frame_3.html]"</span><span class="op">)</span></span>
 <span><span class="va">frame3</span><span class="op">$</span><span class="fu">get_by_title</span><span class="op">(</span><span class="st">"Berikutnya"</span><span class="op">)</span><span class="op">$</span><span class="fu">click</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1593,7 +1821,7 @@ Math.random = () => 42;
 <li>the main resource failed to load.</li>
 <li>The method will not throw an error when any valid HTTP status code is returned by the remote server, including 404 “Not Found” and 500 “Internal Server Error”. The status code for such responses can be retrieved by calling response.status().</li>
 </ul>
-<div class="sourceCode" id="cb156"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb176"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span></span></code></pre></div>
@@ -1603,7 +1831,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-is-detached" class="external-link">is_detached</a><a class="anchor" aria-label="anchor" href="#is_detached"></a>
 </h5>
 <p>Returns true if the frame has been detached, or false otherwise.</p>
-<div class="sourceCode" id="cb157"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb177"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">is_detached</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1613,7 +1841,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-is-enabled" class="external-link">is_enabled</a><a class="anchor" aria-label="anchor" href="#is_enabled-1"></a>
 </h5>
 <p>Returns whether the element is enabled.</p>
-<div class="sourceCode" id="cb158"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb178"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">is_enabled</span><span class="op">(</span><span class="st">"[name=mytext3]"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>timeout<span class="op">=</span><span class="fl">200</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1623,7 +1851,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-locator" class="external-link">locator</a><a class="anchor" aria-label="anchor" href="#locator-3"></a>
 </h5>
 <p>The method returns an element locator that can be used to perform actions on this page / frame. Locator is resolved to the element immediately before performing an action, so a series of actions on the same locator can in fact be performed on different DOM elements. That would happen if the DOM structure between those actions has changed.</p>
-<div class="sourceCode" id="cb159"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb179"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">locator</span><span class="op">(</span><span class="st">"[name=mytext3]"</span><span class="op">)</span><span class="op">$</span><span class="fu">focus</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1634,7 +1862,7 @@ Math.random = () => 42;
 </h5>
 <p>Returns frame’s name attribute as specified in the tag.</p>
 <p>If the name is empty, returns the id attribute instead.</p>
-<div class="sourceCode" id="cb160"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb180"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">name</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1644,7 +1872,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-page" class="external-link">page</a><a class="anchor" aria-label="anchor" href="#page-2"></a>
 </h5>
 <p>Returns the page containing this frame.</p>
-<div class="sourceCode" id="cb161"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb181"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">frame_page_content</span> <span class="op">&lt;-</span> <span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">page</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">content</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1654,7 +1882,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-parent-frame" class="external-link">parent_frame</a><a class="anchor" aria-label="anchor" href="#parent_frame"></a>
 </h5>
 <p>Parent frame, if any. Detached frames and main frames return null.</p>
-<div class="sourceCode" id="cb162"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb182"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">frame_parent_frame</span> <span class="op">&lt;-</span> <span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">parent_frame</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1664,7 +1892,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-set-content" class="external-link">set_content</a><a class="anchor" aria-label="anchor" href="#set_content-1"></a>
 </h5>
 <p>This method internally calls document.write(), inheriting all its specific characteristics and behaviors.</p>
-<div class="sourceCode" id="cb163"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb183"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">set_content</span><span class="op">(</span><span class="st">"content from set_content"</span><span class="op">)</span></span></code></pre></div>
@@ -1674,17 +1902,17 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-title" class="external-link">title</a><a class="anchor" aria-label="anchor" href="#title-1"></a>
 </h5>
 <p>Returns the page title.</p>
-<div class="sourceCode" id="cb164"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb184"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">frame_title</span> <span class="op">&lt;-</span> <span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">title</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="url-2">
-<a href="https://playwright.dev/docs/api/class-frame#frame-url" class="external-link">url</a><a class="anchor" aria-label="anchor" href="#url-2"></a>
+<h5 id="url-3">
+<a href="https://playwright.dev/docs/api/class-frame#frame-url" class="external-link">url</a><a class="anchor" aria-label="anchor" href="#url-3"></a>
 </h5>
 <p>Returns frame’s url.</p>
-<div class="sourceCode" id="cb165"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb185"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">frame_url</span> <span class="op">&lt;-</span> <span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="fu">url</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -1694,7 +1922,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-wait-for-function" class="external-link">wait_for_function</a><a class="anchor" aria-label="anchor" href="#wait_for_function-1"></a>
 </h5>
 <p>Returns when the pageFunction returns a truthy value, returns that value.</p>
-<div class="sourceCode" id="cb166"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb186"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">frame_3</span> <span class="op">&lt;-</span> <span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span></span>
@@ -1709,7 +1937,7 @@ Math.random = () => 42;
 </h5>
 <p>Waits for the required load state to be reached.</p>
 <p>This returns when the frame reaches a required load state, load by default. The navigation must have been committed when this method is called. If current document has already reached the required state, resolves immediately.</p>
-<div class="sourceCode" id="cb167"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb187"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">frame_3</span> <span class="op">&lt;-</span> <span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span></span>
@@ -1723,7 +1951,7 @@ Math.random = () => 42;
 <a href="https://playwright.dev/docs/api/class-frame#frame-wait-for-url" class="external-link">wait_for_u_r_l</a><a class="anchor" aria-label="anchor" href="#wait_for_u_r_l-1"></a>
 </h5>
 <p>Waits for the frame to navigate to the given URL.</p>
-<div class="sourceCode" id="cb168"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb188"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://ui.vision/demo/webtest/frames/"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">child_frames</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">main_frame</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">child_frames</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">frame_3</span> <span class="op">&lt;-</span> <span class="va">child_frames</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span></span>
@@ -1736,7 +1964,7 @@ Math.random = () => 42;
 <div class="section level4">
 <h4 id="full-usage-example">Full Usage Example<a class="anchor" aria-label="anchor" href="#full-usage-example"></a>
 </h4>
-<div class="sourceCode" id="cb169"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb189"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">load_all</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu">roxygen2</span><span class="fu">::</span><span class="fu">roxygenise</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -2001,7 +2229,7 @@ Math.random = () => 42;
 <div class="section level3">
 <h3 id="use-case-example-for-twitter-crawling">Use Case Example for Twitter Crawling<a class="anchor" aria-label="anchor" href="#use-case-example-for-twitter-crawling"></a>
 </h3>
-<div class="sourceCode" id="cb170"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb190"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chrome</span> <span class="op">&lt;-</span> <span class="fu">rplaywright</span><span class="fu">::</span><span class="fu"><a href="reference/new_chromium.html">new_chromium</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">context</span> <span class="op">&lt;-</span> <span class="va">chrome</span><span class="op">$</span><span class="fu">new_context</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
