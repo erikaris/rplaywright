@@ -1550,7 +1550,7 @@ the page object:
 - page.on(‘framedetached’) - fired when the frame gets detached from the
   page. A Frame can be detached from the page only once.
 
-##### \[add_script_tag\]
+##### [add_script_tag](https://playwright.dev/docs/api/class-frame#frame-add-script-tag)
 
 Returns the added tag when the script’s onload fires or when the script
 content was injected into frame.
@@ -1566,7 +1566,7 @@ child_frame <- child_frames[[1]]
 child_frame$add_script_tag(list(content="document.querySelector('[name=mytext1]').value = 'value from add_script_tag'"))$then()
 ```
 
-##### \[add_style_tag\]
+##### [add_style_tag](https://playwright.dev/docs/api/class-frame#frame-add-style-tag)
 
 Returns the added tag when the stylesheet’s onload fires or when the CSS
 content was injected into frame.
@@ -1583,7 +1583,7 @@ child_frame <- child_frames[[1]]
 child_frame$add_style_tag(list(content="body { background-color: red }"))$then()
 ```
 
-##### \[child_frames\]
+##### [child_frames](https://playwright.dev/docs/api/class-frame#frame-child-frames)
 
 ``` r
 page$goto("https://ui.vision/demo/webtest/frames/")$then()
@@ -1593,7 +1593,7 @@ child_frames <- main_frame$child_frames()
 child_frame_content <- child_frames[[1]]$content()$then()
 ```
 
-##### \[content\]
+##### [content](https://playwright.dev/docs/api/class-frame#frame-content)
 
 Gets the full HTML contents of the frame, including the doctype.
 
@@ -1605,13 +1605,13 @@ child_frames <- main_frame$child_frames()
 child_frame_content <- child_frames[[1]]$content()$then()
 ```
 
-##### \[drag_and_drop\]
+##### [drag_and_drop](https://playwright.dev/docs/api/class-frame#frame-drag-and-drop)
 
 ``` r
 page$drag_and_drop("#source", "#target")$then()
 ```
 
-##### \[evaluate\]
+##### [evaluate](https://playwright.dev/docs/api/class-frame#frame-evaluate)
 
 Returns the return value of pageFunction.
 
@@ -1632,7 +1632,7 @@ child_frames <- main_frame$child_frames()
 evaluate_result <- child_frames[[1]]$evaluate("([a, b]) => a * b", c(5, 7))$then()
 ```
 
-##### \[evaluate_handle\]
+##### [evaluate_handle](https://playwright.dev/docs/api/class-frame#frame-evaluate-handle)
 
 Returns the return value of pageFunction as a JSHandle.
 
@@ -1651,7 +1651,7 @@ child_frames <- main_frame$child_frames()
 child_frames[[1]]$evaluate_handle()$then()
 ```
 
-##### \[frame_element\]
+##### [frame_element](https://playwright.dev/docs/api/class-frame#frame-frame-element)
 
 Returns the frame or iframe element handle which corresponds to this
 frame.
@@ -1670,7 +1670,7 @@ child_frames <- main_frame$child_frames()
 frame_element <- child_frames[[1]]$frame_element()
 ```
 
-##### \[frame_locator\]
+##### [frame_locator](https://playwright.dev/docs/api/class-frame#frame-frame-locator)
 
 When working with iframes, you can create a frame locator that will
 enter the iframe and allow selecting elements in that iframe.
@@ -1681,7 +1681,7 @@ frame3 <- page$main_frame()$frame_locator("[url=https://ui.vision/demo/webtest/f
 frame3$get_by_text("Berikutnya")$click()$then()
 ```
 
-##### \[get_by_alt_text\]
+##### [get_by_alt_text](https://playwright.dev/docs/api/class-frame#frame-get-by-alt-text)
 
 Allows locating elements by their alt text.
 
@@ -1691,7 +1691,7 @@ frame3 <- page$main_frame()$frame_locator("[url=https://ui.vision/demo/webtest/f
 frame3$get_by_alt_text("Berikutnya")$click()$then()
 ```
 
-##### \[get_by_label\]
+##### [get_by_label](https://playwright.dev/docs/api/class-frame#frame-get-by-label)
 
 Allows locating input elements by the text of the associated <label> or
 aria-labelledby element, or by the aria-label attribute.
@@ -1702,7 +1702,7 @@ frame3 <- page$main_frame()$frame_locator("[url=https://ui.vision/demo/webtest/f
 frame3$get_by_label("Berikutnya")$click()$then()
 ```
 
-##### \[get_by_placeholder\]
+##### [get_by_placeholder](https://playwright.dev/docs/api/class-frame#frame-get-by-placeholder)
 
 Allows locating input elements by the placeholder text.
 
@@ -1712,7 +1712,7 @@ frame3 <- page$main_frame()$frame_locator("[url=https://ui.vision/demo/webtest/f
 frame3$get_by_placeholder("Berikutnya")$click()$then()
 ```
 
-##### \[get_by_role\]
+##### [get_by_role](https://playwright.dev/docs/api/class-frame#frame-get-by-role)
 
 Allows locating elements by their ARIA role, ARIA attributes and
 accessible name.
@@ -1723,7 +1723,7 @@ frame3 <- page$main_frame()$frame_locator("[url=https://ui.vision/demo/webtest/f
 frame3$get_by_role("Berikutnya")$click()$then()
 ```
 
-##### \[get_by_test_id\]
+##### [get_by_test_id](https://playwright.dev/docs/api/class-frame#frame-get-by-test-id)
 
 Locate element by the test id.
 
@@ -1733,7 +1733,7 @@ frame3 <- page$main_frame()$frame_locator("[url=https://ui.vision/demo/webtest/f
 frame3$get_by_test_id("Berikutnya")$click()$then()
 ```
 
-##### \[get_by_text\]
+##### [get_by_text](https://playwright.dev/docs/api/class-frame#frame-get-by-text)
 
 Allows locating elements that contain given text.
 
@@ -1746,7 +1746,7 @@ frame3 <- page$main_frame()$frame_locator("[url=https://ui.vision/demo/webtest/f
 frame3$get_by_text("Berikutnya")$click()$then()
 ```
 
-##### \[get_by_title\]
+##### [get_by_title](https://playwright.dev/docs/api/class-frame#frame-get-by-title)
 
 Allows locating elements by their title attribute.
 
@@ -1756,7 +1756,7 @@ frame3 <- page$main_frame()$frame_locator("[url=https://ui.vision/demo/webtest/f
 frame3$get_by_title("Berikutnya")$click()$then()
 ```
 
-##### \[goto\]
+##### [goto](https://playwright.dev/docs/api/class-frame#frame-goto)
 
 Returns the main resource response. In case of multiple redirects, the
 navigation will resolve with the response of the last redirect.
@@ -1779,7 +1779,7 @@ child_frames <- page$main_frame()$child_frames()
 child_frames[[3]]$goto("https://ui.vision/demo/webtest/frames/")
 ```
 
-##### \[is_detached\]
+##### [is_detached](https://playwright.dev/docs/api/class-frame#frame-is-detached)
 
 Returns true if the frame has been detached, or false otherwise.
 
@@ -1789,7 +1789,7 @@ child_frames <- page$main_frame()$child_frames()
 child_frames[[3]]$is_detached()
 ```
 
-##### \[is_enabled\]
+##### [is_enabled](https://playwright.dev/docs/api/class-frame#frame-is-enabled)
 
 Returns whether the element is enabled.
 
@@ -1799,7 +1799,7 @@ child_frames <- page$main_frame()$child_frames()
 child_frames[[3]]$is_enabled("[name=mytext3]", list(timeout=200))$then()
 ```
 
-##### \[locator\]
+##### [locator](https://playwright.dev/docs/api/class-frame#frame-locator)
 
 The method returns an element locator that can be used to perform
 actions on this page / frame. Locator is resolved to the element
@@ -1813,7 +1813,7 @@ child_frames <- page$main_frame()$child_frames()
 child_frames[[3]]$locator("[name=mytext3]")$focus()$then()
 ```
 
-##### \[name\]
+##### [name](https://playwright.dev/docs/api/class-frame#frame-name)
 
 Returns frame’s name attribute as specified in the tag.
 
@@ -1825,7 +1825,7 @@ child_frames <- page$main_frame()$child_frames()
 child_frames[[3]]$name()
 ```
 
-##### \[page\]
+##### [page](https://playwright.dev/docs/api/class-frame#frame-page)
 
 Returns the page containing this frame.
 
@@ -1835,7 +1835,7 @@ child_frames <- page$main_frame()$child_frames()
 frame_page_content <- child_frames[[3]]$page()$content()$then()
 ```
 
-##### \[parent_frame\]
+##### [parent_frame](https://playwright.dev/docs/api/class-frame#frame-parent-frame)
 
 Parent frame, if any. Detached frames and main frames return null.
 
@@ -1845,7 +1845,7 @@ child_frames <- page$main_frame()$child_frames()
 frame_parent_frame <- child_frames[[3]]$parent_frame()
 ```
 
-##### \[set_content\]
+##### [set_content](https://playwright.dev/docs/api/class-frame#frame-set-content)
 
 This method internally calls document.write(), inheriting all its
 specific characteristics and behaviors.
@@ -1856,7 +1856,7 @@ child_frames <- page$main_frame()$child_frames()
 child_frames[[3]]$set_content("content from set_content")
 ```
 
-##### \[title\]
+##### [title](https://playwright.dev/docs/api/class-frame#frame-title)
 
 Returns the page title.
 
@@ -1866,7 +1866,7 @@ child_frames <- page$main_frame()$child_frames()
 frame_title <- child_frames[[3]]$title()$then()
 ```
 
-##### \[url\]
+##### [url](https://playwright.dev/docs/api/class-frame#frame-url)
 
 Returns frame’s url.
 
@@ -1876,7 +1876,7 @@ child_frames <- page$main_frame()$child_frames()
 frame_url <- child_frames[[3]]$url()
 ```
 
-##### \[wait_for_function\]
+##### [wait_for_function](https://playwright.dev/docs/api/class-frame#frame-wait-for-function)
 
 Returns when the pageFunction returns a truthy value, returns that
 value.
@@ -1891,7 +1891,7 @@ page$set_viewport_size(list(width=50, height=50))$then()
 js <- fn_promise$then()
 ```
 
-##### \[wait_for_load_state\]
+##### [wait_for_load_state](https://playwright.dev/docs/api/class-frame#frame-wait-for-load-state)
 
 Waits for the required load state to be reached.
 
@@ -1910,7 +1910,7 @@ frame_3$goto("https://playwright.dev/")$then()
 ev <- ev_promise$then()
 ```
 
-##### \[wait_for_u_r_l\]
+##### [wait_for_u_r_l](https://playwright.dev/docs/api/class-frame#frame-wait-for-url)
 
 Waits for the frame to navigate to the given URL.
 
