@@ -43,7 +43,7 @@ Page <- R6::R6Class(
     drag_and_drop = fn_remote_handler,
     emulate_media = fn_remote_handler,
     evaluate = fn_remote_handler,
-    evaluate_handle = unimplemented,
+    evaluate_handle = fn_remote_handler,
     expose_binding = fn_remote_handler,
     expose_function = fn_remote_handler,
     frame = fn_remote_handler,

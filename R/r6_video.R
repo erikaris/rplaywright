@@ -31,6 +31,9 @@ Video <- R6::R6Class(
       }
 
       private$.parent <- parent
-    }
+    },
+    delete = fn_remote_handler,
+    path = fn_remote_handler,
+    save_as = fn_remote_handler
   )
 )

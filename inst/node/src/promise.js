@@ -12,6 +12,7 @@ const Promise = require("./response/promise");
 const { objs, camelCaseRecursive } = require("./vars");
 const { camelCase } = require("lodash");
 const cast = require("./response/cast");
+const importTypes = require("./import-types.js");
 
 // TODO: Implement most crucial APIs from https://playwright.dev/docs/api/class-browsercontext
 
@@ -30,22 +31,12 @@ exports.promisePlugin = (instance, opts, next) => {
       let promise = objs[id];
       let ret = null;
 
+      const types = await importTypes()
+
       if (promise) {
-        ret = await promise.then();
+        ret = await promise.then(types);
       } else {
-        const Browser = (await import("./response/browser.js")).default;
-        const Context = (await import("./response/context.js")).default;
-        const Page = (await import("./response/page.js")).default;
-        const Locator = (await import("./response/locator.js")).default;
-        const Response = (await import("./response/response.js")).default;
-        const Request = (await import("./response/request.js")).default;
-        const Frame = (await import("./response/frame.js")).default;
-        const FrameLocator = (await import("./response/frame-locator.js")).default;
-        const Video = (await import("./response/video.js")).default;
-        const JSHandle = (await import("./response/jshandle.js")).default;
-        const Worker = (await import("./response/worker.js")).default;
-        
-        ret = cast(ret, { Browser, Context, Page, Locator, Request, Response, JSHandle, Frame, FrameLocator, Video, Worker });
+        ret = cast(ret, types);
       }
 
       reply.type("application/json").send(ret);
@@ -72,7 +63,7 @@ exports.promisePlugin = (instance, opts, next) => {
   //     let ret = null;
 
   //     if (promise) {
-  //       ret = promise.invoke(command, ...args);
+  //       ret = promise.invoke(null, command, ...args);
   //     }
 
   //     reply.type("application/json").send(ret);

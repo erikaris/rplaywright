@@ -7,6 +7,7 @@ const {
 const { camelCase } = require("lodash");
 const { camelCaseRecursive, objs } = require("./vars");
 const Locator = require("./response/locator");
+const importTypes = require("./import-types");
 
 /**
  *
@@ -100,7 +101,8 @@ exports.locatorPlugin = (instance, opts, next) => {
       let ret = null;
 
       if (locator) {
-        ret = locator.invoke(command, ...args);
+        const types = await importTypes()
+        ret = locator.invoke(types, command, ...args);
       }
 
       reply.type("application/json").send(ret);

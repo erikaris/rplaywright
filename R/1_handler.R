@@ -4,6 +4,8 @@ unimplemented <- function() {
 }
 
 cast <- function(meta, selff) {
+  if (is.atomic(meta)) return(meta)
+
   if (!is.null(meta$type) && meta$type == "Promise") {
     promise <- Promise$new(selff)
     promise$meta = meta
@@ -71,7 +73,7 @@ cast <- function(meta, selff) {
   }
 
   if (!is.null(meta$type) && meta$type == "Value") {
-    return(meta$value)
+    return(cast(meta$value, selff))
   }
 
   if (!is.null(meta$type) && meta$type == "Error") {

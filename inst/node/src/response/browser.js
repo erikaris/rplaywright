@@ -28,14 +28,14 @@ class Browser {
    * @param {'launch' | 'close' | null} [method=null]
    * @param {any[]} [args=[]]
    **/
-  invoke(method = null, ...args) {
+  invoke(types, method = null, ...args) {
     let ret = this.#browser[method].call(this.#browser, ...args);
 
     if (typeof ret?.then === "function") {
       ret = IPromise.resolve(ret);
     }
 
-    ret = cast(ret)
+    ret = cast(ret, types)
     return ret;
   }
 }

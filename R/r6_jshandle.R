@@ -31,6 +31,13 @@ JSHandle <- R6::R6Class(
       }
 
       private$.parent <- parent
-    }
+    },
+    as_element = fn_remote_handler,
+    dispose = fn_remote_handler,
+    evaluate = fn_remote_handler,
+    evaluate_handle = fn_remote_handler,
+    get_properties = fn_remote_handler,
+    get_property = fn_remote_handler,
+    json_value = fn_remote_handler
   )
 )

@@ -10,6 +10,7 @@ const { IncomingMessage, ServerResponse } = require("http");
 const { objs, camelCaseRecursive } = require("./vars");
 const Browser = require("./response/browser");
 const { camelCase } = require("lodash");
+const importTypes = require("./import-types");
 
 /**
  *
@@ -56,7 +57,8 @@ exports.browserPlugin = (instance, opts, next) => {
       let ret = null;
 
       if (browser) {
-        ret = browser.invoke(command, ...args);
+        const types = await importTypes()
+        ret = browser.invoke(types, command, ...args);
       }
 
       reply.type("application/json").send(ret);

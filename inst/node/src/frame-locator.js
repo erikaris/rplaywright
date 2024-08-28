@@ -7,6 +7,7 @@ const {
 const { camelCase } = require("lodash");
 const { camelCaseRecursive, objs } = require("./vars");
 const FrameLocator = require("./response/frame-locator");
+const importTypes = require("./import-types");
 
 /**
  *
@@ -30,7 +31,8 @@ exports.frameLocatorPlugin = (instance, opts, next) => {
       let ret = null;
 
       if (locator) {
-        ret = locator.invoke(command, ...args);
+        const types = await importTypes()
+        ret = locator.invoke(types, command, ...args);
       }
 
       reply.type("application/json").send(ret);

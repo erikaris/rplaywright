@@ -16,22 +16,11 @@ class IPromise {
     this.#obj = executor;
   }
 
-  async then() {
+  async then(types) {
     try {
       let ret = await this.#obj;
-      const Browser = (await import("./browser.js")).default;
-      const Context = (await import("./context.js")).default;
-      const Page = (await import("./page.js")).default;
-      const Locator = (await import("./locator.js")).default;
-      const Request = (await import("./request.js")).default;
-      const Response = (await import("./response.js")).default;
-      const Frame = (await import("./frame.js")).default;
-      const FrameLocator = (await import("./frame-locator.js")).default;
-      const Video = (await import("./video.js")).default;
-      const JSHandle = (await import("./jshandle.js")).default;
-      const Worker = (await import("./worker.js")).default;
 
-      ret = cast(ret, { Browser, Context, Page, Locator, Request, Response, JSHandle, Frame, FrameLocator, Video, Worker });
+      ret = cast(ret, types);
       return ret;
     } catch (err) {
       return { type: 'Error', value: err?.message || '' };

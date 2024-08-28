@@ -2,90 +2,90 @@ const { objs } = require("../vars.js");
 const { isObject, camelCase } = require("lodash");
 const playwright = require("playwright");
 
-function cast(ret, { Browser, Context, Page, Locator, Request, Response, JSHandle, Frame, FrameLocator, Video, Worker } = {}, level = 0) {
-  let type = ret?.constructor?.name;
+function cast(ret, types, level = 0) {
+  let typeName = ret?.constructor?.name;
+  let { Browser, Context, Page, Locator, Request, Response, JSHandle, Frame, FrameLocator, Video, Worker } = types || {};
 
-  if (type == "ElementHandle") {
+  if (typeName == "ElementHandle") {
     return { type: 'Value', value: null };
   }
 
-  if (type == "Buffer") {
+  if (typeName == "Buffer") {
     return { type: 'Value', value: ret.toString('base64') };
   }
 
-  if (type == "IPromise") {
+  if (typeName == "IPromise") {
     return ret
   }
 
-  if (type == "BrowserContext" && Context) {
+  if (typeName == "BrowserContext" && Context) {
     const b = new Context(ret);
     objs[b.id] = b;
     return b;
   }
 
-  if (type == "Page" && Page) {
+  if (typeName == "Page" && Page) {
     const b = new Page(ret);
     objs[b.id] = b;
     return b;
   }
 
-  if (type == "Locator" && Locator) {
+  if (typeName == "Locator" && Locator) {
     const b = new Locator(ret);
     objs[b.id] = b;
     return b;
   }
 
-  if (type == "Request" && Request) {
+  if (typeName == "Request" && Request) {
     const b = new Request(ret);
     objs[b.id] = b;
     return b;
   }
 
-  if (type == "Response" && Response) {
+  if (typeName == "Response" && Response) {
     const b = new Response(ret);
     objs[b.id] = b;
     return b;
   }
 
-  if (type == "JSHandle" && JSHandle) {
+  if (typeName == "JSHandle" && JSHandle) {
     const b = new JSHandle(ret);
     objs[b.id] = b;
     return b;
   }
 
-  if (type == "Frame" && Frame) {
+  if (typeName == "Frame" && Frame) {
     const b = new Frame(ret);
     objs[b.id] = b;
     return b;
   }
 
-  if (type == "FrameLocator" && FrameLocator) {
+  if (typeName == "FrameLocator" && FrameLocator) {
     const b = new FrameLocator(ret);
     objs[b.id] = b;
     return b;
   }
 
-  if (type == "Video" && Video) {
+  if (typeName == "Video" && Video) {
     const b = new Video(ret);
     objs[b.id] = b;
     return b;
   }
 
-  if (type == "Worker" && Worker) {
+  if (typeName == "Worker" && Worker) {
     const b = new Worker(ret);
     objs[b.id] = b;
     return b;
   }
 
   if (Array.isArray(ret)) {
-    ret = ret.map((rec) => cast(rec, { Browser, Context, Page, Locator, Request, Response, JSHandle, Frame, FrameLocator, Video, Worker }, level+1));
-  }
-
-  if (isObject(ret)) {
+    ret = ret.map((rec) => cast(rec, types, level+1));
+  } 
+  else if (isObject(ret)) {
     ret = Object.keys(ret).reduce(
       (obj, key) => ({
         ...obj,
-        [key]: cast(ret[key], { Browser, Context, Page, Locator, Request, Response, JSHandle, Frame, FrameLocator, Video, Worker }, level+1),
+        [key]: cast(ret[key], types, level+1),
       }),
       {}
     );

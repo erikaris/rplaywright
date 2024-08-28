@@ -13,6 +13,7 @@ const { contexts, pages, locators, camelCaseRecursive, objs } = require("./vars"
 const Context = require("./response/context");
 const { camelCase } = require("lodash");
 const Page = require("./response/page");
+const importTypes = require("./import-types");
 
 // TODO: Implement most crucial APIs from https://playwright.dev/docs/api/class-page
 
@@ -480,7 +481,8 @@ exports.pagePlugin = (instance, opts, next) => {
       let ret = null;
 
       if (page) {
-        ret = page.invoke(command, ...args);
+        const types = await importTypes()
+        ret = page.invoke(types, command, ...args);
       }
 
       reply.type("application/json").send(ret);

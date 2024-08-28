@@ -11,6 +11,7 @@ const uuid = require("uuid");
 const { browsers, contexts, camelCaseRecursive, objs } = require("./vars");
 const Context = require("./response/context");
 const { camelCase } = require("lodash");
+const importTypes = require("./import-types");
 
 // TODO: Implement most crucial APIs from https://playwright.dev/docs/api/class-browsercontext
 
@@ -83,7 +84,8 @@ exports.contextPlugin = (instance, opts, next) => {
       let ret = null;
 
       if (context) {
-        ret = context.invoke(command, ...args);
+        const types = await importTypes()
+        ret = context.invoke(types, command, ...args);
       }
 
       reply.type("application/json").send(ret);

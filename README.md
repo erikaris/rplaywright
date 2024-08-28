@@ -1533,6 +1533,397 @@ Contains the URL of the response.
 url <- resp$url()
 ```
 
+#### [Frame](https://playwright.dev/docs/api/class-frame)
+
+At every point of time, page exposes its current frame tree via the
+page.mainFrame() and frame.childFrames() methods.
+
+Frame object’s lifecycle is controlled by three events, dispatched on
+the page object:
+
+- page.on(‘frameattached’) - fired when the frame gets attached to the
+  page. A Frame can be attached to the page only once.
+
+- page.on(‘framenavigated’) - fired when the frame commits navigation to
+  a different URL.
+
+- page.on(‘framedetached’) - fired when the frame gets detached from the
+  page. A Frame can be detached from the page only once.
+
+##### \[add_script_tag\]
+
+Returns the added tag when the script’s onload fires or when the script
+content was injected into frame.
+
+Adds a `<script>` tag into the page with the desired url or content.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+main_frame <- page$main_frame()
+child_frames <- main_frame$child_frames()
+
+child_frame <- child_frames[[1]]
+child_frame$add_script_tag(list(content="document.querySelector('[name=mytext1]').value = 'value from add_script_tag'"))$then()
+```
+
+##### \[add_style_tag\]
+
+Returns the added tag when the stylesheet’s onload fires or when the CSS
+content was injected into frame.
+
+Adds a `<link rel="stylesheet">` tag into the page with the desired url
+or a `<style type="text/css">` tag with the content.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+main_frame <- page$main_frame()
+child_frames <- main_frame$child_frames()
+
+child_frame <- child_frames[[1]]
+child_frame$add_style_tag(list(content="body { background-color: red }"))$then()
+```
+
+##### \[child_frames\]
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+main_frame <- page$main_frame()
+child_frames <- main_frame$child_frames()
+
+child_frame_content <- child_frames[[1]]$content()$then()
+```
+
+##### \[content\]
+
+Gets the full HTML contents of the frame, including the doctype.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+main_frame <- page$main_frame()
+child_frames <- main_frame$child_frames()
+
+child_frame_content <- child_frames[[1]]$content()$then()
+```
+
+##### \[drag_and_drop\]
+
+``` r
+page$drag_and_drop("#source", "#target")$then()
+```
+
+##### \[evaluate\]
+
+Returns the return value of pageFunction.
+
+If the function passed to the frame.evaluate() returns a Promise, then
+frame.evaluate() would wait for the promise to resolve and return its
+value.
+
+If the function passed to the frame.evaluate() returns a
+non-Serializable value, then frame.evaluate() returns undefined.
+Playwright also supports transferring some additional values that are
+not serializable by JSON: -0, NaN, Infinity, -Infinity.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+main_frame <- page$main_frame()
+child_frames <- main_frame$child_frames()
+
+evaluate_result <- child_frames[[1]]$evaluate("([a, b]) => a * b", c(5, 7))$then()
+```
+
+##### \[evaluate_handle\]
+
+Returns the return value of pageFunction as a JSHandle.
+
+The only difference between frame.evaluate() and frame.evaluateHandle()
+is that frame.evaluateHandle() returns JSHandle.
+
+If the function, passed to the frame.evaluateHandle(), returns a
+Promise, then frame.evaluateHandle() would wait for the promise to
+resolve and return its value.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+main_frame <- page$main_frame()
+child_frames <- main_frame$child_frames()
+
+child_frames[[1]]$evaluate_handle()$then()
+```
+
+##### \[frame_element\]
+
+Returns the frame or iframe element handle which corresponds to this
+frame.
+
+This is an inverse of elementHandle.contentFrame(). Note that returned
+handle actually belongs to the parent frame.
+
+This method throws an error if the frame has been detached before
+frameElement() returns.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+main_frame <- page$main_frame()
+child_frames <- main_frame$child_frames()
+
+frame_element <- child_frames[[1]]$frame_element()
+```
+
+##### \[frame_locator\]
+
+When working with iframes, you can create a frame locator that will
+enter the iframe and allow selecting elements in that iframe.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+frame3 <- page$main_frame()$frame_locator("[url=https://ui.vision/demo/webtest/frames/frame_3.html]")
+frame3$get_by_text("Berikutnya")$click()$then()
+```
+
+##### \[get_by_alt_text\]
+
+Allows locating elements by their alt text.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+frame3 <- page$main_frame()$frame_locator("[url=https://ui.vision/demo/webtest/frames/frame_3.html]")
+frame3$get_by_alt_text("Berikutnya")$click()$then()
+```
+
+##### \[get_by_label\]
+
+Allows locating input elements by the text of the associated <label> or
+aria-labelledby element, or by the aria-label attribute.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+frame3 <- page$main_frame()$frame_locator("[url=https://ui.vision/demo/webtest/frames/frame_3.html]")
+frame3$get_by_label("Berikutnya")$click()$then()
+```
+
+##### \[get_by_placeholder\]
+
+Allows locating input elements by the placeholder text.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+frame3 <- page$main_frame()$frame_locator("[url=https://ui.vision/demo/webtest/frames/frame_3.html]")
+frame3$get_by_placeholder("Berikutnya")$click()$then()
+```
+
+##### \[get_by_role\]
+
+Allows locating elements by their ARIA role, ARIA attributes and
+accessible name.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+frame3 <- page$main_frame()$frame_locator("[url=https://ui.vision/demo/webtest/frames/frame_3.html]")
+frame3$get_by_role("Berikutnya")$click()$then()
+```
+
+##### \[get_by_test_id\]
+
+Locate element by the test id.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+frame3 <- page$main_frame()$frame_locator("[url=https://ui.vision/demo/webtest/frames/frame_3.html]")
+frame3$get_by_test_id("Berikutnya")$click()$then()
+```
+
+##### \[get_by_text\]
+
+Allows locating elements that contain given text.
+
+See also locator.filter() that allows to match by another criteria, like
+an accessible role, and then filter by the text content.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+frame3 <- page$main_frame()$frame_locator("[url=https://ui.vision/demo/webtest/frames/frame_3.html]")
+frame3$get_by_text("Berikutnya")$click()$then()
+```
+
+##### \[get_by_title\]
+
+Allows locating elements by their title attribute.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+frame3 <- page$main_frame()$frame_locator("[url=https://ui.vision/demo/webtest/frames/frame_3.html]")
+frame3$get_by_title("Berikutnya")$click()$then()
+```
+
+##### \[goto\]
+
+Returns the main resource response. In case of multiple redirects, the
+navigation will resolve with the response of the last redirect.
+
+The method will throw an error if:
+
+- there’s an SSL error (e.g. in case of self-signed certificates).
+- target URL is invalid.
+- the timeout is exceeded during navigation.
+- the remote server does not respond or is unreachable.
+- the main resource failed to load.
+- The method will not throw an error when any valid HTTP status code is
+  returned by the remote server, including 404 “Not Found” and 500
+  “Internal Server Error”. The status code for such responses can be
+  retrieved by calling response.status().
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+child_frames <- page$main_frame()$child_frames()
+child_frames[[3]]$goto("https://ui.vision/demo/webtest/frames/")
+```
+
+##### \[is_detached\]
+
+Returns true if the frame has been detached, or false otherwise.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+child_frames <- page$main_frame()$child_frames()
+child_frames[[3]]$is_detached()
+```
+
+##### \[is_enabled\]
+
+Returns whether the element is enabled.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+child_frames <- page$main_frame()$child_frames()
+child_frames[[3]]$is_enabled("[name=mytext3]", list(timeout=200))$then()
+```
+
+##### \[locator\]
+
+The method returns an element locator that can be used to perform
+actions on this page / frame. Locator is resolved to the element
+immediately before performing an action, so a series of actions on the
+same locator can in fact be performed on different DOM elements. That
+would happen if the DOM structure between those actions has changed.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+child_frames <- page$main_frame()$child_frames()
+child_frames[[3]]$locator("[name=mytext3]")$focus()$then()
+```
+
+##### \[name\]
+
+Returns frame’s name attribute as specified in the tag.
+
+If the name is empty, returns the id attribute instead.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+child_frames <- page$main_frame()$child_frames()
+child_frames[[3]]$name()
+```
+
+##### \[page\]
+
+Returns the page containing this frame.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+child_frames <- page$main_frame()$child_frames()
+frame_page_content <- child_frames[[3]]$page()$content()$then()
+```
+
+##### \[parent_frame\]
+
+Parent frame, if any. Detached frames and main frames return null.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+child_frames <- page$main_frame()$child_frames()
+frame_parent_frame <- child_frames[[3]]$parent_frame()
+```
+
+##### \[set_content\]
+
+This method internally calls document.write(), inheriting all its
+specific characteristics and behaviors.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+child_frames <- page$main_frame()$child_frames()
+child_frames[[3]]$set_content("content from set_content")
+```
+
+##### \[title\]
+
+Returns the page title.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+child_frames <- page$main_frame()$child_frames()
+frame_title <- child_frames[[3]]$title()$then()
+```
+
+##### \[url\]
+
+Returns frame’s url.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+child_frames <- page$main_frame()$child_frames()
+frame_url <- child_frames[[3]]$url()
+```
+
+##### \[wait_for_function\]
+
+Returns when the pageFunction returns a truthy value, returns that
+value.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+child_frames <- page$main_frame()$child_frames()
+frame_3 <- child_frames[[3]]
+
+fn_promise <- frame_3$wait_for_function("() => window.innerWidth < 100")
+page$set_viewport_size(list(width=50, height=50))$then()
+js <- fn_promise$then()
+```
+
+##### \[wait_for_load_state\]
+
+Waits for the required load state to be reached.
+
+This returns when the frame reaches a required load state, load by
+default. The navigation must have been committed when this method is
+called. If current document has already reached the required state,
+resolves immediately.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+child_frames <- page$main_frame()$child_frames()
+frame_3 <- child_frames[[3]]
+
+ev_promise <- frame_3$wait_for_load_state("load")
+frame_3$goto("https://playwright.dev/")$then()
+ev <- ev_promise$then()
+```
+
+##### \[wait_for_u_r_l\]
+
+Waits for the frame to navigate to the given URL.
+
+``` r
+page$goto("https://ui.vision/demo/webtest/frames/")$then()
+child_frames <- page$main_frame()$child_frames()
+frame_3 <- child_frames[[3]]
+
+resp_promise <- frame_3$wait_for_u_r_l("https://playwright.dev/")
+frame_3$goto("https://playwright.dev/")$then()
+resp_promise$then()
+```
+
 #### Full Usage Example
 
 ``` r

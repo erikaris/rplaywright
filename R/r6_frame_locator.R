@@ -31,6 +31,19 @@ FrameLocator <- R6::R6Class(
       }
 
       private$.parent <- parent
-    }
+    },
+    first = fn_remote_handler,
+    frame_locator = fn_remote_handler,
+    get_by_alt_text = fn_remote_handler,
+    get_by_label = fn_remote_handler,
+    get_by_placeholder = fn_remote_handler,
+    get_by_role = fn_remote_handler,
+    get_by_test_id = fn_remote_handler,
+    get_by_text = fn_remote_handler,
+    get_by_title = fn_remote_handler,
+    last = fn_remote_handler,
+    locator = fn_remote_handler,
+    nth = fn_remote_handler,
+    owner = fn_remote_handler
   )
 )

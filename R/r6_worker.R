@@ -31,6 +31,9 @@ Worker <- R6::R6Class(
       }
 
       private$.parent <- parent
-    }
+    },
+    evaluate = fn_remote_handler,
+    evaluate_handle = unimplemented,
+    url = fn_remote_handler
   )
 )
