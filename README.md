@@ -1379,62 +1379,48 @@ If request fails at some point, then instead of ‘requestfinished’ event
 event is emitted.
 
 ``` r
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
+req_promise <- page$wait_for_event('requestfinished');
+page$goto("https://hp-api.onrender.com/api/characters")$then()
+req <- req_promise$then()
 ```
 
-##### \[all_headers\]
+##### [all_headers](https://playwright.dev/docs/api/class-request#request-all-headers)
 
 An object with all the request HTTP headers associated with this
 request. The header names are lower-cased.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_all_headers <- req$all_headers()$then()
 ```
 
-##### \[failure\]
+##### [failure](https://playwright.dev/docs/api/class-request#request-failure)
 
 The method returns null unless this request has failed, as reported by
 requestfailed event.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_failure <- req$failure()
 ```
 
-##### \[frame\]
+##### [frame](https://playwright.dev/docs/api/class-request#request-frame)
 
 Returns the Frame that initiated this request.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_frame <- req$frame()
 req_frame$url()
 ```
 
-##### \[header_value\]
+##### [header_value](https://playwright.dev/docs/api/class-request#request-header-value)
 
 Returns the value of the header matching the name. The name is
 case-insensitive.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_headers_accept <- req$header_value("accept")$then()
 ```
 
-##### \[headers\]
+##### [headers](https://playwright.dev/docs/api/class-request#request-headers)
 
 An object with the request HTTP headers. The header names are
 lower-cased. Note that this method does not return security-related
@@ -1442,14 +1428,10 @@ headers, including cookie-related ones. You can use request.allHeaders()
 for complete list of headers that include cookie information.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_headers <- req$headers()
 ```
 
-##### \[headers_array\]
+##### [headers_array](https://playwright.dev/docs/api/class-request#request-headers-array)
 
 An array with all the request HTTP headers associated with this request.
 Unlike request.allHeaders(), header names are NOT lower-cased. Headers
@@ -1457,14 +1439,10 @@ with multiple entries, such as Set-Cookie, appear in the array multiple
 times.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_headers_array <- req$headers_array()
 ```
 
-##### \[is_navigation_request\]
+##### [is_navigation_request](https://playwright.dev/docs/api/class-request#request-is-navigation-request)
 
 Whether this request is driving frame’s navigation.
 
@@ -1472,50 +1450,34 @@ Some navigation requests are issued before the corresponding frame is
 created, and therefore do not have request.frame() available.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_is_navigation_request <- req$is_navigation_request()
 ```
 
-##### \[method\]
+##### [method](https://playwright.dev/docs/api/class-request#request-method)
 
 Request’s method (GET, POST, etc.)
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_method <- req$method()
 ```
 
-##### \[post_data\]
+##### [post_data](https://playwright.dev/docs/api/class-request#request-post-data)
 
 Request’s post body, if any.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_post_data <- req$post_data()
 ```
 
-##### \[post_data_buffer\]
+##### [post_data_buffer](https://playwright.dev/docs/api/class-request#request-post-data-buffer)
 
 Request’s post body in a binary form, if any.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_post_data_buffer <- req$post_data_buffer()
 ```
 
-##### \[post_data_j_s_o_n\]
+##### [post_data_j_s_o_n](https://playwright.dev/docs/api/class-request#request-post-data-json)
 
 Returns parsed request’s body for form-urlencoded and JSON as a fallback
 if any.
@@ -1525,14 +1487,10 @@ object of the values will be returned. Otherwise it will be parsed as
 JSON.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_post_data_j_s_o_n <- req$post_data_j_s_o_n()
 ```
 
-##### \[redirected_from\]
+##### [redirected_from](https://playwright.dev/docs/api/class-request#request-redirected-from)
 
 Request that was redirected by the server to this one, if any.
 
@@ -1543,26 +1501,18 @@ is possible to construct the whole redirect chain by repeatedly calling
 redirectedFrom().
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_redirected_from <- req$redirected_from()
 ```
 
-##### \[redirected_to\]
+##### [redirected_to](https://playwright.dev/docs/api/class-request#request-redirected-to)
 
 New request issued by the browser if the server responded with redirect.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_redirected_to <- req$redirected_to()
 ```
 
-##### \[resource_type\]
+##### [resource_type](https://playwright.dev/docs/api/class-request#request-resource-type)
 
 Contains the request’s resource type as it was perceived by the
 rendering engine. ResourceType will be one of the following: document,
@@ -1570,52 +1520,36 @@ stylesheet, image, media, font, script, texttrack, xhr, fetch,
 eventsource, websocket, manifest, other.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_resource_type <- req$resource_type()
 ```
 
-##### \[response\]
+##### [response](https://playwright.dev/docs/api/class-request#request-response)
 
 Returns the matching Response object, or null if the response was not
 received due to error.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_response <- req$response()$then()
 req_response$ok()
 ```
 
-##### \[service_worker\]
+##### [service_worker](https://playwright.dev/docs/api/class-request#request-service-worker)
 
 The Service Worker that is performing the request.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_service_worker <- req$service_worker()
 ```
 
-##### \[sizes\]
+##### [sizes](https://playwright.dev/docs/api/class-request#request-sizes)
 
 Returns resource size information for given request.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_sizes <- req$sizes()$then()
 ```
 
-##### \[timing\]
+##### [timing](https://playwright.dev/docs/api/class-request#request-timing)
 
 Returns resource timing information for given request. Most of the
 timing values become available upon the response, responseEnd becomes
@@ -1623,22 +1557,14 @@ available when request finishes. Find more information at Resource
 Timing API.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_timing <- req$timing()
 ```
 
-##### \[url\]
+##### [url](https://playwright.dev/docs/api/class-request#request-url)
 
 URL of the request.
 
 ``` r
-req_promise <- page$wait_for_event('requestfinished');
-resp <- page$goto("https://hp-api.onrender.com/api/characters")$then()
-req <- req_promise$then()
-
 req_url <- req$url()
 ```
 
