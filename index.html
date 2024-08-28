@@ -1246,220 +1246,165 @@ Math.random = () => 42;
 </ul>
 <p>If request fails at some point, then instead of ‘requestfinished’ event (and possibly instead of ‘response’ event), the page.on(‘requestfailed’) event is emitted.</p>
 <div class="sourceCode" id="cb121"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
+<span><span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="section level5">
-<h5 id="all_headers">[all_headers]<a class="anchor" aria-label="anchor" href="#all_headers"></a>
+<h5 id="all_headers">
+<a href="https://playwright.dev/docs/api/class-request#request-all-headers" class="external-link">all_headers</a><a class="anchor" aria-label="anchor" href="#all_headers"></a>
 </h5>
 <p>An object with all the request HTTP headers associated with this request. The header names are lower-cased.</p>
 <div class="sourceCode" id="cb122"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_all_headers</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">all_headers</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_all_headers</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">all_headers</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="failure">[failure]<a class="anchor" aria-label="anchor" href="#failure"></a>
+<h5 id="failure">
+<a href="https://playwright.dev/docs/api/class-request#request-failure" class="external-link">failure</a><a class="anchor" aria-label="anchor" href="#failure"></a>
 </h5>
 <p>The method returns null unless this request has failed, as reported by requestfailed event.</p>
 <div class="sourceCode" id="cb123"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_failure</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">failure</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_failure</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">failure</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="frame-1">[frame]<a class="anchor" aria-label="anchor" href="#frame-1"></a>
+<h5 id="frame-1">
+<a href="https://playwright.dev/docs/api/class-request#request-frame" class="external-link">frame</a><a class="anchor" aria-label="anchor" href="#frame-1"></a>
 </h5>
 <p>Returns the Frame that initiated this request.</p>
 <div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_frame</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">frame</span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">req_frame</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">frame</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">req_frame</span><span class="op">$</span><span class="fu">url</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="header_value">[header_value]<a class="anchor" aria-label="anchor" href="#header_value"></a>
+<h5 id="header_value">
+<a href="https://playwright.dev/docs/api/class-request#request-header-value" class="external-link">header_value</a><a class="anchor" aria-label="anchor" href="#header_value"></a>
 </h5>
 <p>Returns the value of the header matching the name. The name is case-insensitive.</p>
 <div class="sourceCode" id="cb125"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_headers_accept</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">header_value</span><span class="op">(</span><span class="st">"accept"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_headers_accept</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">header_value</span><span class="op">(</span><span class="st">"accept"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="headers">[headers]<a class="anchor" aria-label="anchor" href="#headers"></a>
+<h5 id="headers">
+<a href="https://playwright.dev/docs/api/class-request#request-headers" class="external-link">headers</a><a class="anchor" aria-label="anchor" href="#headers"></a>
 </h5>
 <p>An object with the request HTTP headers. The header names are lower-cased. Note that this method does not return security-related headers, including cookie-related ones. You can use request.allHeaders() for complete list of headers that include cookie information.</p>
 <div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_headers</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">headers</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_headers</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">headers</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="headers_array">[headers_array]<a class="anchor" aria-label="anchor" href="#headers_array"></a>
+<h5 id="headers_array">
+<a href="https://playwright.dev/docs/api/class-request#request-headers-array" class="external-link">headers_array</a><a class="anchor" aria-label="anchor" href="#headers_array"></a>
 </h5>
 <p>An array with all the request HTTP headers associated with this request. Unlike request.allHeaders(), header names are NOT lower-cased. Headers with multiple entries, such as Set-Cookie, appear in the array multiple times.</p>
 <div class="sourceCode" id="cb127"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_headers_array</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">headers_array</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_headers_array</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">headers_array</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="is_navigation_request">[is_navigation_request]<a class="anchor" aria-label="anchor" href="#is_navigation_request"></a>
+<h5 id="is_navigation_request">
+<a href="https://playwright.dev/docs/api/class-request#request-is-navigation-request" class="external-link">is_navigation_request</a><a class="anchor" aria-label="anchor" href="#is_navigation_request"></a>
 </h5>
 <p>Whether this request is driving frame’s navigation.</p>
 <p>Some navigation requests are issued before the corresponding frame is created, and therefore do not have request.frame() available.</p>
 <div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_is_navigation_request</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">is_navigation_request</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_is_navigation_request</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">is_navigation_request</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="method">[method]<a class="anchor" aria-label="anchor" href="#method"></a>
+<h5 id="method">
+<a href="https://playwright.dev/docs/api/class-request#request-method" class="external-link">method</a><a class="anchor" aria-label="anchor" href="#method"></a>
 </h5>
 <p>Request’s method (GET, POST, etc.)</p>
 <div class="sourceCode" id="cb129"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_method</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">method</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_method</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">method</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="post_data">[post_data]<a class="anchor" aria-label="anchor" href="#post_data"></a>
+<h5 id="post_data">
+<a href="https://playwright.dev/docs/api/class-request#request-post-data" class="external-link">post_data</a><a class="anchor" aria-label="anchor" href="#post_data"></a>
 </h5>
 <p>Request’s post body, if any.</p>
 <div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_post_data</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">post_data</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_post_data</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">post_data</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="post_data_buffer">[post_data_buffer]<a class="anchor" aria-label="anchor" href="#post_data_buffer"></a>
+<h5 id="post_data_buffer">
+<a href="https://playwright.dev/docs/api/class-request#request-post-data-buffer" class="external-link">post_data_buffer</a><a class="anchor" aria-label="anchor" href="#post_data_buffer"></a>
 </h5>
 <p>Request’s post body in a binary form, if any.</p>
 <div class="sourceCode" id="cb131"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_post_data_buffer</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">post_data_buffer</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_post_data_buffer</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">post_data_buffer</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="post_data_j_s_o_n">[post_data_j_s_o_n]<a class="anchor" aria-label="anchor" href="#post_data_j_s_o_n"></a>
+<h5 id="post_data_j_s_o_n">
+<a href="https://playwright.dev/docs/api/class-request#request-post-data-json" class="external-link">post_data_j_s_o_n</a><a class="anchor" aria-label="anchor" href="#post_data_j_s_o_n"></a>
 </h5>
 <p>Returns parsed request’s body for form-urlencoded and JSON as a fallback if any.</p>
 <p>When the response is application/x-www-form-urlencoded then a key/value object of the values will be returned. Otherwise it will be parsed as JSON.</p>
 <div class="sourceCode" id="cb132"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_post_data_j_s_o_n</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">post_data_j_s_o_n</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_post_data_j_s_o_n</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">post_data_j_s_o_n</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="redirected_from">[redirected_from]<a class="anchor" aria-label="anchor" href="#redirected_from"></a>
+<h5 id="redirected_from">
+<a href="https://playwright.dev/docs/api/class-request#request-redirected-from" class="external-link">redirected_from</a><a class="anchor" aria-label="anchor" href="#redirected_from"></a>
 </h5>
 <p>Request that was redirected by the server to this one, if any.</p>
 <p>When the server responds with a redirect, Playwright creates a new Request object. The two requests are connected by redirectedFrom() and redirectedTo() methods. When multiple server redirects has happened, it is possible to construct the whole redirect chain by repeatedly calling redirectedFrom().</p>
 <div class="sourceCode" id="cb133"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_redirected_from</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">redirected_from</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_redirected_from</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">redirected_from</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="redirected_to">[redirected_to]<a class="anchor" aria-label="anchor" href="#redirected_to"></a>
+<h5 id="redirected_to">
+<a href="https://playwright.dev/docs/api/class-request#request-redirected-to" class="external-link">redirected_to</a><a class="anchor" aria-label="anchor" href="#redirected_to"></a>
 </h5>
 <p>New request issued by the browser if the server responded with redirect.</p>
 <div class="sourceCode" id="cb134"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_redirected_to</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">redirected_to</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_redirected_to</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">redirected_to</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="resource_type">[resource_type]<a class="anchor" aria-label="anchor" href="#resource_type"></a>
+<h5 id="resource_type">
+<a href="https://playwright.dev/docs/api/class-request#request-resource-type" class="external-link">resource_type</a><a class="anchor" aria-label="anchor" href="#resource_type"></a>
 </h5>
 <p>Contains the request’s resource type as it was perceived by the rendering engine. ResourceType will be one of the following: document, stylesheet, image, media, font, script, texttrack, xhr, fetch, eventsource, websocket, manifest, other.</p>
 <div class="sourceCode" id="cb135"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_resource_type</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">resource_type</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_resource_type</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">resource_type</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="response">[response]<a class="anchor" aria-label="anchor" href="#response"></a>
+<h5 id="response">
+<a href="https://playwright.dev/docs/api/class-request#request-response" class="external-link">response</a><a class="anchor" aria-label="anchor" href="#response"></a>
 </h5>
 <p>Returns the matching Response object, or null if the response was not received due to error.</p>
 <div class="sourceCode" id="cb136"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_response</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">response</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">req_response</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">response</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">req_response</span><span class="op">$</span><span class="fu">ok</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="service_worker">[service_worker]<a class="anchor" aria-label="anchor" href="#service_worker"></a>
+<h5 id="service_worker">
+<a href="https://playwright.dev/docs/api/class-request#request-service-worker" class="external-link">service_worker</a><a class="anchor" aria-label="anchor" href="#service_worker"></a>
 </h5>
 <p>The Service Worker that is performing the request.</p>
 <div class="sourceCode" id="cb137"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_service_worker</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">service_worker</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_service_worker</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">service_worker</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="sizes">[sizes]<a class="anchor" aria-label="anchor" href="#sizes"></a>
+<h5 id="sizes">
+<a href="https://playwright.dev/docs/api/class-request#request-sizes" class="external-link">sizes</a><a class="anchor" aria-label="anchor" href="#sizes"></a>
 </h5>
 <p>Returns resource size information for given request.</p>
 <div class="sourceCode" id="cb138"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_sizes</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">sizes</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_sizes</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">sizes</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="timing">[timing]<a class="anchor" aria-label="anchor" href="#timing"></a>
+<h5 id="timing">
+<a href="https://playwright.dev/docs/api/class-request#request-timing" class="external-link">timing</a><a class="anchor" aria-label="anchor" href="#timing"></a>
 </h5>
 <p>Returns resource timing information for given request. Most of the timing values become available upon the response, responseEnd becomes available when request finishes. Find more information at Resource Timing API.</p>
 <div class="sourceCode" id="cb139"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_timing</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">timing</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_timing</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">timing</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level5">
-<h5 id="url-1">[url]<a class="anchor" aria-label="anchor" href="#url-1"></a>
+<h5 id="url-1">
+<a href="https://playwright.dev/docs/api/class-request#request-url" class="external-link">url</a><a class="anchor" aria-label="anchor" href="#url-1"></a>
 </h5>
 <p>URL of the request.</p>
 <div class="sourceCode" id="cb140"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">req_promise</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">wait_for_event</span><span class="op">(</span><span class="st">'requestfinished'</span><span class="op">)</span>;</span>
-<span><span class="va">resp</span> <span class="op">&lt;-</span> <span class="va">page</span><span class="op">$</span><span class="fu">goto</span><span class="op">(</span><span class="st">"https://hp-api.onrender.com/api/characters"</span><span class="op">)</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="va">req</span> <span class="op">&lt;-</span> <span class="va">req_promise</span><span class="op">$</span><span class="fu">then</span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">req_url</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">url</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">req_url</span> <span class="op">&lt;-</span> <span class="va">req</span><span class="op">$</span><span class="fu">url</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level4">
