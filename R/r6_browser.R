@@ -1,3 +1,4 @@
+#' Browser Class
 Browser <- R6::R6Class(
   "Browser",
   private = list(

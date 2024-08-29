@@ -1,3 +1,4 @@
+#' Promise Class
 Promise <- R6::R6Class(
   "Promise",
   private = list(

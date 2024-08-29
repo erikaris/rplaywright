@@ -1,3 +1,4 @@
+#' Video Class
 Video <- R6::R6Class(
   "Video",
   private = list(

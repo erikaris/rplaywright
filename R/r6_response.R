@@ -1,3 +1,4 @@
+#' Response Class
 Response <- R6::R6Class(
   "Response",
   private = list(

@@ -1,3 +1,4 @@
+#' Context Class
 Context <- R6::R6Class(
   "Context",
   private = list(

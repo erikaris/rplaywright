@@ -15,8 +15,8 @@ start_server(host = "127.0.0.1", port = 3000, restart = F)
 Start rplaywright server
 }
 \examples{
-\dontrun{
-rplaywright::start_server()
+\dontrun {
+ rplaywright::start_server()
 }
 
 }

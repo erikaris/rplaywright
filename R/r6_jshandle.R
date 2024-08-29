@@ -1,3 +1,4 @@
+#' JSHandle Class
 JSHandle <- R6::R6Class(
   "JSHandle",
   private = list(

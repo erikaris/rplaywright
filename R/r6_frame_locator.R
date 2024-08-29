@@ -1,3 +1,4 @@
+#' FrameLocator Class
 FrameLocator <- R6::R6Class(
   "FrameLocator",
   private = list(

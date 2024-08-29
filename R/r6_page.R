@@ -1,3 +1,4 @@
+#' Page Class
 Page <- R6::R6Class(
   "Page",
   private = list(

@@ -9,10 +9,15 @@ new_chromium(
   serverOptions = list(host = "127.0.0.1", port = 3000)
 )
 }
+\value{
+An object of class \code{Browser}
+}
 \description{
 Launch new chromium instance
 }
 \examples{
+\dontrun {
 browser <- rplaywright::new_chromium()
+}
 
 }

@@ -1,3 +1,4 @@
+#' Request Class
 Request <- R6::R6Class(
   "Request",
   private = list(

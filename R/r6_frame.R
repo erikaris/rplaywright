@@ -1,3 +1,4 @@
+#' Frame Class
 Frame <- R6::R6Class(
   "Frame",
   private = list(

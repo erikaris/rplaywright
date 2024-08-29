@@ -48,8 +48,8 @@ check_nodejs <- function() {
 #' @param port Rplaywright server port. Default to 3000
 #'
 #' @examples
-#' \dontrun{
-#' rplaywright::start_server()
+#' \dontrun {
+#'  rplaywright::start_server()
 #' }
 #'
 #' @export
@@ -88,7 +88,9 @@ start_server <- function(
 #' Stop rplaywright server
 #'
 #' @examples
+#' \dontrun {
 #' rplaywright::stop_server()
+#' }
 #'
 #' @export
 stop_server <- function(){
@@ -107,7 +109,11 @@ stop_server <- function(){
 #' Launch new chromium instance
 #'
 #' @examples
+#' \dontrun {
 #' browser <- rplaywright::new_chromium()
+#' }
+#'
+#' @return An object of class `Browser`
 #'
 #' @export
 new_chromium <- function(
@@ -133,7 +139,9 @@ new_chromium <- function(
 #' Launch new firefox instance
 #'
 #' @examples
+#' \dontrun {
 #' browser <- rplaywright::new_firefox()
+#' }
 #'
 #' @export
 new_firefox <- function(
@@ -159,7 +167,9 @@ new_firefox <- function(
 #' Launch new webkit instance
 #'
 #' @examples
+#' \dontrun {
 #' browser <- rplaywright::new_webkit()
+#' }
 #'
 #' @export
 new_webkit <- function(
@@ -179,4 +189,49 @@ new_webkit <- function(
   }
 
   Browser$new("webkit")
+}
+
+
+#' Creates a new browser context. It won't share cookies/cache with other browser contexts.
+#' @param browser Browser instance
+#' @examples
+#' \dontrun{
+#'  rplaywright::new_chromium() %>%
+#'   new_context()
+#' }
+#' @export
+new_context <- function(browser) {
+  browser$new_context()$then()
+}
+
+
+#' Creates a new page in the browser context.
+#' @param context Browser Context instance
+#' @examples
+#' \dontrun{
+#'  rplaywright::new_chromium() %>%
+#'   new_context() %>%
+#'   new_page()
+#' }
+#' @export
+new_page <- function(context) {
+  context$new_page()$then()
+}
+
+
+#' Adds a script which would be evaluated in one of the following scenarios:
+#' @references
+#' * [https://erikaris.github.io/rplaywright/#add_init_script]
+#' @param page Page instance
+#' @examples
+#' \dontrun{
+#'  page <- rplaywright::new_chromium() %>%
+#'   new_context() %>%
+#'   new_page()
+#'
+#'  page %>% add_init_script(list(path=normalizePath("./examples/preload.js")))
+#' }
+#' @export
+add_init_script <- function(page, ...) {
+  page$add_init_script(...)$then()
 }

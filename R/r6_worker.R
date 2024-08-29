@@ -1,3 +1,4 @@
+#' Worker Class
 Worker <- R6::R6Class(
   "Worker",
   private = list(

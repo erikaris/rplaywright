@@ -1,3 +1,4 @@
+#' Locator Class
 Locator <- R6::R6Class(
   "Locator",
   private = list(
