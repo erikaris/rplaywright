@@ -13,6 +13,8 @@ install_rplaywright(force = FALSE)
 Install rplaywright and its dependencies
 }
 \examples{
-rplaywright::install_rplaywright(force=TRUE)
+\dontrun{
+  rplaywright::install_rplaywright(force=TRUE)
+}
 
 }

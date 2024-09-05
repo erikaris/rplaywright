@@ -48,7 +48,7 @@ check_nodejs <- function() {
 #' @param port Rplaywright server port. Default to 3000
 #'
 #' @examples
-#' \dontrun {
+#' \dontrun{
 #'  rplaywright::start_server()
 #' }
 #'
@@ -88,7 +88,7 @@ start_server <- function(
 #' Stop rplaywright server
 #'
 #' @examples
-#' \dontrun {
+#' \dontrun{
 #' rplaywright::stop_server()
 #' }
 #'
@@ -109,7 +109,7 @@ stop_server <- function(){
 #' Launch new chromium instance
 #'
 #' @examples
-#' \dontrun {
+#' \dontrun{
 #' browser <- rplaywright::new_chromium()
 #' }
 #'
@@ -139,7 +139,7 @@ new_chromium <- function(
 #' Launch new firefox instance
 #'
 #' @examples
-#' \dontrun {
+#' \dontrun{
 #' browser <- rplaywright::new_firefox()
 #' }
 #'
@@ -167,7 +167,7 @@ new_firefox <- function(
 #' Launch new webkit instance
 #'
 #' @examples
-#' \dontrun {
+#' \dontrun{
 #' browser <- rplaywright::new_webkit()
 #' }
 #'

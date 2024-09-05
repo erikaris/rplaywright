@@ -14,6 +14,262 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r setup, eval=FALSE}
+devtools::install_github("erikaris/rplaywright")
+
 library(rplaywright)
+install_rplaywright(force = TRUE)
+
+chrome <- new_chromium()
+context <- chrome$new_context()$then()
+page <- context$new_page()$then()
+resp <- page$goto("https://playwright.dev/")$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-all}
+all_links <- page$get_by_role("link")$all()$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-all-inner-texts}
+all_inner_texts <- page$get_by_role("link")$all_inner_texts()$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-all-text-contents}
+all_text_contents <- page$get_by_role("link")$all_text_contents()$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-and}
+and_unimplemented <- page$get_by_role("link")$and()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-blur}
+page$get_by_role("link", list(name="Get started"))$blur()$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-bounding-box}
+bounding_box <- page$get_by_role("link", list(name="Get started"))$bounding_box()$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-check}
+page$get_by_role("checkbox")$check(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-clear}
+page$get_by_role("textbox")$clear(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-click}
+page$get_by_role("link", list(name="Get started"))$click(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-content-frame}
+content_frame_unimplemented <- page$get_by_role("link")$content_frame()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-count}
+count <- page$get_by_role("link")$count()$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-dblclick}
+page$get_by_role("link", list(name="Get started"))$dblclick(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-dispatch-event}
+page$get_by_role("link", list(name="Get started"))$dispatch_event('click', NULL, list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-drag-to}
+drag_to_unimplemented <- page$get_by_role("link")$drag_to()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-evaluate}
+evaluate_unimplemented <- page$get_by_role("link")$evaluate()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-evaluate-all}
+evaluate_all_unimplemented <- page$get_by_role("link")$evaluate_all()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-evaluate-handle}
+evaluate_handle_unimplemented <- page$get_by_role("link")$evaluate_handle()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-fill}
+page$get_by_role("textbox")$fill("example value", list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-filter}
+filter_unimplemented <- page$get_by_role("link")$filter()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-first}
+first <- page$get_by_role("link")$first()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-focus}
+page$get_by_role("link")$first()$focus()$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-frame-locator}
+frame_locator_unimplemented <- page$get_by_role("link")$frame_locator()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-get-attribute}
+attribute <- page$get_by_role("link")$first()$get_attribute("title")$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-get-by-alt-text}
+page_2 <- context$new_page()$then()
+page_2$set_content("<img alt='Playwright logo'>")
+page_2$get_by_alt_text("link")$click(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-get-by-label}
+page_2 <- context$new_page()$then()
+page_2$set_content('<input aria-label="Username"></input>
+  <label for="password-input">Password:</label>
+  <input id="password-input"></input>')
+page_2$get_by_label("Username")$fill("John", list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-get-by-placeholder}
+page_2 <- context$new_page()$then()
+page_2$set_content('<input type="email" placeholder="name@example.com"></input>')
+page_2$get_by_placeholder("name@example.com")$fill("playwright@microsoft.com", list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-get-by-role}
+page_2 <- context$new_page()$then()
+page_2$set_content('<h3>Sign up</h3>
+  <label>
+    <input type="checkbox"></input> Subscribe
+  </label>
+  <br/>
+  <button>Submit</button>')
+page_2$get_by_role("checkbox", list(name="Subscribe"))$check(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-get-by-test-id}
+page_2 <- context$new_page()$then()
+page_2$set_content('<button data-testid="directions">Itinéraire</button>')
+page_2$get_by_test_id("directions")$click(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-get-by-text}
+page_2 <- context$new_page()$then()
+page_2$set_content('<div>Hello <span>world</span></div>
+  <div>Hello</div>')
+page_2$get_by_text("Hello", list(exact=FALSE))$click(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-get-by-title}
+page_2 <- context$new_page()$then()
+page_2$set_content("<span title='Issues count'>25 issues</span>")
+get_by_title <- page_2$get_by_title("Issues count")$text_content()$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-highlight}
+page_2 <- context$new_page()$then()
+page_2$set_content("<span title='Issues count'>25 issues</span>")
+page_2$get_by_title("Issues count")$highlight()$then()
+
+#
+page$goto("https://playwright.dev/")$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-hover}
+page$get_by_role("link", list(name="Get started"))$hover(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-inner-html}
+inner_html = page$get_by_role("link", list(name="Get started"))$inner_h_t_m_l(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-inner-text}
+inner_text = page$get_by_role("link", list(name="Get started"))$inner_text(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-input-value}
+page_2 <- context$new_page()$then()
+page_2$set_content('<input type="text" value="Test"></input>')
+input_value <- page_2$get_by_role("text")$first()$input_value(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-is-checked}
+page_2 <- context$new_page()$then()
+page_2$set_content('<input type="checkbox"></input>')
+is_checked <- page_2$get_by_role("checkbox")$is_checked(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-is-disabled}
+page_2 <- context$new_page()$then()
+page_2$set_content('<button data-testid="directions">Itinéraire</button>')
+is_disabled <- page_2$get_by_test_id("directions")$is_disabled(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-is-editable}
+page_2 <- context$new_page()$then()
+page_2$set_content('<input type="checkbox"></input>')
+is_editable <- page_2$get_by_role("checkbox")$is_editable(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-is-enabled}
+page_2 <- context$new_page()$then()
+page_2$set_content('<button data-testid="directions">Itinéraire</button>')
+is_enabled <- page_2$get_by_test_id("directions")$is_enabled(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-is-hidden}
+page_2 <- context$new_page()$then()
+page_2$set_content('<button data-testid="directions">Itinéraire</button>')
+is_hidden <- page_2$get_by_test_id("directions")$is_hidden(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-is-visible}
+page_2 <- context$new_page()$then()
+page_2$set_content('<button data-testid="directions">Itinéraire</button>')
+is_visible <- page_2$get_by_test_id("directions")$is_visible(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-last}
+last <- page$get_by_role("link")$last()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-locator}
+page_2 <- context$new_page()$then()
+page_2$set_content('<button data-testid="directions">Itinéraire</button>')
+locator_inner_text <- page_2$locator('[data-testid="directions"]')$inner_text(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-nth}
+nth_inner_text <- page$get_by_role("link")$nth(2)$inner_text(list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-or}
+or_unimplemented <- page$get_by_role("link")$or()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-page}
+locator_page <- page$get_by_role("link")$page()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-press}
+page_2 <- context$new_page()$then()
+page_2$set_content('<input type="text" value="Test"></input>')
+page_2$locator("input")$press("Backspace", list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-press-sequentially}
+page_2 <- context$new_page()$then()
+page_2$set_content('<input type="text"></input>')
+page_2$locator("input")$press_sequentially("World", list(delay=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-screenshot}
+locator_screenshot <- page$get_by_role("link")$first()$screenshot()$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-screenshot}
+page$get_by_role("link")$last()$scroll_into_view_if_needed(list(delay=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-select-option}
+page_2 <- context$new_page()$then()
+page_2$set_content('<select multiple>
+    <option value="red">Red</option>
+    <option value="green">Green</option>
+    <option value="blue">Blue</option>
+  </select>')
+select_option <- page_2$locator("select")$select_option("blue", list(delay=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-select-text}
+page_2 <- context$new_page()$then()
+page_2$set_content('<label>This is a label</label>')
+page_2$locator("label")$select_text("label", list(delay=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-set-checked}
+page_2 <- context$new_page()$then()
+page_2$set_content('<h3>Sign up</h3>
+  <label>
+    <input type="checkbox"></input> Subscribe
+  </label>
+  <br/>
+  <button>Submit</button>')
+page_2$get_by_role("checkbox", list(name="Subscribe"))$set_checked(TRUE, list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-tap}
+page$get_by_role("link", list(name="Get started"))$tap()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-text-content}
+page_2 <- context$new_page()$then()
+page_2$set_content('<label>This is a label</label>')
+text_content = page_2$locator("label")$text_content(list(delay=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-uncheck}
+page_2 <- context$new_page()$then()
+page_2$set_content('<h3>Sign up</h3>
+  <label>
+    <input type="checkbox" checked="checked"></input> Subscribe
+  </label>
+  <br/>
+  <button>Submit</button>')
+page_2$get_by_role("checkbox", list(name="Subscribe"))$uncheck(TRUE, list(timeout=100))$then()
+
+# @link{https://playwright.dev/docs/api/class-locator#locator-wait-for}
+page_2 <- context$new_page()$then()
+page_2$set_content('<label>This is a label</label>')
+page_2$locator("label")$wait_for(list(state="visible", timeout=100))$then()
+
+chrome$close()$then()
+
+stop_server()
 ```

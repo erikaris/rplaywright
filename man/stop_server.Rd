@@ -10,7 +10,7 @@ stop_server()
 Stop rplaywright server
 }
 \examples{
-\dontrun {
+\dontrun{
 rplaywright::stop_server()
 }
 

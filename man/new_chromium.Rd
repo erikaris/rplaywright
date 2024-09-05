@@ -16,7 +16,7 @@ An object of class \code{Browser}
 Launch new chromium instance
 }
 \examples{
-\dontrun {
+\dontrun{
 browser <- rplaywright::new_chromium()
 }
 

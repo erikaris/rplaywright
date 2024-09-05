@@ -13,7 +13,7 @@ new_webkit(
 Launch new webkit instance
 }
 \examples{
-\dontrun {
+\dontrun{
 browser <- rplaywright::new_webkit()
 }
 

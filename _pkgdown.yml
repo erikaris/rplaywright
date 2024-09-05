@@ -13,4 +13,4 @@ navbar:
   components:
     setup:
       text: Setup
-      href: articles/rplaywright-setup.html
+      href: articles/rplaywright.html

@@ -13,7 +13,7 @@ new_firefox(
 Launch new firefox instance
 }
 \examples{
-\dontrun {
+\dontrun{
 browser <- rplaywright::new_firefox()
 }
 
