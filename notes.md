@@ -16,7 +16,7 @@
 
    b. **infinity loading**  --> Keep scrolling until it reaches the bottom of the page.
 4. **Full Isolation**. Playwright leverage a browser context. Browser context is equivalent to a brand new browser profile. This delivers full test isolation with zero overhead.
-5. Web-first assertions. Playwright assertions are explicitly **created for the dynamic web**. Checks are automatically retried until the necessary conditions are met.
+5. **Web-first assertions**. Playwright assertions are explicitly **created for the dynamic web**. Checks are automatically retried until the necessary conditions are met. <br /> Web-first assertions are like checking if the website's appearance and functionality are correct. For example, you might check if a button is clickable, if text is displayed correctly, or if a form works as expected.
 6. Effortless **Web Automation**: Automate repetitive tasks like web scraping, testing, and end-to-end workflows directly from R.
 7. Enhanced **Testing**: Simplify web testing processes and streamline quality assurance within your R projects.
 8. Increased **Efficiency**: Focus on analysis and insights, not tedious web interactions.
