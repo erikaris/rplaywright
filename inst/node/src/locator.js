@@ -93,7 +93,7 @@ exports.locatorPlugin = (instance, opts, next) => {
       args = camelCaseRecursive(args);
 
       try {
-        args = args.map((arg) => eval(arg));
+        args = args.map((arg) => eval(`\`${arg}\``));
       } catch (err) {}
 
       /** @type {Locator} */

@@ -2,42 +2,69 @@ envpw <- new.env()
 supported_browser <- c("chromium", "firefox", "webkit")
 
 check_nodejs <- function() {
-  # Check NodeJS installation
+  node_dir <- file.path("inst", "node")
 
+  # Check NodeJS installation
   err <- NULL
   tryCatch(
-    node_version <- system2("node", args = c("--version"), stdout = T, stderr = T),
-    error = function (e) {
+    node_version <- system2("node", args = "--version", stdout = TRUE, stderr = TRUE),
+    error = function(e) {
       err <<- e
     }
   )
-
   if (!is.null(err)) {
-    logger::log_error(paste0(c(err, "Check your nodejs installation"), collapse = "\n"))
+    logger::log_error(paste0(c(err$message, "Check your Node.js installation."), collapse = "\n"))
     stop()
   }
-
-  if (!is.null(node_version)) {
-    logger::log_info("You are using NodeJS ", paste0(c(node_version), collapse = "\n"))
-  }
+  logger::log_info(paste("You are using Node.js", paste0(node_version, collapse = "\n")))
 
   # Check NPM installation
-
   err <- NULL
   tryCatch(
-    npm_version <- system2("npm", args = c("--version"), stdout = T, stderr = T),
-    error = function (e) {
+    npm_version <- system2("npm", args = "--version", stdout = TRUE, stderr = TRUE),
+    error = function(e) {
       err <<- e
     }
   )
-
   if (!is.null(err)) {
-    logger::log_error(paste0(c(err, "Check your nodejs installation"), collapse = "\n"))
+    logger::log_error(paste0(c(err$message, "Check your npm installation."), collapse = "\n"))
     stop()
   }
+  logger::log_info(paste("You are using npm", paste0(npm_version, collapse = "\n")))
 
-  if (!is.null(npm_version)) {
-    logger::log_info("You are using NPM ", paste0(c(npm_version), collapse = "\n"))
+  # Check node_modules and install dependencies in inst/node
+  if (!dir.exists(node_dir)) {
+    logger::log_warn("The directory 'inst/node' does not exist. Skipping Node.js checks.")
+    return()
+  }
+
+  lockfile_path <- file.path(node_dir, "package-lock.json")
+  package_path <- file.path(node_dir, "package.json")
+  modules_path <- file.path(node_dir, "node_modules")
+
+  original_wd <- getwd()
+  setwd(node_dir)
+  on.exit(setwd(original_wd), add = TRUE)
+
+  if (file.exists("package-lock.json")) {
+    logger::log_info("package-lock.json found in inst/node.")
+
+    if (!dir.exists("node_modules")) {
+      logger::log_info("node_modules not found in inst/node. Installing with 'npm ci'...")
+    } else {
+      logger::log_info("node_modules exists. Reinstalling to match lockfile using 'npm ci'...")
+    }
+
+    install_result <- system2("npm", args = "ci", stdout = TRUE, stderr = TRUE)
+    logger::log_info(paste(install_result, collapse = "\n"))
+
+  } else if (file.exists("package.json")) {
+    logger::log_info("package-lock.json not found, but package.json exists in inst/node. Running 'npm install'...")
+    install_result <- system2("npm", args = "install", stdout = TRUE, stderr = TRUE)
+    logger::log_info(paste(install_result, collapse = "\n"))
+
+  } else {
+    logger::log_warn("No package-lock.json or package.json found in inst/node. Skipping npm install.")
   }
 }
 
