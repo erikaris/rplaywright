@@ -5,7 +5,7 @@ context <- chrome$new_context(list(
     cookies = list(
       list(
         name = "auth_token",
-        value = "42c3bd29f21d20c89d1c7e4b5a1616491114a362", # Use auth_token from cookies
+        value = "", # Use auth_token from cookies
         domain = ".x.com",
         path = "/",
         expires = -1,
