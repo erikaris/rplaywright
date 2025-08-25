@@ -1,4 +1,4 @@
-chrome <- rplaywright::new_chromium(start_server = F)
+chrome <- rplaywright::new_chromium()
 
 context <- chrome$new_context(list(
   storage_state = list(
