@@ -8,16 +8,18 @@
 - While currently under development, rplaywright is actively being updated to encompass the full range of Playwright's functionalities.
 
 ### playwright pros:
-1. **Faster** execution speed, especially for complex tests (compared to [Selenium](https://www.selenium.dev/) or [Puppeteer])(https://www.npmjs.com/package/puppeteer). 
-2. Built-in features like **auto-waiting** and recording
+1. **Faster** execution speed, especially for complex tests (compared to [Selenium](https://www.selenium.dev/) or [Puppeteer])(https://www.npmjs.com/package/puppeteer).
+2. **Cross Browser**. Playwright seamlessly works with Chromium (Chrome, Edge, Opera), Firefox, and WebKit (Safari).
+3. Built-in features like **auto-waiting** and recording
    
    a. can handle **lazy-loaded** page
 
    b. **infinity loading**  --> Keep scrolling until it reaches the bottom of the page.
-4. Web-first assertions. Playwright assertions are explicitly **created for the dynamic web**. Checks are automatically retried until the necessary conditions are met.
-5. Effortless **Web Automation**: Automate repetitive tasks like web scraping, testing, and end-to-end workflows directly from R.
-6. Enhanced **Testing**: Simplify web testing processes and streamline quality assurance within your R projects.
-7. Increased **Efficiency**: Focus on analysis and insights, not tedious web interactions.
+4. **Full Isolation**. Playwright leverage a browser context. Browser context is equivalent to a brand new browser profile. This delivers full test isolation with zero overhead.
+5. **Web-first assertions**. Playwright assertions are explicitly **created for the dynamic web**. Checks are automatically retried until the necessary conditions are met. <br /> Web-first assertions are like checking if the website's appearance and functionality are correct. For example, you might check if a button is clickable, if text is displayed correctly, or if a form works as expected.
+6. Effortless **Web Automation**: Automate repetitive tasks like web scraping, testing, and end-to-end workflows directly from R.
+7. Enhanced **Testing**: Simplify web testing processes and streamline quality assurance within your R projects.
+8. Increased **Efficiency**: Focus on analysis and insights, not tedious web interactions.
 
 ### how it works:
 1. spawn NodeJS server (created using [Fastify](https://fastify.dev/), a web framework for NodeJS) that will serve APIs that will call playwright functions. Example of the APIs: <br />
