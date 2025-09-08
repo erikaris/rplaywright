@@ -1,9 +1,9 @@
 test_that("screenshot works", {
-  chrome <- new_chromium(start_server = F)
-  context <- chrome$new_context()
-  page3 <- context$new_page(async = FALSE)
-  page3$goto("https://playwright.dev/")
-  ss3 <- page3$get_by_role("link", options=list(name="Get started"))
+  chrome <- new_chromium()
+  context <- chrome$new_context()$then()
+  page <- context$new_page()$then()
+  page$goto("https://playwright.dev/")$then()
+  locator <- page$get_by_role("link", list(name="Get started"))$first()
 
-  expect_no_condition(ss3)
+  expect_no_condition(locator)
 })
