@@ -1,6 +1,6 @@
 Package: rplaywright
 Title: RPlaywright: Bridging R and Playwright for Web Testing and Automation
-Version: 1.42.1
+Version: 1.43.1
 Authors@R: 
     person("Erika", "Siregar", , "erika.mukhlisina@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0005-6323-1177"))
