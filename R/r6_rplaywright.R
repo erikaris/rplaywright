@@ -1,10 +1,18 @@
 envpw <- new.env()
 supported_browser <- c("chromium", "firefox", "webkit")
 
+get_current_file_path <- function() {
+  this_file <- NULL
+  tryCatch({
+    this_file <- normalizePath(sys.frames()[[1]]$ofile)
+  }, error = function(e) {})
+  return(this_file)
+}
+
 check_nodejs <- function() {
-  node_dir <- file.path("inst", "node")
+  node_dir <- file.path(get_current_file_path, "inst", "node")
   if (!dir.exists(node_dir)) {
-    node_dir <- file.path("node")
+    node_dir <- file.path(get_current_file_path, "node")
   }
 
   # Check NodeJS installation
@@ -37,7 +45,7 @@ check_nodejs <- function() {
 
   # Check node_modules and install dependencies in inst/node
   if (!dir.exists(node_dir)) {
-    logger::log_warn("The directory 'inst/node' does not exist. Skipping Node.js checks.")
+    logger::log_warn(paste0("The directory '", node_dir, "' does not exist. Skipping Node.js checks."))
     return()
   }
 
