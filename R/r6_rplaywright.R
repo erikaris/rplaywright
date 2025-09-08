@@ -3,6 +3,9 @@ supported_browser <- c("chromium", "firefox", "webkit")
 
 check_nodejs <- function() {
   node_dir <- file.path("inst", "node")
+  if (!dir.exists(node_dir)) {
+    node_dir <- file.path("node")
+  }
 
   # Check NodeJS installation
   err <- NULL
