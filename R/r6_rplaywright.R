@@ -10,9 +10,11 @@ get_current_file_path <- function() {
 }
 
 check_nodejs <- function() {
-  node_dir <- file.path(get_current_file_path, "inst", "node")
+  logger::log_info(get_current_file_path())
+
+  node_dir <- file.path(get_current_file_path(), "inst", "node")
   if (!dir.exists(node_dir)) {
-    node_dir <- file.path(get_current_file_path, "node")
+    node_dir <- file.path(get_current_file_path(), "node")
   }
 
   # Check NodeJS installation
