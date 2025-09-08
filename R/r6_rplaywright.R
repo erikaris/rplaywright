@@ -1,20 +1,17 @@
 envpw <- new.env()
 supported_browser <- c("chromium", "firefox", "webkit")
 
-get_current_file_path <- function() {
-  this_file <- NULL
-  tryCatch({
-    this_file <- normalizePath(sys.frames()[[1]]$ofile)
-  }, error = function(e) {})
-  return(this_file)
+get_lib_path <- function() {
+  pkgname <- utils::packageName()  # Get the name of the current package
+  system.file(package = pkgname)   # Returns the path from which this package was loaded
 }
 
 check_nodejs <- function() {
-  logger::log_info(get_current_file_path())
+  logger::log_info(get_lib_path())
 
-  node_dir <- file.path(get_current_file_path(), "inst", "node")
+  node_dir <- file.path(get_lib_path(), "inst", "node")
   if (!dir.exists(node_dir)) {
-    node_dir <- file.path(get_current_file_path(), "node")
+    node_dir <- file.path(get_lib_path(), "node")
   }
 
   # Check NodeJS installation
