@@ -57,10 +57,10 @@ check_nodejs <- function() {
   on.exit(setwd(original_wd), add = TRUE)
 
   if (file.exists("package-lock.json")) {
-    logger::log_info("package-lock.json found in inst/node.")
+    logger::log_info("package-lock.json found.")
 
     if (!dir.exists("node_modules")) {
-      logger::log_info("node_modules not found in inst/node. Installing with 'npm ci'...")
+      logger::log_info("node_modules not found. Installing with 'npm ci'...")
     } else {
       logger::log_info("node_modules exists. Reinstalling to match lockfile using 'npm ci'...")
     }
@@ -69,12 +69,12 @@ check_nodejs <- function() {
     logger::log_info(paste(install_result, collapse = "\n"))
 
   } else if (file.exists("package.json")) {
-    logger::log_info("package-lock.json not found, but package.json exists in inst/node. Running 'npm install'...")
+    logger::log_info("package-lock.json not found, but package.json exists. Running 'npm install'...")
     install_result <- system2("npm", args = "install", stdout = TRUE, stderr = TRUE)
     logger::log_info(paste(install_result, collapse = "\n"))
 
   } else {
-    logger::log_warn("No package-lock.json or package.json found in inst/node. Skipping npm install.")
+    logger::log_warn("No package-lock.json or package.json found. Skipping npm install.")
   }
 }
 
