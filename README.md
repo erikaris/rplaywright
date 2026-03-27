@@ -3,6 +3,8 @@
 
 # rplaywright
 
+<img src="rplaywright-logo.png" style="width: 50%;">
+
 rplaywright is an R package developed as part of my participation in the
 [rOpenSci Champions Program](https://ropensci.org/champions/). It is
 designed to seamlessly bridge with the NodeJS library,
