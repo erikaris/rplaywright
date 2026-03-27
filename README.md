@@ -3,7 +3,7 @@
 
 # rplaywright
 
-<img src="rplaywright-logo.png" style="width: 50%;">
+<img src="rplaywright-logo.png" style="width: 25%;">
 
 rplaywright is an R package developed as part of my participation in the
 [rOpenSci Champions Program](https://ropensci.org/champions/). It is
